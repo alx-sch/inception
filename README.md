@@ -3,7 +3,8 @@ Set up a Linux virtual machine and use Docker to build and manage containerized 
 
 ## What is Docker? What are containers?
 
-
+XXX
+XXXXX
 
 
 ## Setting up the VM
@@ -54,7 +55,7 @@ hostname -I
      - **Guest Port**: `22`
      - **Guest IP**: leave blank (VirtualBox resolves it automatically); you may also add the VM's internal IP address confirmed above
        
-## 4. Connect from the Host
+### 4. Connect from the Host
 
 Start the VM (you don’t need to log in at the console) and, on the host:
 
@@ -62,7 +63,7 @@ Start the VM (you don’t need to log in at the console) and, on the host:
 ssh <vm_username>@localhost -p 2222
 ```
 
-## 5 Optional: SSH Config Shortcut
+### 5 Optional: SSH Config Shortcut
 
 To simplify the command, edit `~/.ssh/config` on the host:
 
@@ -88,7 +89,7 @@ Now you can connect with:
 ssh myvm
 ```
 
-## 6. Use Your Local Editor (e.g. VS Code)
+### 6. Use Your Local Editor (e.g. VS Code)
 - Install the **Remote – SSH** extension on VS Code.
 - Click the “><” icon in the lower-left corner (“Open a Remote Window”).
 - Choose **Connect to Host → myvm** and enter the VM user’s password.
@@ -99,94 +100,56 @@ You can now edit files and run terminals in VS Code as if you were working local
 
 ## Setting up Docker
 
-XXXX
+To turn the minimal Debian server installation to a ready-to-use Docker host, follow these steps:
 
+### 1. Create a Sudo-Enabled User
 
+Docker commands typically require elevated privileges. To give your user sudo rights:
 
-///
-
-After installation:
-login with created user
-
-give user sudo rights
-log in as root
+```bash
+# Log in as root
 su -
 
-install sudo:
+# Install sudo
 apt install sudo
 
-Add your user to sudo group:
+# Add your user to the sudo group (replace with your username)
 usermod -aG sudo your_username
 
-verify change:
-groups your_username 
-(sudo should show up a group you are part of)
+# Verify membership
+groups your_username
+```
 
-type 'exit' to leave and log out and back in.
+You should see `sudo` listed in the groups. Type `exit` to leave the root shell, then log out and back in for the change to take effect.
 
+### 2. Update the System
 
-1. Update Your System
-First, make sure your system's package list is up-to-date and all installed packages are upgraded to their latest versions.
+Keep the packages current:
 
-Bash
-
+```bash
 sudo apt update && sudo apt upgrade -y
-2. Install a Few Essential Tools
-Install some common utilities that you will need. git is for managing your project files from your repository, and curl is often used to download installation scripts.
+```
 
-Bash
+### 3. Install Common Tools
 
+Install a few utilities you’ll use often:
+
+```bash
 sudo apt install curl git -y
+```
 
+`git` helps manage project files from a repository.
+`curl` is handy for downloading installation scripts.
 
-Excellent. Now that you have a clean, minimal Debian OS, you only need to install a few key things to turn it into a host for your project.
+### 4. Install Docker Engine
 
-The main software you need to install directly on the VM is Docker and Git.
+Follow Docker’s official guide for the most reliable installation:
+[Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
 
-Step-by-Step Installation Guide
-Follow these steps in the command line of your new Debian VM.
+Use the “Install using the apt repository” method. After installation, confirm that Docker is working:
 
-1. Update Your System
-First, make sure your system's package list is up-to-date and all installed packages are upgraded to their latest versions.
-
-Bash
-
-sudo apt update && sudo apt upgrade -y
-2. Install a Few Essential Tools
-Install some common utilities that you will need. git is for managing your project files from your repository, and curl is often used to download installation scripts.
-
-Bash
-
-sudo apt install curl git -y
-3. Install Docker Engine 🐳
-This is the most important step. You should always follow the official documentation to install Docker, as it's the most reliable method.
-
-Go to the official Docker guide: Install Docker Engine on Debian (https://docs.docker.com/engine/install/debian/)
-
-Follow the "Installation methods": The recommended method is to set up Docker's official repository and install from there. The guide will walk you through the exact commands to
-
-check if installation was all succesful, by running this docker with:
+```bash
 sudo docker run hello-world
+```
 
-
-///
-
-VM in NAT (Network Address Translation) mode; VM is hidden from main network (using an internal IP address, like 10.0.2.15);
-
- port forwarding is a rule that redirects communication from a port on your host computer to a specific port on your VM.
-
-confirm what port ssh uses on VM (should be 22, but just to double check):
-
-grep Port /etc/ssh/sshd_config
-
-#Port 22
-#GatewayPorts no
-
-Port 22 is commented out, so the default is used (which is port 22)
-
-
-
-
-
-
-
+If you see the “Hello from Docker!” message, your setup is complete.
