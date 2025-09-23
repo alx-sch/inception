@@ -43,7 +43,7 @@ grep Port /etc/ssh/sshd_config
 
 If `Port 22` is commented out, SSH defaults to port 22, which is what you want.
 
-Find the VM’s internal IP (not strictly required for port forwarding):
+By default, the VM is assigned an internal IP address within a private NAT network. This purposefully isolates the VM, making it inaccessible from the external network and providing a basic layer of security. While not strictly required for setting up the port forward, you can check the VM's IP with:
 
 ```bash
 hostname -I
