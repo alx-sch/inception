@@ -6,11 +6,62 @@
 
 This project focuses on system administration and virtualization with **Docker**. The goal is to build a multi-container application using **Docker Compose**, featuring separate containers for an NGINX web server, a MariaDB database, and a WordPress instance. All services are built from scratch using custom `Dockerfiles` and communicate securely over a dedicated Docker network.
 
-## What is Docker? What are containers?
+---
 
-XXX
-XXXXX
+## Understanding Docker
 
+### What is Docker?
+
+Docker is a platform for developing, shipping, and running applications in **containers**. A Docker container can hold any application and its dependencies (code, libraries, system tools, configuration) and run on any machine that has Docker installed.    
+
+This solves the classic problem of "it works on my machine" by packaging the entire application environment into a single, predictable, and portable unit.
+
+
+### A Bit of History
+
+Docker was first introduced by Solomon Hykes at PyCon in 2013<sup><a href="#footnote1">[1]</a></sup>. It was originally an internal project at a PaaS company called dotCloud, but its potential was so clear that it was quickly open-sourced.   
+
+While Docker popularized containers, the underlying technology has been part of the Linux kernel for years in the form of cgroups (which limit resource usage) and namespaces (which isolate processes)<sup><a href="#footnote2">[2]</a></sup>.     
+Docker's innovation was to create a user-friendly toolchain and ecosystem around these technologies, making them accessible to all developers.
+
+### Containers vs. Virtual Machines
+
+A common point of confusion is the difference between a container and a virtual machine (VM):
+
+- **A VM** virtualizes the hardware. It runs a full-blown guest operating system with its own kernel on top of your host OS. Think of it as a complete, separate house with its own plumbing, electricity, and foundation.
+  
+- **A Docker Container** virtualizes the operating system. All containers on a host share the host's OS kernel but have their own isolated view of the filesystem and processes. Think of them as apartments in a single building—they all share the building's main foundation and utilities but are completely separate living spaces.
+
+This makes containers incredibly lightweight, fast to start, and efficient compared to VMs.
+
+---
+
+### Applications
+
+Docker is the standard way modern applications are built, shipped, and run in the industry<sup><a href="#footnote3">[3</a>,<a href="#footnote4">4],</sup>.
+
+**1. Standardized Development Environments**
+
+By packaging an application and its dependencies into a container, companies ensure that their software runs identically everywhere: on a developer's laptop, on a testing server, and in production.
+ 
+**2.  CI/CD Pipelines**
+
+Docker is a cornerstone of modern **Continuous Integration and Continuous Deployment (CI/CD)**. When a developer pushes new code, automated systems use Docker to:
+
+- Build the code inside a clean, consistent container.
+- Run automated tests inside that container.
+- If tests pass, push the new container image to a registry.
+- Automatically deploy the updated container to production servers.
+
+This makes the release process fast, reliable, and fully automated.
+
+**3. Microservices Architecture**
+
+Docker is the perfect platform for microservices, an architectural style where a large application is broken down into smaller, independent services. Each microservice (e.g., user authentication, payment processing, product catalog) runs in its own container. This makes the application easier to develop, scale, and maintain, as different teams can work on different services independently.
+
+**4. Cloud and Multi-Cloud Deployment**
+
+Docker containers can run on any cloud provider (AWS, Google Cloud, Azure, etc.) without modification. This portability gives companies the freedom to move applications between different cloud environments without being locked into a single vendor. It's the foundation of modern "cloud-native" applications.
 
 ## Setting up the VM
 
@@ -149,3 +200,17 @@ sudo docker run hello-world
 ```
 
 If you see the “Hello from Docker!” message, your setup is complete.
+
+## References
+
+<a name="footnote1">[1]</a> Hykes, S.; PyCon 2013 (Mar 13, 2013). [*The future of Linux Containers*](https://www.youtube.com/watch?v=wW9CAH9nSLs)         
+<a name="footnote2">[2]</a> Subendran, B.; Medium (Feb 13, 2024). [*Namespaces and cgroups*](https://hanancs.medium.com/namespaces-and-cgroups-3eb99041e04f)      
+<a name="footnote3">[3]</a> Docker Inc. (2025). [*What is Docker?*](https://docs.docker.com/get-started/docker-overview/)
+<a name="footnote4">[4]</a> ur Rehman, O.; Folio3 Cloud Services (Jun 23, 2025). [*Docker Use Cases: Top 15 Most Common Ways To Use Docker*](https://cloud.folio3.com/blog/docker-use-cases/)
+
+
+
+
+
+
+
