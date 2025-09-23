@@ -112,6 +112,48 @@ Docker Compose acts as an orchestrator for the Docker Engine, allowing you to ma
 
 ----
 
+### The Dockerfile
+
+Text-based document that's used to create a container image. As an example, the following Dockerfile would produce a ready-to-run Python application<sup><a href="#footnote7">[7]</a></sup>:
+
+```Dockerfile
+FROM python:3.13
+WORKDIR /usr/local/app
+
+# Install the application dependencies
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy in the source code
+COPY src ./src
+EXPOSE 5000
+
+# Setup an app user so the container doesn't run as the root user
+RUN useradd app
+USER app
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+```
+
+A Dockerfile typically follows these steps:
+
+1. Determine your base image
+2. Install application dependencies
+3. Copy in any relevant source code and/or binaries
+4. Configure the final image
+
+Some of the most common instructions in a `Dockerfile` include:
+
+- `FROM <image>` - this specifies the base image that the build will extend.
+- `WORKDIR <path>` - this instruction specifies the "working directory" or the path in the image where files will be copied and commands will be executed.
+- `COPY <host-path> <image-path>` - this instruction tells the builder to copy files from the host and put them into the container image.
+- `RUN <command>` - this instruction tells the builder to run the specified command.
+- `ENV <name> <value>` - this instruction sets an environment variable that a running container will use.
+- `EXPOSE <port-number>` - this instruction sets configuration on the image that indicates a port the image would like to expose.
+- `USER <user-or-uid>` - this instruction sets the default user for all subsequent instructions.
+- `CMD ["<command>", "<arg1>"]` - this instruction sets the default command a container using this image will run.
+
+---
 
 
 Useful Docker commands<sup><a href="#footnote6">[6]</a></sup>:
@@ -277,6 +319,6 @@ If you see the “Hello from Docker!” message, your setup is complete.
 <a name="footnote4">[4]</a> ur Rehman, O.; Folio3 Cloud Services (Jun 23, 2025). [*Docker Use Cases: Top 15 Most Common Ways To Use Docker*](https://cloud.folio3.com/blog/docker-use-cases/)     
 <a name="footnote5">[5]</a> Sonalijain; Medium (Jan 5, 2024). [*Docker Components*](https://cloud.folio3.com/blog/docker-use-cases)
 <a name="footnote6">[6]</a> Coursera Inc. (2025). [*Docker Cheat Sheet*](https://www.coursera.org/collections/docker-cheat-sheet)
-
+<a name="footnote7">[7]</a> Docker Inc. (2025). [*Writing a Dockerfile*](https://docs.docker.com/get-started/docker-concepts/building-images/writing-a-dockerfile/)
 
 
