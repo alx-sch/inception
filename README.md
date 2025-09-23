@@ -16,7 +16,6 @@ Docker is a platform for developing, shipping, and running applications in **con
 
 This solves the classic problem of "it works on my machine" by packaging the entire application environment into a single, predictable, and portable unit.
 
-
 ### A Bit of History
 
 Docker was first introduced by Solomon Hykes at PyCon in 2013<sup><a href="#footnote1">[1]</a></sup>. It was originally an internal project at a PaaS company called dotCloud, but its potential was so clear that it was quickly open-sourced.   
@@ -33,8 +32,6 @@ A common point of confusion is the difference between a container and a virtual 
 - **A Docker Container** virtualizes the operating system. All containers on a host share the host's OS kernel but have their own isolated view of the filesystem and processes. Think of them as apartments in a single building—they all share the building's main foundation and utilities but are completely separate living spaces.
 
 This makes containers incredibly lightweight, fast to start, and efficient compared to VMs.
-
----
 
 ### Applications
 
@@ -62,6 +59,20 @@ Docker is the perfect platform for microservices, an architectural style where a
 **4. Cloud and Multi-Cloud Deployment**
 
 Docker containers can run on any cloud provider (AWS, Google Cloud, Azure, etc.) without modification. This portability gives companies the freedom to move applications between different cloud environments without being locked into a single vendor. It's the foundation of modern "cloud-native" applications.
+
+---
+
+## How Docker is used in Inception   
+
+For this project, we use Docker to create isolated containers for each service:
+
+- Nginx (our web server)
+- MariaDB (our database)
+- WordPress (our application)
+
+By containerizing them, we ensure that they can be developed, tested, and deployed in any environment with perfect consistency. The `docker-compose.yml` file defines how these isolated containers connect and work together to form a single, functional application.
+
+---
 
 ## Setting up the VM
 
@@ -205,7 +216,7 @@ If you see the “Hello from Docker!” message, your setup is complete.
 
 <a name="footnote1">[1]</a> Hykes, S.; PyCon 2013 (Mar 13, 2013). [*The future of Linux Containers*](https://www.youtube.com/watch?v=wW9CAH9nSLs)         
 <a name="footnote2">[2]</a> Subendran, B.; Medium (Feb 13, 2024). [*Namespaces and cgroups*](https://hanancs.medium.com/namespaces-and-cgroups-3eb99041e04f)      
-<a name="footnote3">[3]</a> Docker Inc. (2025). [*What is Docker?*](https://docs.docker.com/get-started/docker-overview/)
+<a name="footnote3">[3]</a> Docker Inc. (2025). [*What is Docker?*](https://docs.docker.com/get-started/docker-overview/)      
 <a name="footnote4">[4]</a> ur Rehman, O.; Folio3 Cloud Services (Jun 23, 2025). [*Docker Use Cases: Top 15 Most Common Ways To Use Docker*](https://cloud.folio3.com/blog/docker-use-cases/)
 
 
