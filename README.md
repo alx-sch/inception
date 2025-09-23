@@ -8,7 +8,7 @@ This project focuses on system administration and virtualization with **Docker**
 
 ---
 
-## Understanding Docker
+## Docker Introduction
 
 ### What is Docker?
 
@@ -35,7 +35,7 @@ This makes containers incredibly lightweight, fast to start, and efficient compa
 
 ### Applications
 
-Docker is the standard way modern applications are built, shipped, and run in the industry<sup><a href="#footnote3">[3</a>,<a href="#footnote4">4],</sup>.
+Docker is the standard way modern applications are built, shipped, and run in the industry<sup><a href="#footnote3">[3</a>,<a href="#footnote4">4],</sup>. Common applications of Docker are:
 
 **1. Standardized Development Environments**
 
@@ -62,6 +62,24 @@ Docker containers can run on any cloud provider (AWS, Google Cloud, Azure, etc.)
 
 ---
 
+## Docker Components
+
+### The Docker Engine
+
+This article gives an good overview of the multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
+
+- **Docker Engine:** XXX
+- **Docker Client:** XXX
+- **Docker Registries:** XXXX
+- **Docker Images:**: XX
+- **Dockerfile:**: XX
+- **Docker Volumes:** XXXX
+- **Docker Compose:** XXX
+- 
+
+
+---
+
 ## How Docker is used in Inception   
 
 For this project, we use Docker to create isolated containers for each service:
@@ -72,7 +90,7 @@ For this project, we use Docker to create isolated containers for each service:
 
 By containerizing them, we ensure that they can be developed, tested, and deployed in any environment with perfect consistency. The `docker-compose.yml` file defines how these isolated containers connect and work together to form a single, functional application.
 
----
+
 
 ## Setting up the VM
 
@@ -217,8 +235,8 @@ If you see the “Hello from Docker!” message, your setup is complete.
 <a name="footnote1">[1]</a> Hykes, S.; PyCon 2013 (Mar 13, 2013). [*The future of Linux Containers*](https://www.youtube.com/watch?v=wW9CAH9nSLs)         
 <a name="footnote2">[2]</a> Subendran, B.; Medium (Feb 13, 2024). [*Namespaces and cgroups*](https://hanancs.medium.com/namespaces-and-cgroups-3eb99041e04f)      
 <a name="footnote3">[3]</a> Docker Inc. (2025). [*What is Docker?*](https://docs.docker.com/get-started/docker-overview/)      
-<a name="footnote4">[4]</a> ur Rehman, O.; Folio3 Cloud Services (Jun 23, 2025). [*Docker Use Cases: Top 15 Most Common Ways To Use Docker*](https://cloud.folio3.com/blog/docker-use-cases/)
-
+<a name="footnote4">[4]</a> ur Rehman, O.; Folio3 Cloud Services (Jun 23, 2025). [*Docker Use Cases: Top 15 Most Common Ways To Use Docker*](https://cloud.folio3.com/blog/docker-use-cases/)     
+<a name="footnote5">[5]</a> Sonalijain; Medium (Jan 5, 2024). [*Docker Components*](https://cloud.folio3.com/blog/docker-use-cases)
 
 
 
