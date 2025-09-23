@@ -33,7 +33,7 @@ When the installer runs:
 
 ### 2. Enable SSH Access
 
-Working directly in the VM console is possible but inconvenient. Using SSH lets you work from your host machine’s terminal and editor.
+Working directly in the VM console is possible but inconvenient: You have no mouse integration, copy-pasting is not possible, and you can't use your favorite text editor. By creating a "tunnel" from the host to the VM's SSH port, you can work from your host machine’s terminal and editor.
 
 Inside the VM, confirm the SSH port:
 
@@ -71,15 +71,6 @@ ssh <vm_username>@localhost -p 2222
 ### 5 Optional: SSH Config Shortcut
 
 To simplify the command, edit `~/.ssh/config` on the host:
-
-```bash
-ssh <vm_username>@localhost -p 2222
-```
-
-
-Working directly in a command-line-only VM console is powerful, but it's also inefficient for development. You have no mouse integration, copy-pasting is difficult, and you can't use your favorite text editor. By creating a "tunnel" from the host to the VM's SSH port, we can work from the host machine, using it's terminals and tools.
-
-First, you might want to double check if the VM's SSH uses port 22 (which it should by default). Log into the VM and check:
 
 ```bash
 Host myvm
