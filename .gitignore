@@ -17,3 +17,4 @@ Thumbs.db
 
 # Environment variables - NEVER commit secrets
 .env
+secrets/
