@@ -14,6 +14,9 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
   
 - [Docker Introduction](#docker-introduction)
     - [What is Docker?](#what-is-docker)
+    - [Docker History](#a-bit-of-history)
+    - [Container vs VM](#containers-vs-virtual-machines)
+    - [Docker Applications](#applications)
 - [Docker Deep Dive](#docker-deep-dive)
 
 ---
