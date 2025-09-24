@@ -10,6 +10,14 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
 
 ---
 
+## Table of Contents
+  
+- [Docker Introduction](#docker-introduction)
+    - [What is Docker?](#what-is-docker)
+- [Docker Deep Dive](#docker-deep-dive)
+
+---
+
 ## Docker Introduction
 
 ### What is Docker?
@@ -350,3 +358,4 @@ If you see the “Hello from Docker!” message, your setup is complete.
 <a name="footnote8">[8]</a> Avi; Geekflare (Dec 21, 2024). [*Docker Architecture and its Components for Beginners*](https://geekflare.com/devops/docker-architecture/)     
 <a name="footnote9">[9]</a> Rahul; Tecadmin.net (Apr 26, 2025). [*Docker 101: An Introduction to Containerization Technology*](https://tecadmin.net/docker-introduction/)      
 
+The project badge is from [this repository](https://github.com/ayogun/42-project-badges) by Ali Ogun.
