@@ -45,30 +45,23 @@ This makes containers incredibly lightweight, fast to start, and efficient compa
 
 ### Applications
 
-Docker is the standard way modern applications are built, shipped, and run<sup><a href="#footnote3">[3</a>,<a href="#footnote4">4],</sup>. Common applications are:
+Docker is the standard way modern applications are built, shipped, and run<sup><a href="#footnote3">[3</a>,<a href="#footnote4">4]</sup>. Common applications are:
 
-**1. Standardized Development Environments**
+- **Standardized Development Environments**       
+    By packaging an application and its dependencies into a container, companies ensure that their software runs identically everywhere: on a developer's laptop, on a testing server, and in production.
 
-By packaging an application and its dependencies into a container, companies ensure that their software runs identically everywhere: on a developer's laptop, on a testing server, and in production.
+- **CI/CD Pipelines**        
+   Docker is a cornerstone of modern **Continuous Integration and Continuous Deployment (CI/CD)**. When a developer pushes new code, automated systems use Docker to:
+    - Build the code inside a clean, consistent container.
+    - Run automated tests inside that container.
+    - If tests pass, push the new container image to a registry.
+    - Automatically deploy the updated container to production servers.
  
-**2.  CI/CD Pipelines**
+- **Microservices Architecture**      
+    Docker is the perfect platform for microservices, an architectural style where a large application is broken down into smaller, independent services. Each microservice (e.g., user authentication, payment processing, product catalog) runs in its own container. This makes the application easier to develop, scale, and maintain, as different teams can work on different services independently.
 
-Docker is a cornerstone of modern **Continuous Integration and Continuous Deployment (CI/CD)**. When a developer pushes new code, automated systems use Docker to:
-
-- Build the code inside a clean, consistent container.
-- Run automated tests inside that container.
-- If tests pass, push the new container image to a registry.
-- Automatically deploy the updated container to production servers.
-
-This makes the release process fast, reliable, and fully automated.
-
-**3. Microservices Architecture**
-
-Docker is the perfect platform for microservices, an architectural style where a large application is broken down into smaller, independent services. Each microservice (e.g., user authentication, payment processing, product catalog) runs in its own container. This makes the application easier to develop, scale, and maintain, as different teams can work on different services independently.
-
-**4. Cloud and Multi-Cloud Deployment**
-
-Docker containers can run on any cloud provider (AWS, Google Cloud, Azure, etc.) without modification. This portability gives companies the freedom to move applications between different cloud environments without being locked into a single vendor. It's the foundation of modern "cloud-native" applications.
+- **Cloud and Multi-Cloud Deployment**     
+    Docker containers can run on any cloud provider (AWS, Google Cloud, Azure, etc.) without modification. This portability gives companies the freedom to move applications between different cloud environments without being locked into a single vendor. It's the foundation of modern "cloud-native" applications.
 
 ---
 
