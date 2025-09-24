@@ -80,7 +80,7 @@ Docker is the standard way modern applications are built, shipped, and run<sup><
 
 Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
 
-- **Docker Engine:** The core of Docker. It's a client-server application with three main components: a long-running background service called the **Docker daemon**, a **REST API** that specifies interfaces for programs to talk to the daemon, and the Docker client.
+- **Docker Engine:** The core of Docker. It's a client-server application with three main components: a long-running background service called the **Docker daemon**, a **REST API** that specifies interfaces for programs to talk to the daemon, and the **Docker client**.
  
 - **Docker Client:** The primary way users interact with Docker. It's the command-line interface (CLI) tool (e.g., `docker run`, `docker build`) that sends commands to the Docker daemon.
  
@@ -94,14 +94,27 @@ Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
 
 - **Docker Compose:** A tool for defining and running multi-container applications. It uses a single YAML file (`docker-compose.yml`) to configure all of the application's services, networks, and volumes, which can then be started or stopped with a single command.
 
-- <p align="center">
-    <img src="https://github.com/alx-sch/inception/blob/main/.assets/docker-engine.png" alt="docker-engine.png"  width="600" />
+<br>
+<p align="center">
+    <img src="https://github.com/alx-sch/inception/blob/main/.assets/docker-engine.png" alt="docker-engine.png"  width="400" />
     <br>
      <span>
-        <b>VMs (left):</b> Use a hypervisor (managing virtual hardware), include full guest OS.<br>
-        <b>Containers (right):</b> Use Docker engine, share the host OS, isolate at process level<sup><a href="#footnote8">[8]</a></sup>.
+        <b>Docker Engine:</b> Running a Docker command in the CLI, it communicates with the daemon via a REST API (locally over a Unix socket or TCP). The daemon then manages images, containers, networks and volumes<sup><a href="#footnote9">[9]</a></sup>.
     </span>
 </p>
+
+<br>
+<p align="center">
+    <img src="https://github.com/alx-sch/inception/blob/main/.assets/docker-architecture.png" alt="docker-architecture.png"  width="400" />
+    <br>
+     <span>
+        <b>Docker Architecture:</b> The Docker client (CLI) communicates with the Docker Engine on the host to run containers using images, which are often stored and pulled from a registry like Docker Hub.<br>
+        <b>NGINX:</b> Web server or reverse proxy; often used to route traffic to containers or load-balance requests.<br>
+        <b>Docker Hub:</b> Public container registry (orange logo); stores and distributes Docker images.<br>
+        <b>OpenStack:</b> Cloud platform for managing virtual machines, storage, and networks; can host Docker infrastructure but is separate from Docker itself.<sup><a href="#footnote8">[8]</a></sup>.
+    </span>
+</p>
+
 
 
 ---
@@ -334,5 +347,6 @@ If you see the “Hello from Docker!” message, your setup is complete.
 <a name="footnote5">[5]</a> Sonalijain; Medium (Jan 5, 2024). [*Docker Components*](https://cloud.folio3.com/blog/docker-use-cases)
 <a name="footnote6">[6]</a> Coursera Inc. (2025). [*Docker Cheat Sheet*](https://www.coursera.org/collections/docker-cheat-sheet)
 <a name="footnote7">[7]</a> Docker Inc. (2025). [*Writing a Dockerfile*](https://docs.docker.com/get-started/docker-concepts/building-images/writing-a-dockerfile/)
-<a name="footnote8">[8]</a> Avi; Geekflare (Dec 21, 2024). [*Docker Architecture and its Components for Beginners*](https://geekflare.com/devops/docker-architecture/)   
+<a name="footnote8">[8]</a> Avi; Geekflare (Dec 21, 2024). [*Docker Architecture and its Components for Beginners*](https://geekflare.com/devops/docker-architecture/) 
+<a name="footnote9">[9]</a> Rahul; Tecadmin.net (Apr 26, 2025). [*Docker 101: An Introduction to Containerization Technology*](https://tecadmin.net/docker-introduction/) 
 
