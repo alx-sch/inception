@@ -24,7 +24,7 @@ This solves the classic problem of "it works on my machine" by packaging the ent
 
 Docker was first introduced by Solomon Hykes at PyCon in 2013<sup><a href="#footnote1">[1]</a></sup>. It was originally an internal project at a PaaS company called dotCloud, but its potential was so clear that it was quickly open-sourced.   
 
-While Docker popularized containers, the underlying technology has been part of the Linux kernel for years in the form of cgroups (which limit resource usage) and namespaces (which isolate processes)<sup><a href="#footnote2">[2]</a></sup>.     
+While Docker popularized containers, the underlying technology has been part of the Linux kernel for years in the form of **cgroups** (which limit resource usage) and **namespaces** (which isolate processes)<sup><a href="#footnote2">[2]</a></sup>.     
 Docker's innovation was to create a user-friendly toolchain and ecosystem around these technologies, making them accessible to all developers.
 
 ---
