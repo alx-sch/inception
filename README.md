@@ -52,10 +52,10 @@ Docker is the standard way modern applications are built, shipped, and run<sup><
 
 - **CI/CD Pipelines**        
    Docker is a cornerstone of modern **Continuous Integration and Continuous Deployment (CI/CD)**. When a developer pushes new code, automated systems use Docker to:
-    - Build the code inside a clean, consistent container.
-    - Run automated tests inside that container.
-    - If tests pass, push the new container image to a registry.
-    - Automatically deploy the updated container to production servers.
+    1. Build the code inside a clean, consistent container.
+    2. Run automated tests inside that container.
+    3. If tests pass, push the new container image to a registry.
+    4. Automatically deploy the updated container to production servers.
  
 - **Microservices Architecture**      
     Docker is the perfect platform for microservices, an architectural style where a large application is broken down into smaller, independent services. Each microservice (e.g., user authentication, payment processing, product catalog) runs in its own container. This makes the application easier to develop, scale, and maintain, as different teams can work on different services independently.
