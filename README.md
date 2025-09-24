@@ -126,8 +126,6 @@ Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
     </span>
 </p>
 
-
-
 ---
 
 ### The Workflow
@@ -152,7 +150,7 @@ Docker Compose acts as an orchestrator for the Docker Engine, allowing you to ma
 
 ### The Dockerfile
 
-Text-based document that's used to create a container image. As an example, the following Dockerfile would produce a ready-to-run Python application<sup><a href="#footnote7">[7]</a></sup>:
+Text-based document that is used to create a container image. As an example, the following Dockerfile would produce a ready-to-run Python application<sup><a href="#footnote7">[7]</a></sup>:
 
 ```Dockerfile
 FROM python:3.13
@@ -193,8 +191,61 @@ Some of the most common instructions in a `Dockerfile` include:
 
 ---
 
+### Docker Commands    
 
-Useful Docker commands<sup><a href="#footnote6">[6]</a></sup>:
+The most common Docker commands you'll use with a `Dockerfile` are for building an image from the file and running a container based on that image<sup><a href="#footnote6">[6]</a></sup>:
+
+- `docker build`     
+  This command builds a Docker image from a `Dockerfile` and a "context". The context is the set of files at the path specified (in this case, `.`).
+  
+  ```bash
+  docker build -t your-image-name:tag .
+  ```
+  
+  - `-t`: This flag stands for **"tag"**. It allows you to name your image and give it a version tag (e.g., `my-app:1.0`). If you don't provide a tag, it defaults to `latest`.
+  - `your-image-name:tag`: The name and tag you choose for your image.
+  - `.`: The period specifies the **build context**. It tells Docker to use the current directory's files for the build.
+
+- `docker run`    
+  Once your image is built, you use this command to start a container from it.
+  
+  ```bash
+  docker run -d -p 8080:80 your-image-name:tag
+  ```
+  
+  - `-d`: Runs the container in **detached mode** (in the background). Without this, your terminal will be attached to the container's log output.
+  - `-p 8080:80`: The **port mapping** flag. It maps port `8080` on your host machine to port `80` inside the container. The format is `HOST_PORT:CONTAINER_PORT`.
+  - `your-image-name:tag`: The name of the image you want to run.
+
+- `docker images`      
+  This command lists all the Docker images you have on your local machine. It's useful for seeing the images you've built.
+  
+  ```bash
+  docker images
+  ```
+  
+  This will show a table with your images, including repository name, tag, image ID, creation date, and size.
+
+- `docker ps`    
+  This command shows you all the containers that are currently running.
+  
+  ```bash
+  docker ps
+  ```
+  
+  To see *all* containers, including those that have stopped, add the `-a` flag:
+  ```bash
+  docker ps -a
+  ```
+
+- `docker rmi`     
+  If you want to remove an image from your system, you use this command.
+
+  ```bash
+  docker rmi your-image-name:tag
+  ```
+  
+  You cannot remove an image if it's currently being used by a container. You'll need to stop and remove the container first using `docker stop <container_id>` and `docker rm <container_id>`.
 
 
 ---
@@ -203,13 +254,13 @@ Useful Docker commands<sup><a href="#footnote6">[6]</a></sup>:
 
 For this project, we use Docker to create isolated containers for each service:
 
-- Nginx (our web server)
+- NGINX (our web server)
 - MariaDB (our database)
 - WordPress (our application)
 
 By containerizing them, we ensure that they can be developed, tested, and deployed in any environment with perfect consistency. The `docker-compose.yml` file defines how these isolated containers connect and work together to form a single, functional application.
 
-
+---
 
 ## Setting up the VM
 
