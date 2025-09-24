@@ -45,7 +45,7 @@ This makes containers incredibly lightweight, fast to start, and efficient compa
 
 ### Applications
 
-Docker is the standard way modern applications are built, shipped, and run in the industry<sup><a href="#footnote3">[3</a>,<a href="#footnote4">4],</sup>. Common applications of Docker are:
+Docker is the standard way modern applications are built, shipped, and run<sup><a href="#footnote3">[3</a>,<a href="#footnote4">4],</sup>. Common applications are:
 
 **1. Standardized Development Environments**
 
