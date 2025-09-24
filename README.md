@@ -35,9 +35,9 @@ Docker’s innovation was to create a user-friendly set of tools, a strong commu
 
 A common point of confusion is the difference between a container and a virtual machine (VM):
 
-- **A VM** virtualizes the hardware. It runs a full-blown guest operating system with its own kernel on top of your host OS. Think of it as a complete, separate house with its own plumbing, electricity, and foundation.
+- **A VM** virtualizes the hardware. It runs a full-blown guest operating system with its own kernel on top of your host OS. Think of it as a complete, separate house with its own plumbing, electricity and foundation.
   
-- **A Docker Container** virtualizes the operating system. All containers on a host share the host's OS kernel but have their own isolated view of the filesystem and processes. Think of them as apartments in a single building—they all share the building's main foundation and utilities but are completely separate living spaces.
+- **A Docker Container** virtualizes the operating system. All containers on a host share the host's OS kernel but have their own isolated view of the filesystem and processes. Think of them as apartments in a single building: They all share the building's main foundation and utilities but are completely separate living spaces.
 
 This makes containers incredibly lightweight, fast to start, and efficient compared to VMs.
 
