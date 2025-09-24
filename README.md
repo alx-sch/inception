@@ -16,16 +16,18 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
 
 Docker is a platform for developing, shipping, and running applications in **containers**. A Docker container can hold any application and its dependencies (code, libraries, system tools, configuration) and run on any machine that has Docker installed.    
 
-This solves the classic problem of "it works on my machine" by packaging the entire application environment into a single, predictable, and portable unit.
+This solves the classic problem of "it works on my machine" by packaging the entire application environment into a single, predictable and portable unit.
 
 ---
 
 ### A Bit of History
 
-Docker was first introduced by Solomon Hykes at PyCon in 2013<sup><a href="#footnote1">[1]</a></sup>. It was originally an internal project at a PaaS company called dotCloud, but its potential was so clear that it was quickly open-sourced.   
+Docker was first introduced by Solomon Hykes at PyCon 2013 -- check out his legendary five-minute minute talk [here](https://www.youtube.com/watch?v=wW9CAH9nSLs) <sup><a href="#footnote1">[1]</a></sup>.     
+Originally an internal project at his PaaS company dotCloud, it was quickly open-sourced once its potential became clear.
 
-While Docker popularized containers, the underlying technology has been part of the Linux kernel for years in the form of **cgroups** (which limit resource usage) and **namespaces** (which isolate processes)<sup><a href="#footnote2">[2]</a></sup>.     
-Docker's innovation was to create a user-friendly toolchain and ecosystem around these technologies, making them accessible to all developers.
+While Docker popularized containers, the underlying technology has been part of the Linux kernel for years in the form of **cgroups** (which limit resource usage) and **namespaces** (which isolate processes)<sup><a href="#footnote2">[2]</a></sup>.    
+
+Docker’s innovation was to create a user-friendly set of tools, a strong community and useful services (public registries, ready-made base images, and orchestration tools like Compose and Kubernetes), making those kernel features approachable for everyday developers.
 
 ---
 
