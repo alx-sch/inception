@@ -316,16 +316,44 @@ The most common Docker commands you'll use with a `Dockerfile` are for building 
 
 ---
 
+## Docker Containers in Inception
+
+### Test Isolated Containers First
+
+While the final goal of Inception is a multi-container application orchestrated by Docker Compose, the foundation of a stable system lies in building and testing each service in complete isolation first. This workflow can be thought of as "unit testing" for infrastructure.
+
+Before we can connect all the services, we must prove that each one (MariaDB, WordPress, and NGINX) is individually robust, secure, and functional. This isolates variables and makes debugging the final, integrated application exponentially easier.
+
+### Case Study: Building and Verifying the MariaDB Container
+
+The goal for this service is to create a self-contained, persistent, and correctly configured database container directly from its `Dockerfile` and associated scripts.
+
+1. **Building the Image**    
+
+    First, we use the `Dockerfile` in the [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/requirements/mariadb) directory to build a custom image. This image bundles the Debian OS, the MariaDB server, our custom configuration, and the initialization script
+   
+    #### Anatomy of the MariaDB Service
+   The custom image is not just a Dockerfile; it's a collection of files that work together:
+
+   - `Dockerfile`: This is the main blueprint. It starts from a base Debian image, installs the MariaDB server packages, and copies our custom configuration and scripts into the image. It also defines the entrypoint, which is the `initial_db.sh` script.
+
+   - `conf/50-server.cnf`: This is a MariaDB configuration file. Its sole purpose is to override the default bind-address setting. By setting it to `0.0.0.0`, we tell the database server to accept connections from any network interface, not just `localhost`. This is essential for allowing the WordPress container to connect to it over the private Docker network.
+
+   - `tools/initial_db.sh`: This is the core logic of the container. It's a script that runs every time the container starts. It checks if the database has already been initialized. If not, it uses the `mariadbd --bootstrap` command to securely set up the database, create the WordPress user, grant the correct permissions, and change filesystem ownership to the `mysql` user. If the database already exists, the script does nothing.
+  
+    ```
+    docker build -t mariadb-image ./srcs/requirements/mariadb
+    ```
+
+2. **Running the Isolated Container**
+
+https://github.com/alx-sch/inception/tree/main/requirements/mariadb
+
+Xxxxx
 
 
 
-## How Docker is used in Inception   
 
-For this project, we use Docker to create isolated containers for each service:
-
-- NGINX (our web server)
-- MariaDB (our database)
-- WordPress (our application)
 
 By containerizing them, we ensure that they can be developed, tested, and deployed in any environment with perfect consistency. The `docker-compose.yml` file defines how these isolated containers connect and work together to form a single, functional application.
 
