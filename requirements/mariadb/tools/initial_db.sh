@@ -16,14 +16,14 @@ else
 
 	# Create a temporary file to hold our SQL commands.
 	# Using 'mktemp' is safer than just creating a file with a fixed name.
-	tfile=`mktemp`
-	if [ ! -f "$tfile" ]; then
+	init=`mktemp`
+	if [ ! -f "$init" ]; then
 		return 1
 	fi
 
 	# Write all our SQL setup commands into the temporary file.
 	# This is safer and more reliable than piping to the mysql client.
-	cat <<-EOF > $tfile
+	cat <<-EOF > $init
 		-- This command ensures the grant tables are reloaded.
 		FLUSH PRIVILEGES;
 
@@ -46,7 +46,7 @@ else
 	# This is the key command. 'mariadbd --bootstrap' runs the server
 	# just long enough to execute the SQL from the file, then it exits.
 	# This initializes the database data directory (/var/lib/mysql) correctly.
-	mariadbd --bootstrap < $tfile
+	mariadbd --bootstrap < $init
 
 	# The bootstrap process creates files owned by root. We must change ownership
 	# to the 'mysql' user, which is what the final server process runs as.
@@ -54,7 +54,7 @@ else
 	chown -R mysql:mysql /var/lib/mysql
 
 	# Clean up the temporary file.
-	rm -f $tfile
+	rm -f $init
 
 	echo "MariaDB database and user setup complete."
 fi
