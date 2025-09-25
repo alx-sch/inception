@@ -1,5 +1,7 @@
 # inception
 
+# WIP!!!! NOT FINISHED YET!
+
 <p align="center">
     <img src="https://github.com/alx-sch/inception/blob/main/.assets/inception_badge.png" alt="inception_badge.png" />
 </p>
@@ -18,6 +20,71 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
     - [Container vs VM](#containers-vs-virtual-machines)
     - [Docker Applications](#applications)
 - [Docker Deep Dive](#docker-deep-dive)
+
+---
+
+## The Project: A Dockerized Web Application Stack
+
+In this project, I containerize a full-stack web application using Docker. The goal is to learn about system administration, container orchestration, and the architecture of modern web services by setting up a WordPress site with NGINX and a MariaDB database from scratch, without using pre-existing official images.
+
+This project emphasizes the importance of isolated environments and the automation of service deployment. By using Docker, it is ensured that the application is portable, scalable and runs consistently across any environment. The `docker-compose.yml` file serves as the master blueprint, defining and connecting the individual services on a private network to form a single, cohesive application.
+
+### Technology Stack
+- **Orchestration:** Docker & Docker Compose
+- **Web Server / Reverse Proxy:** NGINX with TLSv1.3
+- **Application:** WordPress with PHP-FPM
+- **Database:** MariaDB
+- **Operating System:** Debian Bullseye
+- **Automation:** Makefile
+
+### Architecture and Request Flow
+
+The "big picture" of the Inception application is an orchestrated stack of services, each running in its own isolated container. All communication between services happens over a private Docker network, with NGINX being the sole public-facing entry point.
+
+```
++----------+      HTTPS     +-------------+      HTTP      +----------------+      SQL       +-------------+
+|          | -------------> |             | -------------> |                | -------------> |             |
+|  User's  |                |    NGINX    |                |   WordPress    |                |   MariaDB   |
+|  Browser | <------------- | (Port 443)  | <------------- |   (PHP-FPM)    | <------------- | (Database)  |
+|          |      HTML      |             |      HTML      |                |      Data      |             |
++----------+                +-------------+                +----------------+                +-------------+
+  ^                                                                                                |
+  |                                                                                                |
+  +------------------------------------------------------------------------------------------------+
+                                       (Data stored in a persistent Docker Volume)
+```
+
+#### Step-by-Step Breakdown:
+
+1. **The User Arrives (Browser -> NGINX)**
+   - A user opens their web browser and types in your address (e.g., `https.aschenk.42.fr`).
+   - This request travels across the internet and hits your server. **The only container exposed to the outside world is NGINX.** It acts as the front door, security guard, and receptionist all in one (a reverse proxy).
+   - NGINX receives the `HTTPS` request. Its first job is **TLS Termination**. It handles the complex encryption/decryption, so WordPress doesn't have to.
+
+3. **The Hand-off (NGINX -> WordPress)**
+   - After decrypting the request, NGINX looks at its configuration. It sees that requests for this domain should be handled by the WordPress service.
+   - It then forwards a simple, unencrypted `HTTP` request over the **private Docker network** to the WordPress container. The WordPress container is not exposed to the internet; it only talks to NGINX.
+
+5. **The Brain at Work (WordPress -> MariaDB)**
+   - The WordPress container receives the request. It's running a PHP processor (`PHP-FPM`) which executes the WordPress application code.
+   - WordPress determines what content is needed to build the page (e.g., the latest blog posts, comments, page content). This data is not in the WordPress container; it's in the database.
+   - WordPress opens a connection to the MariaDB container, again over the private Docker network. It connects using the predefined configuration (hostname, database user, database to access, etc.).
+  
+4. **The Vault Opens (MariaDB -> WordPress)**
+    - The MariaDB container receives the SQL query from WordPress (e.g., `SELECT * FROM wp_posts...`).
+    - It executes the query, gathers the results, and sends the data back to the WordPress container. Like WordPress, the MariaDB container is completely isolated from the internet. It only talks to WordPress.
+
+5. **The Assembly and Return (WordPress -> NGINX -> Browser)**
+   - WordPress receives the data from MariaDB. The PHP engine uses this data to assemble the final HTML page.
+   - WordPress sends the complete, rendered HTML page back to NGINX.
+   - NGINX receives the plain HTML, re-encrypts it for `HTTPS`, and sends it back across the internet to the user's browser.
+   - The user's browser renders the HTML, and they see the beautiful website :)
+
+---
+
+## How to Use?
+
+XXX
 
 ---
 
@@ -247,8 +314,10 @@ The most common Docker commands you'll use with a `Dockerfile` are for building 
   
   You cannot remove an image if it's currently being used by a container. You'll need to stop and remove the container first using `docker stop <container_id>` and `docker rm <container_id>`.
 
-
 ---
+
+
+
 
 ## How Docker is used in Inception   
 
