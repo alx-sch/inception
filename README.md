@@ -333,9 +333,10 @@ docker volume rm $(docker volume ls -q)
 ```
 
 Here's a single-line version achieving the same result
-```
+```bash
 docker stop $(docker ps -a -q) && docker system prune -af --volumes && docker volume rm $(docker volume ls -q)
 ```
+
 ---
 
 ## Docker Containers in Inception
