@@ -325,11 +325,16 @@ This is a powerful "total cleanup" routine. It removes ALL Docker resources to f
 # Stop all containers
 docker stop $(docker ps -q)
 
-# Then prune everything
+# Then prune everything (images, containers, unnamed volumes)
 docker system prune -a --volumes
 
-# Also remove names volumes
+# Also remove named volumes
 docker volume rm $(docker volume ls -q)
+```
+
+Here's a single-line version achieving the same result
+```
+docker stop $(docker ps -a -q) && docker system prune -af --volumes && docker volume rm $(docker volume ls -q)
 ```
 ---
 
