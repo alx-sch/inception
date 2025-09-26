@@ -254,7 +254,10 @@ Some of the most common instructions in a `Dockerfile` include:
 - `ENV <name> <value>` - this instruction sets an environment variable that a running container will use.
 - `EXPOSE <port-number>` - this instruction sets configuration on the image that indicates a port the image would like to expose.
 - `USER <user-or-uid>` - this instruction sets the default user for all subsequent instructions.
-- `CMD ["<command>", "<arg1>"]` - this instruction sets the default command a container using this image will run.
+- `ENTRYPOINT ["<executable>", "<param1>"]` - this sets the main command. It typically executes a script or a binary, but can also be a command.
+- `CMD ["<command>", "<arg1>"]` - this instruction sets the default command a container using this image will run. This can be overridden when providing a command when starting the container (`docker run my-image <CMD>`).
+
+Note: When multiple `ENTRYPOINT` and `CMD` are specified in a Dockerfile, all but the very last are ignored.
 
 ---
 
@@ -314,20 +317,108 @@ The most common Docker commands you'll use with a `Dockerfile` are for building 
   
   You cannot remove an image if it's currently being used by a container. You'll need to stop and remove the container first using `docker stop <container_id>` and `docker rm <container_id>`.
 
+#### Total Cleanup
+
+This is a powerful "total cleanup" routine. It removes ALL Docker resources to free up space:
+
+```bash
+# Stop all containers
+docker stop $(docker ps -q)
+
+# Then prune everything
+docker system prune -a --volumes
+
+# Also remove names volumes
+docker volume rm $(docker volume ls -q)
+```
 ---
 
+## Docker Containers in Inception
 
+### Test Isolated Containers First
 
+While the final goal of Inception is a multi-container application orchestrated by Docker Compose, the foundation of a stable system lies in building and testing each service in complete isolation first. This workflow can be thought of as "unit testing" for infrastructure.
 
-## How Docker is used in Inception   
+Before we can connect all the services, we must prove that each one (MariaDB, WordPress, and NGINX) is individually robust, secure, and functional. This isolates variables and makes debugging the final, integrated application much easier.
 
-For this project, we use Docker to create isolated containers for each service:
+### Case Study: Building and Verifying the MariaDB Container
 
-- NGINX (our web server)
-- MariaDB (our database)
-- WordPress (our application)
+The goal for this service is to create a self-contained, persistent, and correctly configured database container directly from its `Dockerfile` and associated scripts.
 
-By containerizing them, we ensure that they can be developed, tested, and deployed in any environment with perfect consistency. The `docker-compose.yml` file defines how these isolated containers connect and work together to form a single, functional application.
+1. **Building the Image**    
+
+    First, we use the `Dockerfile` in the [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/requirements/mariadb) directory to build a custom image.
+   
+    #### Anatomy of the MariaDB Service
+   The custom image is not just a Dockerfile; it's a collection of files that work together:
+
+   - `Dockerfile`: This is the main blueprint. It starts from a base Debian image, installs the MariaDB server packages, and copies our custom configuration and scripts into the image. It also defines the `ENTRYPOINT` and `CMD` to ensure that the container starts gracefully.
+  
+   - `tools/initial_db.sh`: This is the core logic of the container. It's a script that runs every time the container starts. It checks if the database has already been initialized. If not, it uses the `mariadbd --bootstrap` command to securely set up the database, create the WordPress user, grant the correct permissions, and change filesystem ownership to the `mysql` user. If the database already exists, the script does nothing.
+
+   - `conf/50-server.cnf`: This configuration file overrides the default `bind-address` setting to `0.0.0.0`, allowing the database to accept connections from other containers (like WordPress) over the private Docker network.
+  
+    ```bash
+    docker build -t mariadb-image ./srcs/requirements/mariadb
+    ```
+
+    Check the Docker build output: All steps should complete successfully (each step is shown in blue when it succeeds). Docker's layer caching will make subsequent builds almost instant if no files have changed.
+
+2. **Running the Isolated Container**
+
+    Next, we run the container using `docker run`. This is where we simulate the environment that Docker Compose will eventually provide, passing in all necessary configurations as environment variables (`-e`) and attaching a persistent volume (`-v`):
+    
+   ```bash
+    docker run -d --name my-mariadb \
+      -p 3306:3306 \
+      -v db_data:/var/lib/mysql \
+      -e DB_NAME=wordpress \
+      -e DB_USER=wp_user \
+      -e DB_PASSWORD=wp_pass \
+      -e DB_ROOT_PASSWORD=root_pass \
+      mariadb-image
+    ```
+
+3. **Verification and Testing**
+
+    With the container running, we perform a series of checks to validate its state and functionality.
+    
+     **A. Log Analysis (`docker logs`)**
+
+    The first step is to check the container's logs to ensure the initialization script behaved as expected. On the first run with an empty volume, the logs must show the full initialization sequence.
+
+    ```bash
+    docker logs my-mariadb
+    ```
+
+    The output must show all `echo` messages from the `initial_db.sh` script, confirming each stage of the setup was reached.
+
+   **B. Interactive Testing (`docker exec`)**
+
+   Next, gain access to the container via an interactive shell to perform live tests from the perspective of an administrator and the application itself.
+
+    ```bash
+    docker exec -it my-mariadb bash
+    ```
+
+    Once inside, we verify the following:
+   
+    - **Root Access:** Can we log in as the MariaDB `root` user with the correct password? (`mysql -u root -p`)
+    - **Application User Access:** Can we log in as the dedicated `wp_user` and connect to the `wordpress` database? (`mysql -u wp_user -p wordpress`)
+    - **Permissions and Security:** When logged in as `wp_user`, do `SHOW DATABASES;` and `SHOW GRANTS;` confirm that the user has `ALL PRIVILEGES` on the `wordpress` database and can see nothing else?
+    -  **Full CRUD Test: ** As the `wp_user`, verify that you can perform a complete Create, Read, Update, and Delete cycle (`CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`, `DROP TABLE`)? This is the ultimate proof that all permissions are correct. Learn more about these SQL commands [here](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter).
+
+     **C. Persistence Test (`docker stop` / `docker rm`)**
+    Finally, ensure that the data survives in the allocated volume even when the container is completely removed.
+
+   1. **Stop and remove the container:** `docker stop my-mariadb` and then `docker rm my-mariadb`. The container is now gone.
+
+   2. **Re-run the container:** Use the exact same `docker` run command from step 2, ensuring you attach the same volume (`-v db_data:/var/lib/mysql`).
+
+   3. **Verify the logs:** The new container's logs (`docker logs my-mariadb`) must now show the message `Database directory is not empty. Skipping initialization.`. This proves our script's logic is correct and that the data persisted in the volume.
+
+After all these checks pass, we can consider the MariaDB service fully validated and ready for integration. All other service containers are validated using a similar methodology. Once each component is proven to be stable and correct, we proceed to the final integration phase: orchestrating the entire application with Docker Compose.
+
 
 ---
 
