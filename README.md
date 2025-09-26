@@ -317,6 +317,20 @@ The most common Docker commands you'll use with a `Dockerfile` are for building 
   
   You cannot remove an image if it's currently being used by a container. You'll need to stop and remove the container first using `docker stop <container_id>` and `docker rm <container_id>`.
 
+#### Total Cleanup
+
+This is the powerful "total cleanup" command. It removes all unused Docker resources to free up space:
+
+```bash
+docker system prune -a --volumes
+```
+
+- `system prune`: By default, this removes all stopped containers, all networks not used by at least one container, all dangling images, and all build cache.
+
+- `-a` (`--all`): This flag enhances the command to remove all unused images, not just dangling ones. A dangling image is one that isn't tagged and isn't referenced by any container. An unused image is any image that is not used by at least one container.
+
+- `--volumes`: Tells Docker to also remove all unused volumes. Since volumes contain your persistent data, you should only use this when you are absolutely sure you want to delete all saved data (like your databases).
+
 ---
 
 ## Docker Containers in Inception
