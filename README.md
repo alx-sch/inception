@@ -351,8 +351,7 @@ Before we can connect all the services, we must prove that each one (MariaDB, Wo
 
 ### Case Study: Building and Verifying the MariaDB Container
 
-The goal for this service is to create a self-contained, persistent, and correctly configured database container directly from its `Dockerfile` and associated scripts.     
-The custom image is not just a `Dockerfile`; it's a collection of files that work together (see [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/srcs/requirements/mariadb)):
+The goal for this service is to create a self-contained, persistent, and correctly configured database container directly from its `Dockerfile` and associated scripts (see [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/srcs/requirements/mariadb)):
 
 - `Dockerfile`: This is the main blueprint. It starts from a base Debian image, installs the MariaDB server packages, and copies our custom configuration and scripts into the image. It also defines the `ENTRYPOINT` and `CMD` to ensure that the container starts gracefully.
   
@@ -412,7 +411,7 @@ The custom image is not just a `Dockerfile`; it's a collection of files that wor
     - **Root Access:** Can we log in as the MariaDB `root` user with the correct password? (`mysql -u root -p`)
     - **Application User Access:** Can we log in as the dedicated `wp_user` and connect to the `wordpress` database? (`mysql -u wp_user -p wordpress`)
     - **Permissions and Security:** When logged in as `wp_user`, do `SHOW DATABASES;` and `SHOW GRANTS;` confirm that the user has `ALL PRIVILEGES` on the `wordpress` database and can see nothing else?
-    -  **Full CRUD Test: ** As the `wp_user`, verify that you can perform a complete Create, Read, Update, and Delete cycle (`CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`, `DROP TABLE`)? This is the ultimate proof that all permissions are correct. Learn more about these SQL commands [here](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter).
+    -  **Full CRUD Test:** As the `wp_user`, verify that you can perform a complete Create, Read, Update, and Delete cycle (`CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`, `DROP TABLE`)? This is the ultimate proof that all permissions are correct. Learn more about these SQL commands [here](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)<sup><a href="#footnote10">[10]</a></sup> and [here](https://www.almabetter.com/bytes/cheat-sheet/mariadb)<sup><a href="#footnote11">[11]</a></sup>.
 
      **C. Persistence Test (`docker stop` / `docker rm`)**
     Finally, ensure that the data survives in the allocated volume even when the container is completely removed.
@@ -576,6 +575,8 @@ If you see the “Hello from Docker!” message, your setup is complete.
 <a name="footnote6">[6]</a> Coursera Inc. (2025). [*Docker Cheat Sheet*](https://www.coursera.org/collections/docker-cheat-sheet)      
 <a name="footnote7">[7]</a> Docker Inc. (2025). [*Writing a Dockerfile*](https://docs.docker.com/get-started/docker-concepts/building-images/writing-a-dockerfile/)     
 <a name="footnote8">[8]</a> Avi; Geekflare (Dec 21, 2024). [*Docker Architecture and its Components for Beginners*](https://geekflare.com/devops/docker-architecture/)     
-<a name="footnote9">[9]</a> Rahul; Tecadmin.net (Apr 26, 2025). [*Docker 101: An Introduction to Containerization Technology*](https://tecadmin.net/docker-introduction/)      
+<a name="footnote9">[9]</a> Rahul; Tecadmin.net (Apr 26, 2025). [*Docker 101: An Introduction to Containerization Technology*](https://tecadmin.net/docker-introduction/) 
+<a name="footnote10">[10]</a> Singh, N.; DataLemur(Jan 19, 2025). [*SQL CRUD: CREATE, READ, UPDATE, DELETE, DROP, and ALTER in SQL*](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)
+<a name="footnote11">[11]</a> Abhani, J; AlmaBetter (Dec 15, 2024). [*MariaDB Cheat Sheet*](https://www.almabetter.com/bytes/cheat-sheet/mariadb)  
 
 The project badge is from [this repository](https://github.com/ayogun/42-project-badges) by Ali Ogun.
