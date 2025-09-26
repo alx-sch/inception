@@ -254,7 +254,10 @@ Some of the most common instructions in a `Dockerfile` include:
 - `ENV <name> <value>` - this instruction sets an environment variable that a running container will use.
 - `EXPOSE <port-number>` - this instruction sets configuration on the image that indicates a port the image would like to expose.
 - `USER <user-or-uid>` - this instruction sets the default user for all subsequent instructions.
-- `CMD ["<command>", "<arg1>"]` - this instruction sets the default command a container using this image will run.
+- `ENTRYPOINT ["<executable>", "<param1>"]` - this sets the main command. It typically executes a script or a binary, but can also be a command.
+- `CMD ["<command>", "<arg1>"]` - this instruction sets the default command a container using this image will run. This can be overridden when providing a command when starting the container (`docker run my-image <CMD>`).
+
+Note: When multiple `ENTRYPOINT` and `CMD` are specified in a Dockerfile, all but the very last are ignored.
 
 ---
 
