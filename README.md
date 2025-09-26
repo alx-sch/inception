@@ -322,6 +322,10 @@ The most common Docker commands you'll use with a `Dockerfile` are for building 
 This is the powerful "total cleanup" command. It removes all unused Docker resources to free up space:
 
 ```bash
+# Stop all containers
+docker stop $(docker ps -q)
+
+# Then prune everything
 docker system prune -a --volumes
 ```
 
