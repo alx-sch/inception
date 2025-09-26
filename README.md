@@ -319,7 +319,7 @@ The most common Docker commands you'll use with a `Dockerfile` are for building 
 
 #### Total Cleanup
 
-This is a powerful "total cleanup" routine. It removes ALL Docker resources to free up space:
+This is a powerful "total cleanup" routine. It removes *ALL* Docker resources to free up space:
 
 ```bash
 # Stop all containers
@@ -332,7 +332,7 @@ docker system prune -a --volumes
 docker volume rm $(docker volume ls -q)
 ```
 
-Here's a single-line version achieving the same result
+Here's a single-line version achieving the same result:
 ```bash
 docker stop $(docker ps -a -q) && docker system prune -af --volumes && docker volume rm $(docker volume ls -q)
 ```
