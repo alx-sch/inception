@@ -6,10 +6,11 @@ FROM		debian:bullseye
 # Author
 LABEL		author="aschenk@student.42berlin.de"
 
-# Update package lists and install MariaDB server and client.
-# Remove package lists to reduce image size.
+# Update package lists and install necessary packages.
+# - We remove package lists afterwards to keep the final image size smaller.
 RUN			apt-get update && apt-get install -y \
-			mariadb-server mariadb-client \
+			mariadb-server \
+			mariadb-client \
 			&& rm -rf /var/lib/apt/lists/*
 
 # Copy the MariaDB configuration file.
@@ -26,9 +27,10 @@ RUN			chmod +x /usr/local/bin/initial_db.sh
 EXPOSE		3306
 
 # Set the entrypoint for the container.
-# This script will run when the container starts.
+# This script will run when the container starts, setting up the database.
 ENTRYPOINT	["/usr/local/bin/initial_db.sh"]
 
-# The command to run when the entrypoint script finishes its setup.
-# mysqld_safe is a wrapper that restarts the MariaDB server if it crashes.
+# The default command to run when the entrypoint script finishes its setup,
+# starting the MariaDB server that listens for incoming connections.
+# 'mysqld_safe' is a wrapper that restarts the MariaDB server if it crashes.
 CMD			["mysqld_safe"]
