@@ -347,22 +347,22 @@ While the final goal of Inception is a multi-container application orchestrated 
 
 Before we can connect all the services, we must prove that each one (MariaDB, WordPress, and NGINX) is individually robust, secure, and functional. This isolates variables and makes debugging the final, integrated application much easier.
 
+---
+
 ### Case Study: Building and Verifying the MariaDB Container
 
-The goal for this service is to create a self-contained, persistent, and correctly configured database container directly from its `Dockerfile` and associated scripts.
+The goal for this service is to create a self-contained, persistent, and correctly configured database container directly from its `Dockerfile` and associated scripts.     
+The custom image is not just a `Dockerfile`; it's a collection of files that work together (see [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/srcs/requirements/mariadb)):
+
+- `Dockerfile`: This is the main blueprint. It starts from a base Debian image, installs the MariaDB server packages, and copies our custom configuration and scripts into the image. It also defines the `ENTRYPOINT` and `CMD` to ensure that the container starts gracefully.
+  
+ - `tools/initial_db.sh`: This is the core logic of the container. It's a script that runs every time the container starts. It checks if the database has already been initialized. If not, it uses the `mariadbd --bootstrap` command to securely set up the database, create the WordPress user, grant the correct permissions, and change filesystem ownership to the `mysql` user. If the database already exists, the script does nothing.
+
+- `conf/50-server.cnf`: This configuration file overrides the default `bind-address` setting to `0.0.0.0`, allowing the database to accept connections from other containers (like WordPress) over the private Docker network.
 
 1. **Building the Image**    
 
-    First, we use the `Dockerfile` in the [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/srcs/requirements/mariadb) directory to build a custom image.
-   
-    #### Anatomy of the MariaDB Service
-   The custom image is not just a Dockerfile; it's a collection of files that work together:
-
-   - `Dockerfile`: This is the main blueprint. It starts from a base Debian image, installs the MariaDB server packages, and copies our custom configuration and scripts into the image. It also defines the `ENTRYPOINT` and `CMD` to ensure that the container starts gracefully.
-  
-   - `tools/initial_db.sh`: This is the core logic of the container. It's a script that runs every time the container starts. It checks if the database has already been initialized. If not, it uses the `mariadbd --bootstrap` command to securely set up the database, create the WordPress user, grant the correct permissions, and change filesystem ownership to the `mysql` user. If the database already exists, the script does nothing.
-
-   - `conf/50-server.cnf`: This configuration file overrides the default `bind-address` setting to `0.0.0.0`, allowing the database to accept connections from other containers (like WordPress) over the private Docker network.
+    First, we use the `Dockerfile` to build a custom image.
   
     ```bash
     docker build -t mariadb-image ./srcs/requirements/mariadb
