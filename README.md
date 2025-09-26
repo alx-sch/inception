@@ -353,7 +353,7 @@ The goal for this service is to create a self-contained, persistent, and correct
 
 1. **Building the Image**    
 
-    First, we use the `Dockerfile` in the [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/requirements/mariadb) directory to build a custom image.
+    First, we use the `Dockerfile` in the [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/srcs/requirements/mariadb) directory to build a custom image.
    
     #### Anatomy of the MariaDB Service
    The custom image is not just a Dockerfile; it's a collection of files that work together:
