@@ -349,7 +349,7 @@ Before we can connect all the services, we must prove that each one (MariaDB, Wo
 
 ---
 
-### Case Study: Building and Verifying the MariaDB Container
+### Building and Verifying the MariaDB Container
 
 The goal for this service is to create a self-contained, persistent, and correctly configured database container directly from its `Dockerfile` and associated scripts (see [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/srcs/requirements/mariadb)):
 
