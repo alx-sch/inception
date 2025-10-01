@@ -25,16 +25,16 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
 
 ## The Project: A Dockerized Web Application Stack
 
-In this project, I containerize a full-stack web application using Docker. The goal is to learn about system administration, container orchestration and the architecture of modern web services by setting up a WordPress site with NGINX and a MariaDB database from scratch, without using pre-existing official images.
+In this project, I containerize a full-stack web application using Docker. The goal is to learn about system administration, container orchestration and the architecture of modern web services by setting up a WordPress site with NGINX and a MariaDB database from scratch, without using pre-existing official images. The entire stack is deployed within a Debian virtual machine, creating a fully isolated and production-like server environment from the ground up. 
 
 This project emphasizes the importance of isolated environments and the automation of service deployment. By using Docker, it is ensured that the application is portable, scalable and runs consistently across any environment. The `docker-compose.yml` file serves as the master blueprint, defining and connecting the individual services on a private network to form a single, cohesive application.
 
 ### Technology Stack
+- **Host Environment:** Virtual Machine running Debian 13 (Trixie)
 - **Orchestration:** Docker & Docker Compose
 - **Web Server / Reverse Proxy:** NGINX with TLSv1.3
 - **Application:** WordPress with PHP-FPM
 - **Database:** MariaDB
-- **Operating System:** Debian Bullseye
 - **Automation:** Makefile
 
 ### Architecture and Request Flow
