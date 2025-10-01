@@ -6,7 +6,7 @@
     <img src="https://github.com/alx-sch/inception/blob/main/.assets/inception_badge.png" alt="inception_badge.png" />
 </p>
 
-This project focuses on system administration and virtualization with **Docker**. The goal is to build a multi-container application using **Docker Compose**, featuring separate containers for an NGINX web server, a MariaDB database and a WordPress instance.   
+This project focuses on system administration and containerization with **Docker**. The goal is to build a multi-container application using **Docker Compose**, featuring separate containers for an NGINX web server, a MariaDB database and a WordPress instance.   
 
 All services are built from scratch using custom `Dockerfiles` and communicate securely over a dedicated Docker network.
 
