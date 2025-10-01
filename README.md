@@ -247,7 +247,7 @@ A Dockerfile typically follows these steps:
 
 Some of the most common instructions in a `Dockerfile` include:
 
-- `FROM <image>` - this specifies the base image that the build will extend.
+- `FROM <image>` - this specifies the base image, so what you start with. This could be a minimal OS or a ready-to-use image for a specific application.
 - `WORKDIR <path>` - this instruction specifies the "working directory" or the path in the image where files will be copied and commands will be executed.
 - `COPY <host-path> <image-path>` - this instruction tells the builder to copy files from the host and put them into the container image.
 - `RUN <command>` - this instruction tells the builder to run the specified command.
