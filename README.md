@@ -6,7 +6,7 @@
     <img src="https://github.com/alx-sch/inception/blob/main/.assets/inception_badge.png" alt="inception_badge.png" />
 </p>
 
-This project focuses on system administration and virtualization with **Docker**. The goal is to build a multi-container application using **Docker Compose**, featuring separate containers for an NGINX web server, a MariaDB database, and a WordPress instance.   
+This project focuses on system administration and containerization with **Docker**. The goal is to build a multi-container application using **Docker Compose**, featuring separate containers for an NGINX web server, a MariaDB database and a WordPress instance.   
 
 All services are built from scratch using custom `Dockerfiles` and communicate securely over a dedicated Docker network.
 
@@ -25,16 +25,16 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
 
 ## The Project: A Dockerized Web Application Stack
 
-In this project, I containerize a full-stack web application using Docker. The goal is to learn about system administration, container orchestration, and the architecture of modern web services by setting up a WordPress site with NGINX and a MariaDB database from scratch, without using pre-existing official images.
+In this project, I containerize a full-stack web application using Docker. The goal is to learn about system administration, container orchestration and the architecture of modern web services by setting up a WordPress site with NGINX and a MariaDB database from scratch, without using pre-existing official images. The entire stack is deployed within a Debian virtual machine, creating a fully isolated and production-like server environment from the ground up. 
 
 This project emphasizes the importance of isolated environments and the automation of service deployment. By using Docker, it is ensured that the application is portable, scalable and runs consistently across any environment. The `docker-compose.yml` file serves as the master blueprint, defining and connecting the individual services on a private network to form a single, cohesive application.
 
 ### Technology Stack
+- **Host Environment:** Virtual Machine running Debian 13 (Trixie)
 - **Orchestration:** Docker & Docker Compose
 - **Web Server / Reverse Proxy:** NGINX with TLSv1.3
 - **Application:** WordPress with PHP-FPM
 - **Database:** MariaDB
-- **Operating System:** Debian Bullseye
 - **Automation:** Makefile
 
 ### Architecture and Request Flow
@@ -58,7 +58,7 @@ The "big picture" of the Inception application is an orchestrated stack of servi
 
 1. **The User Arrives (Browser -> NGINX)**
    - A user opens their web browser and types in your address (e.g., `https.aschenk.42.fr`).
-   - This request travels across the internet and hits your server. **The only container exposed to the outside world is NGINX.** It acts as the front door, security guard, and receptionist all in one (a reverse proxy).
+   - This request travels across the internet and hits your server. **The only container exposed to the outside world is NGINX.** It acts as the front door, security guard and receptionist all in one (a reverse proxy).
    - NGINX receives the `HTTPS` request. Its first job is **TLS Termination**. It handles the complex encryption/decryption, so WordPress doesn't have to.
 
 3. **The Hand-off (NGINX -> WordPress)**
@@ -72,13 +72,13 @@ The "big picture" of the Inception application is an orchestrated stack of servi
   
 4. **The Vault Opens (MariaDB -> WordPress)**
     - The MariaDB container receives the SQL query from WordPress (e.g., `SELECT * FROM wp_posts...`).
-    - It executes the query, gathers the results, and sends the data back to the WordPress container. Like WordPress, the MariaDB container is completely isolated from the internet. It only talks to WordPress.
+    - It executes the query, gathers the results and sends the data back to the WordPress container. Like WordPress, the MariaDB container is completely isolated from the internet. It only talks to WordPress.
 
 5. **The Assembly and Return (WordPress -> NGINX -> Browser)**
    - WordPress receives the data from MariaDB. The PHP engine uses this data to assemble the final HTML page.
    - WordPress sends the complete, rendered HTML page back to NGINX.
-   - NGINX receives the plain HTML, re-encrypts it for `HTTPS`, and sends it back across the internet to the user's browser.
-   - The user's browser renders the HTML, and they see the beautiful website :)
+   - NGINX receives the plain HTML, re-encrypts it for `HTTPS` and sends it back across the internet to the user's browser.
+   - The user's browser renders the HTML and they see the beautiful website :)
 
 ---
 
@@ -92,7 +92,7 @@ XXX
 
 ### What is Docker?
 
-Docker is a platform for developing, shipping, and running applications in **containers**. A Docker container can hold any application and its dependencies (code, libraries, system tools, configuration) and run on any machine that has Docker installed.    
+Docker is a platform for developing, shipping and running applications in **containers**. A Docker container can hold any application and its dependencies (code, libraries, system tools, configuration) and run on any machine that has Docker installed.    
 
 This solves the classic problem of "it works on my machine" by packaging the entire application environment into a single, predictable and portable unit.
 
@@ -105,7 +105,7 @@ Originally an internal project at his PaaS company dotCloud, it was quickly open
 
 While Docker popularized containers, the underlying technology has been part of the Linux kernel for years in the form of **cgroups** (which limit resource usage) and **namespaces** (which isolate processes)<sup><a href="#footnote2">[2]</a></sup>.    
 
-Docker’s innovation was to create a user-friendly set of tools, a strong community and useful services (public registries, ready-made base images, and orchestration tools like Compose and Kubernetes), making those kernel features approachable for everyday developers.
+Docker’s innovation was to create a user-friendly set of tools, a strong community and useful services (public registries, ready-made base images and orchestration tools like Compose and Kubernetes), making those kernel features approachable for everyday developers.
 
 ---
 
@@ -117,7 +117,7 @@ A common point of confusion is the difference between a container and a virtual 
   
 - **A Docker Container** virtualizes the operating system. All containers on a host share the host's OS kernel but have their own isolated view of the filesystem and processes. Think of them as apartments in a single building: They all share the building's main foundation and utilities but are completely separate living spaces.
 
-This makes containers incredibly lightweight, fast to start, and efficient compared to VMs.
+This makes containers incredibly lightweight, fast to start and efficient compared to VMs.
 
 <p align="center">
     <img src="https://github.com/alx-sch/inception/blob/main/.assets/vm-vs-docker.png" alt="vm-vs-docker.png"  width="600" />
@@ -132,10 +132,10 @@ This makes containers incredibly lightweight, fast to start, and efficient compa
 
 ### Applications
 
-Docker is the standard way modern applications are built, shipped, and run<sup><a href="#footnote3">[3</a>,<a href="#footnote4">4]</sup>. Common applications are:
+Docker is the standard way modern applications are built, shipped and run<sup><a href="#footnote3">[3</a>,<a href="#footnote4">4]</sup>. Common applications are:
 
 - **Standardized Development Environments**       
-    By packaging an application and its dependencies into a container, companies ensure that their software runs identically everywhere: on a developer's laptop, on a testing server, and in production.
+    By packaging an application and its dependencies into a container, companies ensure that their software runs identically everywhere: on a developer's laptop, on a testing server and in production.
 
 - **CI/CD Pipelines**        
    Docker is a cornerstone of modern **Continuous Integration and Continuous Deployment (CI/CD)**. When a developer pushes new code, automated systems use Docker to:
@@ -145,7 +145,7 @@ Docker is the standard way modern applications are built, shipped, and run<sup><
     4. Automatically deploy the updated container to production servers.
  
 - **Microservices Architecture**      
-    Docker is the perfect platform for microservices, an architectural style where a large application is broken down into smaller, independent services. Each microservice (e.g., user authentication, payment processing, product catalog) runs in its own container. This makes the application easier to develop, scale, and maintain, as different teams can work on different services independently.
+    Docker is the perfect platform for microservices, an architectural style where a large application is broken down into smaller, independent services. Each microservice (e.g., user authentication, payment processing, product catalog) runs in its own container. This makes the application easier to develop, scale and maintain, as different teams can work on different services independently.
 
 - **Cloud and Multi-Cloud Deployment**     
     Docker containers can run on any cloud provider (AWS, Google Cloud, Azure, etc.) without modification. This portability gives companies the freedom to move applications between different cloud environments without being locked into a single vendor. It's the foundation of modern "cloud-native" applications.
@@ -158,19 +158,19 @@ Docker is the standard way modern applications are built, shipped, and run<sup><
 
 Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
 
-- **Docker Engine:** The core of Docker. It's a client-server application with three main components: a long-running background service called the **Docker daemon**, a **REST API** that specifies interfaces for programs to talk to the daemon, and the **Docker client**.
+- **Docker Engine:** The core of Docker. It's a client-server application with three main components: a long-running background service called the **Docker daemon**, a **REST API** that specifies interfaces for programs to talk to the daemon and the **Docker client**.
  
 - **Docker Client:** The primary way users interact with Docker. It's the command-line interface (CLI) tool (e.g., `docker run`, `docker build`) that sends commands to the Docker daemon.
  
 - **Docker Registries:** A storage and distribution system for Docker images. **Docker Hub** is the default public registry, but companies often host private ones for their own images.
   
-- **Docker Images:** Read-only, executable blueprints that contain everything needed to run an application: the code, a runtime, libraries, environment variables, and configuration files.
+- **Docker Images:** Read-only, executable blueprints that contain everything needed to run an application: the code, a runtime, libraries, environment variables and configuration files.
   
 - **Dockerfile:** A text file containing a set of instructions on how to build a Docker image. The `docker build` command reads this file to assemble the image layer by layer.
 
 - **Docker Volumes:** The mechanism for persisting data generated by Docker containers. Volumes are managed by Docker and exist outside the container's lifecycle, ensuring your data is safe even if the container is removed.
 
-- **Docker Compose:** A tool for defining and running multi-container applications. It uses a single YAML file (`docker-compose.yml`) to configure all of the application's services, networks, and volumes, which can then be started or stopped with a single command.
+- **Docker Compose:** A tool for defining and running multi-container applications. It uses a single YAML file (`docker-compose.yml`) to configure all of the application's services, networks and volumes, which can then be started or stopped with a single command.
 
 <br>
 <p align="center">
@@ -189,7 +189,7 @@ Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
         <b>Docker Architecture:</b> The Docker client (CLI) communicates with the Docker Engine on the host to run containers using images, which are often stored and pulled from a registry like Docker Hub.<br>
         <b>NGINX:</b> Web server or reverse proxy; often used to route traffic to containers or load-balance requests.<br>
         <b>Docker Hub:</b> Public container registry (orange logo); stores and distributes Docker images.<br>
-        <b>OpenStack:</b> Cloud platform for managing virtual machines, storage, and networks; can host Docker infrastructure but is separate from Docker itself.<sup><a href="#footnote8">[8]</a></sup>.
+        <b>OpenStack:</b> Cloud platform for managing virtual machines, storage and networks; can host Docker infrastructure but is separate from Docker itself.<sup><a href="#footnote8">[8]</a></sup>.
     </span>
 </p>
 
@@ -205,7 +205,7 @@ Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
 **Docker Compose** streamlines and automates this workflow, especially for applications with multiple services:
 
 1. You write a Dockerfile for each service (e.g., one for your web server, one for your database).
-2. You create a single `docker-compose.yml` file. In this file, you define all your services, tell Compose where to find each service's Dockerfile, and describe how they should be connected (e.g., networking, volumes).
+2. You create a single `docker-compose.yml` file. In this file, you define all your services, tell Compose where to find each service's Dockerfile and describe how they should be connected (e.g., networking, volumes).
 3. You use the **Docker Compose CLI** (`docker-compose up`) to send the entire application definition to the Docker Daemon.
 4. The Docker Daemon then reads the `docker-compose.yml file` and:
     - **Builds** a Docker Image from each Dockerfile (if it doesn't already exist).
@@ -247,7 +247,7 @@ A Dockerfile typically follows these steps:
 
 Some of the most common instructions in a `Dockerfile` include:
 
-- `FROM <image>` - this specifies the base image that the build will extend.
+- `FROM <image>` - this specifies the base image, so what you start with. This could be a minimal OS to build on or a ready-to-use image for a specific application.
 - `WORKDIR <path>` - this instruction specifies the "working directory" or the path in the image where files will be copied and commands will be executed.
 - `COPY <host-path> <image-path>` - this instruction tells the builder to copy files from the host and put them into the container image.
 - `RUN <command>` - this instruction tells the builder to run the specified command.
@@ -294,7 +294,7 @@ The most common Docker commands you'll use with a `Dockerfile` are for building 
   docker images
   ```
   
-  This will show a table with your images, including repository name, tag, image ID, creation date, and size.
+  This will show a table with your images, including repository name, tag, image ID, creation date and size.
 
 - `docker ps`    
   This command shows you all the containers that are currently running.
@@ -319,18 +319,24 @@ The most common Docker commands you'll use with a `Dockerfile` are for building 
 
 #### Total Cleanup
 
-This is a powerful "total cleanup" routine. It removes ALL Docker resources to free up space:
+This is a powerful "total cleanup" routine. It removes *ALL* Docker resources to free up space:
 
 ```bash
 # Stop all containers
 docker stop $(docker ps -q)
 
-# Then prune everything
+# Then prune everything (images, containers, unnamed volumes)
 docker system prune -a --volumes
 
-# Also remove names volumes
+# Also remove named volumes
 docker volume rm $(docker volume ls -q)
 ```
+
+Here's a single-line version achieving the same result:
+```bash
+docker stop $(docker ps -a -q) && docker system prune -af --volumes && docker volume rm $(docker volume ls -q)
+```
+
 ---
 
 ## Docker Containers in Inception
@@ -339,24 +345,23 @@ docker volume rm $(docker volume ls -q)
 
 While the final goal of Inception is a multi-container application orchestrated by Docker Compose, the foundation of a stable system lies in building and testing each service in complete isolation first. This workflow can be thought of as "unit testing" for infrastructure.
 
-Before we can connect all the services, we must prove that each one (MariaDB, WordPress, and NGINX) is individually robust, secure, and functional. This isolates variables and makes debugging the final, integrated application much easier.
+Before we can connect all the services, we ideally prove that each one (MariaDB, WordPress and NGINX) is individually robust, secure and functional. This isolates variables and makes debugging the final, integrated application much easier.
 
-### Case Study: Building and Verifying the MariaDB Container
+---
 
-The goal for this service is to create a self-contained, persistent, and correctly configured database container directly from its `Dockerfile` and associated scripts.
+### Building and Verifying the MariaDB Container
+
+The goal for this service is to create a self-contained, persistent and correctly configured database container directly from its `Dockerfile` and associated scripts (see [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/srcs/requirements/mariadb)):
+
+- `Dockerfile`: This is the main blueprint. It starts from a base Debian image, installs the MariaDB server packages and copies our custom configuration and scripts into the image. It also defines the `ENTRYPOINT` and `CMD` to ensure that the container starts gracefully.
+  
+ - `tools/initial_db.sh`: This is the core logic of the container. It's a script that runs every time the container starts. It checks if the database has already been initialized. If not, it uses the `mariadbd --bootstrap` command to securely set up the database, create the WordPress user, grant the correct permissions and change filesystem ownership to the `mysql` user. If the database already exists, the script does nothing.
+
+- `conf/50-server.cnf`: This configuration file overrides the default `bind-address` setting to `0.0.0.0`, allowing the database to accept connections from other containers (like WordPress) over the private Docker network.
 
 1. **Building the Image**    
 
-    First, we use the `Dockerfile` in the [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/requirements/mariadb) directory to build a custom image.
-   
-    #### Anatomy of the MariaDB Service
-   The custom image is not just a Dockerfile; it's a collection of files that work together:
-
-   - `Dockerfile`: This is the main blueprint. It starts from a base Debian image, installs the MariaDB server packages, and copies our custom configuration and scripts into the image. It also defines the `ENTRYPOINT` and `CMD` to ensure that the container starts gracefully.
-  
-   - `tools/initial_db.sh`: This is the core logic of the container. It's a script that runs every time the container starts. It checks if the database has already been initialized. If not, it uses the `mariadbd --bootstrap` command to securely set up the database, create the WordPress user, grant the correct permissions, and change filesystem ownership to the `mysql` user. If the database already exists, the script does nothing.
-
-   - `conf/50-server.cnf`: This configuration file overrides the default `bind-address` setting to `0.0.0.0`, allowing the database to accept connections from other containers (like WordPress) over the private Docker network.
+    First, we use the `Dockerfile` to build a custom image.
   
     ```bash
     docker build -t mariadb-image ./srcs/requirements/mariadb
@@ -385,7 +390,7 @@ The goal for this service is to create a self-contained, persistent, and correct
     
      **A. Log Analysis (`docker logs`)**
 
-    The first step is to check the container's logs to ensure the initialization script behaved as expected. On the first run with an empty volume, the logs must show the full initialization sequence.
+    The first step is to check the container's logs to ensure the initialization script behaved as expected. On the first run with an empty volume, the logs should show the full initialization sequence.
 
     ```bash
     docker logs my-mariadb
@@ -406,7 +411,7 @@ The goal for this service is to create a self-contained, persistent, and correct
     - **Root Access:** Can we log in as the MariaDB `root` user with the correct password? (`mysql -u root -p`)
     - **Application User Access:** Can we log in as the dedicated `wp_user` and connect to the `wordpress` database? (`mysql -u wp_user -p wordpress`)
     - **Permissions and Security:** When logged in as `wp_user`, do `SHOW DATABASES;` and `SHOW GRANTS;` confirm that the user has `ALL PRIVILEGES` on the `wordpress` database and can see nothing else?
-    -  **Full CRUD Test: ** As the `wp_user`, verify that you can perform a complete Create, Read, Update, and Delete cycle (`CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`, `DROP TABLE`)? This is the ultimate proof that all permissions are correct. Learn more about these SQL commands [here](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter).
+    -  **Full CRUD Test:** As the `wp_user`, verify that you can perform a complete Create, Read, Update and Delete cycle (`CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`, `DROP TABLE`)? This is the ultimate proof that all permissions are correct. Learn more about these SQL commands [here](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)<sup><a href="#footnote10">[10]</a></sup> and [here](https://www.almabetter.com/bytes/cheat-sheet/mariadb)<sup><a href="#footnote11">[11]</a></sup>.
 
      **C. Persistence Test (`docker stop` / `docker rm`)**
     Finally, ensure that the data survives in the allocated volume even when the container is completely removed.
@@ -443,7 +448,7 @@ When the installer runs:
 
 ### 2. Enable SSH Access
 
-Working directly in the VM console is possible but inconvenient: You have no mouse integration, copy-pasting is not possible, and you can't use your favorite text editor. By creating a "tunnel" from the host to the VM's SSH port, you can work from your host machine’s terminal and editor.
+Working directly in the VM console is possible but inconvenient: You have no mouse integration, copy-pasting is not possible and you can't use your favorite text editor. By creating a "tunnel" from the host to the VM's SSH port, you can work from your host machine’s terminal and editor.
 
 Inside the VM, confirm the SSH port:
 
@@ -570,6 +575,8 @@ If you see the “Hello from Docker!” message, your setup is complete.
 <a name="footnote6">[6]</a> Coursera Inc. (2025). [*Docker Cheat Sheet*](https://www.coursera.org/collections/docker-cheat-sheet)      
 <a name="footnote7">[7]</a> Docker Inc. (2025). [*Writing a Dockerfile*](https://docs.docker.com/get-started/docker-concepts/building-images/writing-a-dockerfile/)     
 <a name="footnote8">[8]</a> Avi; Geekflare (Dec 21, 2024). [*Docker Architecture and its Components for Beginners*](https://geekflare.com/devops/docker-architecture/)     
-<a name="footnote9">[9]</a> Rahul; Tecadmin.net (Apr 26, 2025). [*Docker 101: An Introduction to Containerization Technology*](https://tecadmin.net/docker-introduction/)      
+<a name="footnote9">[9]</a> Rahul; Tecadmin.net (Apr 26, 2025). [*Docker 101: An Introduction to Containerization Technology*](https://tecadmin.net/docker-introduction/) 
+<a name="footnote10">[10]</a> Singh, N.; DataLemur(Jan 19, 2025). [*SQL CRUD: CREATE, READ, UPDATE, DELETE, DROP, and ALTER in SQL*](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)
+<a name="footnote11">[11]</a> Abhani, J; AlmaBetter (Dec 15, 2024). [*MariaDB Cheat Sheet*](https://www.almabetter.com/bytes/cheat-sheet/mariadb)  
 
 The project badge is from [this repository](https://github.com/ayogun/42-project-badges) by Ali Ogun.
