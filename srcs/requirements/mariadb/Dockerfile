@@ -33,4 +33,6 @@ ENTRYPOINT	["/usr/local/bin/initial_db.sh"]
 # The default command to run when the entrypoint script finishes its setup,
 # starting the MariaDB server that listens for incoming connections.
 # 'mysqld_safe' is a wrapper that restarts the MariaDB server if it crashes.
+# It also keeps the database running in the foreground (even though a daemon is called -> mysql'd'),
+# keeping the container alive.
 CMD			["mysqld_safe"]
