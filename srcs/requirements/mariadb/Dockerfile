@@ -35,4 +35,6 @@ ENTRYPOINT	["/usr/local/bin/initial_db.sh"]
 # 'mysqld_safe' is a wrapper that restarts the MariaDB server if it crashes.
 # It also keeps the database running in the foreground (even though a daemon is called -> mysql'd'),
 # keeping the container alive.
+# JUST FYI: 'mysqld' starts the actual database server program,
+# while 'mysql' is the command-line client used to interact with the server.
 CMD			["mysqld_safe"]
