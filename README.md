@@ -390,7 +390,7 @@ The goal for this service is to create a self-contained, persistent and correctl
     
      **A. Log Analysis (`docker logs`)**
 
-    The first step is to check the container's logs to ensure the initialization script behaved as expected. On the first run with an empty volume, the logs must show the full initialization sequence.
+    The first step is to check the container's logs to ensure the initialization script behaved as expected. On the first run with an empty volume, the logs should show the full initialization sequence.
 
     ```bash
     docker logs my-mariadb
