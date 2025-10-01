@@ -345,7 +345,7 @@ docker stop $(docker ps -a -q) && docker system prune -af --volumes && docker vo
 
 While the final goal of Inception is a multi-container application orchestrated by Docker Compose, the foundation of a stable system lies in building and testing each service in complete isolation first. This workflow can be thought of as "unit testing" for infrastructure.
 
-Before we can connect all the services, we must prove that each one (MariaDB, WordPress and NGINX) is individually robust, secure and functional. This isolates variables and makes debugging the final, integrated application much easier.
+Before we can connect all the services, we ideally prove that each one (MariaDB, WordPress and NGINX) is individually robust, secure and functional. This isolates variables and makes debugging the final, integrated application much easier.
 
 ---
 
