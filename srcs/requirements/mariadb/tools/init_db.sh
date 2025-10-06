@@ -1,52 +1,66 @@
 #!/bin/bash
 
-# This script runs within the MariaDB container when it starts.
+# This script runs when the MariaDB container starts.
 # It sets up the database and user with the credentials
 # provided in the docker-compose.yml file.
 
 # 'set -e' will make the script exit immediately if any command fails.
 set -e
 
-# Check if the 'mysql' database directory exists as a sign of initialization
-if [ -d "/var/lib/mysql/${DB_NAME}" ]; then
-    echo "Database '${DB_NAME}' already exists. Skipping setup."
+# We check if the database data directory is empty.
+# If it's not empty, it means initialization has already run.
+if [ -d "/var/lib/mysql/$DB_NAME" ]; then		# '-d' returns true if argument exists and is a directory
+	echo "Database '$DB_NAME' already exists. Skipping initialization."
 else
-    echo "Initializing MariaDB database for WordPress..."
-    # 1. Initialize the data directory. This creates the system tables.
-    mysql_install_db --user=mysql --datadir=/var/lib/mysql
+	echo "Initializing MariaDB database..."
 
-    # 2. Start a temporary server in the background.
-    #    --skip-networking makes sure it's only accessible locally.
-    mysqld_safe --datadir='/var/lib/mysql' --skip-networking &
-    
-    # 3. Wait for the server to be ready for connections.
-    until mysqladmin ping --silent; do
-        echo -n "."; sleep 1
-    done
-    echo "Temporary MariaDB server is up."
+	# Create a temporary file to hold our SQL commands.
+	# Using 'mktemp' is safer than just creating a file with a fixed name.
+	init=`mktemp`
+	if [ ! -f "$init" ]; then
+		return 1
+	fi
 
-    # 4. Run your SQL commands using the standard client.
-    mariadb <<-EOF
-        -- Set a password for the root user.
-        ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
-        
-        -- Create the WordPress database.
-        CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;
-        
-        -- Create the WordPress user and grant it permissions.
-        CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
-        GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'%';
-        
-        -- Apply the changes.
-        FLUSH PRIVILEGES;
-EOF
+	# Write all our SQL setup commands into the temporary file.
+	# This is safer and more reliable than piping to the mysql client.
+	cat <<-EOF > $init
+		-- This command ensures the grant tables are reloaded.
+		FLUSH PRIVILEGES;
 
-    # 5. Stop the temporary server.
-    mysqladmin -u root -p"${DB_ROOT_PASSWORD}" shutdown
-    echo "Initialization complete. Temporary server stopped."
+		-- Set the password for the root user.
+		ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
+
+		-- Create the main database for WordPress.
+		CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;
+
+		-- Create a dedicated user for WordPress to connect with.
+		CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+
+		-- Grant that user full permissions on the WordPress database only.
+		GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'%';
+
+		-- Apply all the privilege changes.
+		FLUSH PRIVILEGES;
+	EOF
+
+	# This is the key command. 'mariadbd --bootstrap' runs the server
+	# just long enough to execute the SQL from the file, then it exits.
+	# This initializes the database data directory (/var/lib/mysql) correctly.
+	mariadbd --bootstrap < $init
+
+	# The bootstrap process creates files owned by root. We must change ownership
+	# to the 'mysql' user, which is what the final server process runs as.
+	echo "Setting correct file permissions..."
+	chown -R mysql:mysql /var/lib/mysql
+
+	# Clean up the temporary file.
+	rm -f $init
+
+	echo "MariaDB database and user setup complete."
 fi
 
-# This is the crucial final step. It runs the CMD from your Dockerfile
-# ("mysqld_safe") as the main process of the container.
-echo "Starting MariaDB server for external connections..."
-exec "$@"
+# 'exec "$@"' passes control to the CMD specified in the Dockerfile
+# (which is 'mysqld_safe'). This starts the MariaDB server in the foreground,
+# keeping the container running.
+echo "Starting MariaDB server in the foreground..."
+exec "$@" # expands to all arguments passed to the script (the commands after the entrypoint in the Dockerfile) -> 'exec mysqld_safe'
