@@ -2,8 +2,8 @@
 	"name": "Debian with Docker",
 
 	// 1. This replaces installing the Debian VM.
-	// We're using a pre-built Debian 13 (Trixie) image.
-	// XXXX
+	// We're using a pre-built Debian 12 (Bookworm) image instead of Debian 13 (Trixie),
+	// as the latter does not support docker-in-docker (and Codespaces itself is a container)
 	"image": "mcr.microsoft.com/devcontainers/base:bookworm",
 
 	// 2. This section replaces manual package installation.
