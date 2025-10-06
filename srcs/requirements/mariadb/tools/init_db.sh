@@ -1,12 +1,17 @@
 #!/bin/bash
+
+# This script runs within the MariaDB container when it starts.
+# It sets up the database and user with the credentials
+# provided in the docker-compose.yml file.
+
+# 'set -e' will make the script exit immediately if any command fails.
 set -e
 
 # Check if the 'mysql' database directory exists as a sign of initialization
-if [ -d "/var/lib/mysql/mysql" ]; then
-    echo "MariaDB is already initialized. Skipping setup."
+if [ -d "/var/lib/mysql/${DB_NAME}" ]; then
+    echo "Database '${DB_NAME}' already exists. Skipping setup."
 else
-    echo "Initializing MariaDB for the first time..."
-
+    echo "Initializing MariaDB database for WordPress..."
     # 1. Initialize the data directory. This creates the system tables.
     mysql_install_db --user=mysql --datadir=/var/lib/mysql
 

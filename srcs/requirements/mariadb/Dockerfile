@@ -18,17 +18,17 @@ RUN			apt-get update && apt-get install -y \
 COPY		./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Copy the entrypoint script to initialize the database.
-COPY		./tools/initial_db.sh /usr/local/bin/initial_db.sh
+COPY		./tools/init_db.sh /usr/local/bin/init_db.sh
 
 # Make the entrypoint script executable.
-RUN			chmod +x /usr/local/bin/initial_db.sh
+RUN			chmod +x /usr/local/bin/init_db.sh
 
 # Expose the default MariaDB port (3306) to allow connections from other containers.
 EXPOSE		3306
 
 # Set the entrypoint for the container.
 # This script will run when the container starts, setting up the database.
-ENTRYPOINT	["/usr/local/bin/initial_db.sh"]
+ENTRYPOINT	["/usr/local/bin/init_db.sh"]
 
 # The default command to run when the entrypoint script finishes its setup,
 # starting the MariaDB server that listens for incoming connections.
