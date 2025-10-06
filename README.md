@@ -413,7 +413,17 @@ The goal for this service is to create a self-contained, persistent and correctl
     - **Permissions and Security:** When logged in as `wp_user`, do `SHOW DATABASES;` and `SHOW GRANTS;` confirm that the user has `ALL PRIVILEGES` on the `wordpress` database and can see nothing else?
     -  **Full CRUD Test:** As the `wp_user`, verify that you can perform a complete Create, Read, Update and Delete cycle (`CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`, `DROP TABLE`)? This is the ultimate proof that all permissions are correct. Learn more about these SQL commands [here](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)<sup><a href="#footnote10">[10]</a></sup> and [here](https://www.almabetter.com/bytes/cheat-sheet/mariadb)<sup><a href="#footnote11">[11]</a></sup>.
 
-     **C. Persistence Test (`docker stop` / `docker rm`)**
+    ⚠️ **Note on GitHub Codespaces:**
+
+    Due to a specific incompatibility between this container and the Codespaces runtime, `docker exec` may fail. The following steps provide a reliable workaround by connecting directly to the database from the Codespaces terminal:
+
+    ```bash
+    mysql -h 127.0.0.1 -u wp_user -p wordpress
+    ```
+
+    You can now proceed with the permission and CRUD tests.
+
+    **C. Persistence Test (`docker stop` / `docker rm`)**
     Finally, ensure that the data survives in the allocated volume even when the container is completely removed.
 
    1. **Stop and remove the container:** `docker stop my-mariadb` and then `docker rm my-mariadb`. The container is now gone.
