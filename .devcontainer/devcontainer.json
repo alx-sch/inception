@@ -3,7 +3,8 @@
 
 	// 1. This replaces installing the Debian VM.
 	// We're using a pre-built Debian 13 (Trixie) image.
-	"image": "mcr.microsoft.com/devcontainers/base:trixie",
+	// XXXX
+	"image": "mcr.microsoft.com/devcontainers/base:bookworm",
 
 	// 2. This section replaces manual package installation.
 	// We add "features" to automatically install and configure tools.
