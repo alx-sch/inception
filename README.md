@@ -415,7 +415,7 @@ The goal for this service is to create a self-contained, persistent and correctl
 
     ⚠️ **Note on GitHub Codespaces:**
 
-    Due to a specific incompatibility between this container and the Codespaces runtime, `docker exec` may fail. The following steps provide a reliable workaround by connecting directly to the database from the Codespaces terminal:
+    Due to a specific incompatibility between this container and the Codespaces runtime, `docker exec` may fail. Connecting directly to the database from the Codespaces terminal is a reliable workaround:
 
     ```bash
     mysql -h 127.0.0.1 -u wp_user -p wordpress
