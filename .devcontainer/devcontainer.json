@@ -14,7 +14,7 @@
 	"ghcr.io/devcontainers/features/docker-in-docker:2": {}
 	},
 
-	// This tells tools like the VS Code Docker extension
-	// where to find the Docker socket.
-	"postCreateCommand": "sudo chown $(whoami) /var/run/docker.sock"
+	// 'sudo chown $(whoami) /var/run/docker.sock':
+	// This tells tools like the VS Code Docker extension where to find the Docker socket.
+	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y mariadb-client && sudo chown $(whoami) /var/run/docker.sock"
 }
