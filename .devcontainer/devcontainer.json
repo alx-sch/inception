@@ -1,0 +1,19 @@
+{
+	"name": "Debian with Docker",
+
+	// 1. This replaces installing the Debian VM.
+	// We're using a pre-built Debian 13 (Trixie) image.
+	"image": "mcr.microsoft.com/devcontainers/base:trixie",
+
+	// 2. This section replaces manual package installation.
+	// We add "features" to automatically install and configure tools.
+	"features": {
+	// This feature installs Docker inside the Codespace,
+	// just like you installed it on the VM -> sudo, user already in Docker group and so on
+	"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+	},
+
+	// This tells tools like the VS Code Docker extension
+	// where to find the Docker socket.
+	"postCreateCommand": "sudo chown $(whoami) /var/run/docker.sock"
+}
