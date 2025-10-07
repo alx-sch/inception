@@ -10,6 +10,7 @@ set -e
 # --- 1. WAIT FOR DATABASE ---
 DB_HOST="mariadb"
 DB_PORT="3306"		# Default MariaDB port
+WP_PATH="/var/www/html"
 
 echo "Waiting for database readiness at $DB_HOST:$DB_PORT..."
 
@@ -22,7 +23,7 @@ echo "Database is ready."
 
 # --- 2. WP-CONFIG.PHP GENERATION ---
 # Check if wp-config.php exists. If not, create it using env variables.
-if [ ! -f /var/www/html/wp-config.php ]; then
+if [ ! -f "$WP_PATH/wp-config.php" ]; then
 	echo "Creating wp-config.php..."
 	wp config create \
 		--dbname="$DB_NAME" \
@@ -31,13 +32,13 @@ if [ ! -f /var/www/html/wp-config.php ]; then
 		--host="$DB_HOST" \
 		--allow-root \
 		--skip-check \
-		--path="/var/www/html"
+		--path="$WP_PATH"
 fi
 
 
 # --- 3. WORDPRESS INSTALLATION ---
 # Check if WordPress tables are created. If not, run the core installation.
-if ! wp core is-installed --allow-root --path="/var/www/html"; then
+if ! wp core is-installed --allow-root --path="$WP_PATH"; then
 	echo "Installing WordPress core..."
 	wp core install \
 		--url="https://$DOMAIN_NAME" \
@@ -47,7 +48,7 @@ if ! wp core is-installed --allow-root --path="/var/www/html"; then
 		--admin_email="$WP_ADMIN_EMAIL" \
 		--skip-email \
 		--allow-root \
-		--path="/var/www/html"
+		--path="$WP_PATH"
 
 		echo "WordPress setup complete."
 fi

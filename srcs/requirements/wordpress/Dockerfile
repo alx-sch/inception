@@ -4,7 +4,7 @@
 FROM	debian:bullseye
 
 # Author
-LABEL	author="aschenk@student.42berlin.de"
+LABEL	author="aschenk"
 
 # Update package lists and install all necessary packages in a single layer.
 # - php-fpm: The PHP FastCGI Process Manager, which runs the WordPress code.
@@ -62,4 +62,4 @@ EXPOSE	9000
 # CMD calls 'exec' style --> looks for the binary in the $PATH
 # '-F' flag tells php-fpm to run in the foreground (not as a daemon)
 
-CMD		["/usr/sbin/php-fpm7.4", "-F"]
+CMD		["php-fpm7.4", "-F"]

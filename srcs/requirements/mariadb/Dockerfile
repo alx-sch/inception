@@ -4,7 +4,7 @@
 FROM		debian:bullseye
 
 # Author
-LABEL		author="aschenk@student.42berlin.de"
+LABEL		author="aschenk"
 
 # Update package lists and install necessary packages.
 # - We remove package lists afterwards to keep the final image size smaller.
