@@ -351,11 +351,13 @@ Before we can connect all the services, we ideally prove that each one (MariaDB,
 
 ### Building and Verifying the MariaDB Container
 
-The goal for this service is to create a self-contained, persistent and correctly configured database container directly from its `Dockerfile` and associated scripts (see [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/srcs/requirements/mariadb)):
+The goal is to set up a correctly initialized and persistent MariaDB container. The current `init_db.sh` uses the secure method of reading passwords from Docker secret files (`cat /run/secrets/...`). To allow for isolated testing of the container as described below (without Docker Compose), the script needs to use environment variables for passwords (`{$DB_ROOT_PASSWORD}`, `{$DB_PASSWORD}`) instead.
+
+The files used to build the MariaDB image and container are found in [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/srcs/requirements/mariadb):
 
 - `Dockerfile`: This is the main blueprint. It starts from a base Debian image, installs the MariaDB server packages and copies our custom configuration and scripts into the image. It also defines the `ENTRYPOINT` and `CMD` to ensure that the container starts gracefully.
   
- - `tools/initial_db.sh`: This is the core logic of the container. It's a script that runs every time the container starts. It checks if the database has already been initialized. If not, it uses the `mariadbd --bootstrap` command to securely set up the database, create the WordPress user, grant the correct permissions and change filesystem ownership to the `mysql` user. If the database already exists, the script does nothing.
+ - `tools/init_db.sh`: This is the core logic of the container. It's a script that runs every time the container starts. It checks if the database has already been initialized. If not, it uses the `mariadbd --bootstrap` command to securely set up the database, create the WordPress user, grant the correct permissions and change filesystem ownership to the `mysql` user. If the database already exists, the script does nothing.
 
 - `conf/50-server.cnf`: This configuration file overrides the default `bind-address` setting to `0.0.0.0`, allowing the database to accept connections from other containers (like WordPress) over the private Docker network.
 
@@ -396,7 +398,7 @@ The goal for this service is to create a self-contained, persistent and correctl
     docker logs my-mariadb
     ```
 
-    The output must show all `echo` messages from the `initial_db.sh` script, confirming each stage of the setup was reached.
+    The output must show all `echo` messages from the `init_db.sh` script, confirming each stage of the setup was reached.
 
    **B. Interactive Testing (`docker exec`)**
 
@@ -415,7 +417,7 @@ The goal for this service is to create a self-contained, persistent and correctl
 
     ⚠️ **Note on GitHub Codespaces:**
 
-    Due to a specific incompatibility between this container and the Codespaces runtime, `docker exec` may fail. The following steps provide a reliable workaround by connecting directly to the database from the Codespaces terminal:
+    Due to a specific incompatibility between this container and the Codespaces runtime, `docker exec` may fail. Connecting directly to the database from the Codespaces terminal is a reliable workaround:
 
     ```bash
     mysql -h 127.0.0.1 -u wp_user -p wordpress
