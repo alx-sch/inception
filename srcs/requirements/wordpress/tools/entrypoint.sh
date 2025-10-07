@@ -1,0 +1,58 @@
+# Sources:
+# https://www.hostpress.de/blog/wp-config-erstellen-finden-bearbeiten/
+# https://developer.wordpress.org/cli/commands/config/create/
+# https://www.catalyst2.com/knowledgebase/wp-cli/installing-wordpress-using-wp-cli/
+
+#!/bin/bash
+set -e
+
+
+# --- 1. WAIT FOR DATABASE ---
+DB_HOST="mariadb"
+DB_PORT="3306"		# Default MariaDB port
+
+echo "Waiting for database readiness at $DB_HOST:$DB_PORT..."
+
+# This loop uses netcat to check if the port is open ('-z' flag is for scanning, no data sent).
+while ! nc -z $DB_HOST $DB_PORT; do
+	sleep 1
+done
+echo "Database is ready."
+
+
+# --- 2. WP-CONFIG.PHP GENERATION ---
+# Check if wp-config.php exists. If not, create it using env variables.
+if [ ! -f /var/www/html/wp-config.php ]; then
+	echo "Creating wp-config.php..."
+	wp config create \
+		--dbname="$DB_NAME" \
+		--user="$DB_USER" \
+		--pass="$DB_PASSWORD" \
+		--host="$DB_HOST" \
+		--allow-root \
+		--skip-check \
+		--path="/var/www/html"
+fi
+
+
+# --- 3. WORDPRESS INSTALLATION ---
+# Check if WordPress tables are created. If not, run the core installation.
+if ! wp core is-installed --allow-root --path="/var/www/html"; then
+	echo "Installing WordPress core..."
+	wp core install \
+		--url="https://$DOMAIN_NAME" \
+		--title="$WP_TITLE" \
+		--admin_user="$WP_ADMIN_USER" \
+		--admin_password="$WP_ADMIN_PASSWORD" \
+		--admin_email="$WP_ADMIN_EMAIL" \
+		--skip-email \
+		--allow-root \
+		--path="/var/www/html"
+
+		echo "WordPress setup complete."
+fi
+
+# --- 4. START MAIN PROCESS ---
+echo "Starting PHP-FPM..."
+# Execute the command passed via CMD (which is /usr/sbin/php-fpm7.4 -F)
+exec "$@"
