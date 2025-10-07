@@ -1,1 +1,64 @@
-XXXXX
+# Syntax: https://www.redhat.com/en/topics/automation/what-is-yaml#:~:text=YAML%20is%20a%20human%2Dreadable,is%20for%20data%2C%20not%20documents.
+# Services: https://docs.docker.com/reference/compose-file/services/
+
+# ------------------------------------
+# DEFINE SERVICES
+# ------------------------------------
+
+services:
+  # 1. MARIADB SERVICE (database)
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+
+    build:
+      context: ${MARIADB_CONTEXT}
+      dockerfile: Dockerfile
+
+    restart: always
+
+    env_file:
+      - .env
+
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_ROOT_PASSWORD_FILE: /run/secrets/root_password
+      DB_PASSWORD_FILE: /run/secrets/db_password
+
+
+    secrets:
+    # secrets are made available as files in container in /run/secrets/<secret_name>
+      - root_password
+      - db_password
+
+    volumes:
+      - db_data:/var/lib/mysql
+
+    networks:
+      - inception
+
+# ------------------------------------
+# DEFINE VOLUMES AND SECRETS
+# ------------------------------------
+
+volumes:
+  # Mandatory volume for the database
+  db_data:
+    driver: local
+
+  # Mandatory volume for the website files
+  wp_files:
+    driver: local
+
+networks:
+  # Custom docker-network; bridge creates a private, isolated internal network
+  inception:
+    driver: bridge
+
+secrets:
+  root_password:
+    file: ${SECRET_ROOT_PASS_FILE}
+
+  db_password:
+    file: ${SECRET_DB_PASS_FILE}

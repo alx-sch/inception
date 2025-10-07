@@ -28,13 +28,13 @@ else
 		FLUSH PRIVILEGES;
 
 		-- Set the password for the root user.
-		ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
+		ALTER USER 'root'@'localhost' IDENTIFIED BY '$(cat /run/secrets/root_password)';
 
 		-- Create the main database for WordPress.
 		CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;
 
 		-- Create a dedicated user for WordPress to connect with.
-		CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+		CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '$(cat /run/secrets/db_password)';
 
 		-- Grant that user full permissions on the WordPress database only.
 		GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'%';
