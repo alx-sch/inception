@@ -17,7 +17,7 @@ RUN			apt-get update && apt-get install -y \
 # This file allows connections from other containers (like WordPress).
 COPY		./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
-# Set stricter, non-writable permissions for others.
+# Set stricter, non-writable permissions for others. Gets rid of warnings in the logs.
 RUN			chmod 644 /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Copy the entrypoint script to initialize the database.

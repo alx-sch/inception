@@ -14,6 +14,7 @@
 	"ghcr.io/devcontainers/features/docker-in-docker:2": {}
 	},
 
+	// Install mariadb-client for database access via 'mysql' command.
 	// 'sudo chown $(whoami) /var/run/docker.sock':
 	// This tells tools like the VS Code Docker extension where to find the Docker socket.
 	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y mariadb-client && sudo chown $(whoami) /var/run/docker.sock"
