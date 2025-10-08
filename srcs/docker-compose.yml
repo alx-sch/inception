@@ -8,8 +8,9 @@
 services:
   # 1. MARIADB SERVICE (database)
   mariadb:
-    image: mariadb
-    container_name: mariadb
+    # Use 'inception' tag, as no tag defaults to 'latest' (forbidden)
+    # Also avoids confusion with the official 'mariadb' image
+    image: mariadb:inception
 
     build:
       context: ${MARIADB_CONTEXT}
@@ -17,15 +18,13 @@ services:
 
     restart: always
 
-    env_file:
-      - .env
-
+    # Vars within the container, used when running it
+    # Docker Compose automatically loads variables from a .env file in the same directory
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_ROOT_PASSWORD_FILE: /run/secrets/root_password
       DB_PASSWORD_FILE: /run/secrets/db_password
-
 
     secrets:
     # secrets are made available as files in container in /run/secrets/<secret_name>
@@ -43,18 +42,11 @@ services:
 # ------------------------------------
 
 volumes:
-  # Mandatory volume for the database
   db_data:
-    driver: local
-
-  # Mandatory volume for the website files
   wp_files:
-    driver: local
 
 networks:
-  # Custom docker-network; bridge creates a private, isolated internal network
   inception:
-    driver: bridge
 
 secrets:
   root_password:
