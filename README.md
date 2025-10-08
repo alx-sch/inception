@@ -376,7 +376,7 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
     Next, we run the container using `docker run`. This is where we simulate the environment that Docker Compose will eventually provide, passing in all necessary configurations as environment variables (`-e`) and attaching a persistent volume (`-v`):
     
    ```bash
-    docker run -d --name my-mariadb \
+    docker run -d --name mariadb \
       -p 3306:3306 \
       -v db_data:/var/lib/mysql \
       -e DB_NAME=wordpress \
@@ -395,7 +395,7 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
     The first step is to check the container's logs to ensure the initialization script behaved as expected. On the first run with an empty volume, the logs should show the full initialization sequence.
 
     ```bash
-    docker logs my-mariadb
+    docker logs mariadb
     ```
 
     The output must show all `echo` messages from the `init_db.sh` script, confirming each stage of the setup was reached.
@@ -405,7 +405,7 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
    Next, gain access to the container via an interactive shell to perform live tests from the perspective of an administrator and the application itself.
 
     ```bash
-    docker exec -it my-mariadb bash
+    docker exec -it mariadb bash
     ```
 
     Once inside, we verify the following:
@@ -428,11 +428,11 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
     **C. Persistence Test (`docker stop` / `docker rm`)**
     Finally, ensure that the data survives in the allocated volume even when the container is completely removed.
 
-   1. **Stop and remove the container:** `docker stop my-mariadb` and then `docker rm my-mariadb`. The container is now gone.
+   1. **Stop and remove the container:** `docker stop mariadb` and then `docker rm mariadb`. The container is now gone.
 
    2. **Re-run the container:** Use the exact same `docker` run command from step 2, ensuring you attach the same volume (`-v db_data:/var/lib/mysql`).
 
-   3. **Verify the logs:** The new container's logs (`docker logs my-mariadb`) must now show the message `Database directory is not empty. Skipping initialization.`. This proves our script's logic is correct and that the data persisted in the volume.
+   3. **Verify the logs:** The new container's logs (`docker logs mariadb`) must now show the message `Database directory is not empty. Skipping initialization.`. This proves our script's logic is correct and that the data persisted in the volume.
 
 After all these checks pass, we can consider the MariaDB service fully validated and ready for integration. All other service containers are validated using a similar methodology. Once each component is proven to be stable and correct, we proceed to the final integration phase: orchestrating the entire application with Docker Compose.
 
