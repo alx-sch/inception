@@ -47,13 +47,13 @@ RUN		mkdir -p /run/php
 COPY	./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
 # Copy the entrypoint script
-COPY	./tools/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY	./tools/init_wp.sh /usr/local/bin/init_wp.sh
 
 # Make the entrypoint script executable
-RUN		chmod +x /usr/local/bin/entrypoint.sh
+RUN		chmod +x /usr/local/bin/init_wp.sh
 
 # Set the entrypoint to run the setup script first.
-ENTRYPOINT  ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT  ["/usr/local/bin/init_wp.sh"]
 
 # Set the port that the container exposes
 EXPOSE	9000

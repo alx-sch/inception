@@ -3,13 +3,9 @@
 # 'set -e' makes the script exit immediately if any command fails.
 set -e
 
-# Load the file paths from the container's environment (as set in docker-compose.yml):
-DB_ROOT_PASSWORD_F=$DB_ROOT_PASSWORD_FILE
-DB_PASSWORD_F=$DB_PASSWORD_FILE
-
 # Read the password content from the mounted secret files:
-DB_ROOT_PASSWORD=$(cat $DB_ROOT_PASSWORD_F)
-DB_PASSWORD=$(cat $DB_PASSWORD_F)
+DB_ROOT_PASSWORD=$(cat $DB_ROOT_PASSWORD_FILE)
+DB_PASSWORD=$(cat $DB_PASSWORD_FILE)
 
 # Check if the database data directory is empty.
 # If it's not empty, it means initialization has already run.

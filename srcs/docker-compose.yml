@@ -6,7 +6,11 @@
 # ------------------------------------
 
 services:
-  # 1. MARIADB SERVICE (Database)
+
+  #################################
+  # 1. MARIADB SERVICE (Database) #
+  #################################
+
   mariadb:
     # Use 'inception' tag, as not to default to 'latest'.
     image: mariadb:inception
@@ -27,6 +31,10 @@ services:
       DB_ROOT_PASSWORD_FILE: /run/secrets/root_password
       DB_PASSWORD_FILE: /run/secrets/db_password
 
+    # Expose the PHP-FPM port internally to Ngninx
+    expose:
+      - ${DB_PORT}
+
     volumes:
       - db_data:/var/lib/mysql
 
@@ -38,8 +46,12 @@ services:
       - root_password
       - db_password
 
-  # 2. WORDPRESS SERVICE (Web Server)
+  #####################################
+  # 2. WORDPRESS SERVICE (Web Server) #
+  #####################################
+
   wordpress:
+
     # Make sure WordPress waits for MariaDB before starting setup
     depends_on:
       - mariadb
