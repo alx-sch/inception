@@ -371,7 +371,7 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
     First, we use the `Dockerfile` to build a custom image.
   
     ```bash
-    docker build -t mariadb-image ./srcs/requirements/mariadb
+    docker build -t mariadb:inception ./srcs/requirements/mariadb
     ```
 
     Check the Docker build output: All steps should complete successfully (each step is shown in blue when it succeeds). Docker's layer caching will make subsequent builds almost instant if no files have changed.
@@ -388,7 +388,7 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
       -e DB_USER=wp_user \
       -e DB_PASSWORD=wp_pass \
       -e DB_ROOT_PASSWORD=root_pass \
-      mariadb-image
+      mariadb:inception
     ```
 
 3. **Verification and Testing**
