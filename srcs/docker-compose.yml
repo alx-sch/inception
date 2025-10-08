@@ -58,7 +58,7 @@ networks:
 
 secrets:
   root_password:
-    file: ${SECRET_ROOT_PASS_FILE}
+    file: ${SECRET_DB_ROOT_PASS_FILE}
 
   db_password:
     file: ${SECRET_DB_PASS_FILE}
