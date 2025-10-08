@@ -6,36 +6,78 @@
 # ------------------------------------
 
 services:
-  # 1. MARIADB SERVICE (database)
+  # 1. MARIADB SERVICE (Database)
   mariadb:
-    # Use 'inception' tag, as no tag defaults to 'latest' (forbidden)
-    # Also avoids confusion with the official 'mariadb' image
+    # Use 'inception' tag, as not to default to 'latest'.
     image: mariadb:inception
 
     build:
+      # Automatically uses 'Dockerfile' in the specified context directory
       context: ${MARIADB_CONTEXT}
-      dockerfile: Dockerfile
 
     restart: always
 
-    # Vars within the container, used when running it
-    # Docker Compose automatically loads variables from a .env file in the same directory
+    # Vars within the container, used by init_db.sh when running it
+    # Docker Compose automatically loads variables from .env file in the same directory
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
+
+      # Vars pointing to secret file paths within the container
       DB_ROOT_PASSWORD_FILE: /run/secrets/root_password
       DB_PASSWORD_FILE: /run/secrets/db_password
-
-    secrets:
-    # secrets are made available as files in container in /run/secrets/<secret_name>
-      - root_password
-      - db_password
 
     volumes:
       - db_data:/var/lib/mysql
 
     networks:
       - inception
+
+    # secrets are made available as files in container in /run/secrets/<secret_name>
+    secrets:
+      - root_password
+      - db_password
+
+  # 2. WORDPRESS SERVICE (Web Server)
+  wordpress:
+    # Make sure WordPress waits for MariaDB before starting setup
+    depends_on:
+      - mariadb
+
+    image: wordpress:inception
+
+    build:
+      context: ${WORDPRESS_CONTEXT}
+
+    restart: always
+
+    environment:
+      DB_HOST: mariadb  # Service name acts as the hostname (DNS resolution)
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DOMAIN_NAME: ${DOMAIN_NAME}
+      WP_TITLE: ${WP_TITLE}
+      WP_ADMIN_USER: ${WP_ADMIN_USER}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
+      WP_PATH: ${WP_PATH}
+
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      WP_ADMIN_PASSWORD_FILE: /run/secrets/wp_admin_password
+
+    # Expose the PHP-FPM port internally to Ngninx
+    expose:
+      - "9000"
+
+    volumes:
+      - wp_files:/var/www/html
+
+    networks:
+      - inception
+
+    secrets:
+      - db_password
+      - wp_admin_password
 
 # ------------------------------------
 # DEFINE VOLUMES AND SECRETS
@@ -54,3 +96,6 @@ secrets:
 
   db_password:
     file: ${SECRET_DB_PASS_FILE}
+
+  wp_admin_password:
+    file: ${SECRET_WP_ADMIN_PASS_FILE}

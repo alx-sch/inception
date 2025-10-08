@@ -1,17 +1,29 @@
+#!/bin/sh
+
 # Sources:
 # https://www.hostpress.de/blog/wp-config-erstellen-finden-bearbeiten/
 # https://developer.wordpress.org/cli/commands/config/create/
 # https://www.catalyst2.com/knowledgebase/wp-cli/installing-wordpress-using-wp-cli/
 
-#!/bin/bash
+# 'set -e' makes the script exit immediately if any command fails.
 set -e
 
+# Load the file paths from the container's environment (as set in docker-compose.yml):
+DB_PASSWORD_F=$DB_PASSWORD_FILE
+WP_ADMIN_PASSWORD_F=$WP_ADMIN_PASSWORD_FILE
+
+# Read the password content from the mounted secret files:
+DB_PASSWORD=$(cat $DB_PASSWORD_F)
+WP_ADMIN_PASSWORD=$(cat $WP_ADMIN_PASSWORD_F)
+
+# The paths below are set via environment variables in docker-compose.yml
+DB_PASSWORD_FILE=/run/secrets/db_password
+WP_ADMIN_PASSWORD_FILE=/run/secrets/wp_admin_password
+
+DB_PASSWORD=$(cat $DB_PASSWORD_FILE)
+WP_ADMIN_PASSWORD=$(cat $WP_ADMIN_PASSWORD_FILE)
 
 # --- 1. WAIT FOR DATABASE ---
-DB_HOST="mariadb"
-DB_PORT="3306"		# Default MariaDB port
-WP_PATH="/var/www/html"
-
 echo "Waiting for database readiness at $DB_HOST:$DB_PORT..."
 
 # This loop uses netcat to check if the port is open ('-z' flag is for scanning, no data sent).
@@ -27,9 +39,9 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
 	echo "Creating wp-config.php..."
 	wp config create \
 		--dbname="$DB_NAME" \
-		--user="$DB_USER" \
-		--pass="$DB_PASSWORD" \
-		--host="$DB_HOST" \
+		--dbuser="$DB_USER" \
+		--dbpass="$DB_PASSWORD" \
+		--dbhost="$DB_HOST" \
 		--allow-root \
 		--skip-check \
 		--path="$WP_PATH"
