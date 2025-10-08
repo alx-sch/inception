@@ -337,6 +337,11 @@ Here's a single-line version achieving the same result:
 docker stop $(docker ps -a -q) && docker system prune -af --volumes && docker volume rm $(docker volume ls -q)
 ```
 
+Check the disk space consumed by different Docker ressources with:
+```bash
+docker system df
+```
+
 ---
 
 ## Docker Containers in Inception
