@@ -28,13 +28,11 @@ clean:
 # Stops everything and removes containers, networks, images, and volumes.
 # This performs the complete environment reset.
 ## 1. Take down the entire project stack (containers, networks, images, volumes)
-## 2. Prune any remaining dangling images left from build stages
-## 3. Prunes the build cache (intermediate layers) to free up space
+## 2. Prune any remaining ressoruces (dangling images, build cache)
 fclean:
 	@echo "$(BOLD)$(RED)💥 FULL CLEANUP: Removing containers, networks, images, and volumes...$(RESET)"
 	@docker compose -f $(DOCKER_COMP_F) down --rmi all --volumes
-	@docker image prune -f
-	@docker builder prune -f
+	@docker system prune -af --volumes
 	@echo "$(BOLD)$(RED)\n🗑️  All Docker containers, networks, images, and volumes have been removed.$(RESET)"
 
 re:	fclean all
