@@ -560,11 +560,12 @@ sudo apt update && sudo apt upgrade -y
 Install a few utilities you’ll use often:
 
 ```bash
-sudo apt install curl git -y
+sudo apt install curl git make -y
 ```
 
 `git` helps manage project files from a repository.
 `curl` is handy for downloading installation scripts.
+`make` is used to execute Makefiles.
 
 ### 4. Install Docker Engine
 
