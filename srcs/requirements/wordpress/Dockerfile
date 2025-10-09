@@ -58,5 +58,4 @@ ENTRYPOINT	["/usr/local/bin/init_wp.sh"]
 # Start the PHP FastCGI Process Manager in the foreground
 # CMD calls 'exec' style --> looks for the binary in the $PATH
 # '-F' flag tells php-fpm to run in the foreground (not as a daemon)
-
 CMD			["php-fpm7.4", "-F"]
