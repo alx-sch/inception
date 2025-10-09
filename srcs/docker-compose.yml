@@ -32,6 +32,8 @@ services:
       DB_PASSWORD_FILE: /run/secrets/db_password
 
     # Expose the PHP-FPM port internally to Ngninx
+    # Mostly for documentation, as there is automatic service discovery and DNS resolution
+    # for services communicating within the same Docker network
     expose:
       - ${DB_PORT}
 
@@ -77,7 +79,6 @@ services:
       DB_PASSWORD_FILE: /run/secrets/db_password
       WP_ADMIN_PASSWORD_FILE: /run/secrets/wp_admin_password
 
-    # Expose the PHP-FPM port internally to Ngninx
     expose:
       - "9000"
 
