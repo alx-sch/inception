@@ -6,11 +6,7 @@
 # ------------------------------------
 
 services:
-
-  #################################
-  # 1. MARIADB SERVICE (Database) #
-  #################################
-
+  # 1. MARIADB SERVICE (Database)
   mariadb:
     # Use 'inception' tag, as not to default to 'latest'.
     image: mariadb:inception
@@ -29,14 +25,8 @@ services:
       DB_VOLUME: ${DB_VOLUME}
 
       # Vars pointing to secret file paths within the container (default location)
-      DB_ROOT_PASSWORD_FILE: /run/secrets/${SECRET_DB_ROOT}
-      DB_PASSWORD_FILE: /run/secrets/${SECRET_DB}
-
-    # Expose the PHP-FPM port internally to Ngninx
-    # Mostly for documentation, as there is automatic service discovery and DNS resolution
-    # for services communicating within the same Docker network
-    expose:
-      - ${DB_PORT}
+      DB_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      DB_PASSWORD_FILE: /run/secrets/db_password
 
     volumes:
       - db_data:${DB_VOLUME}
@@ -44,17 +34,13 @@ services:
     networks:
       - inception
 
-    # secrets are made available as files in container in /run/secrets/<secret_name>
+    # Secrets are mounted as files in /run/secrets/<name>
     secrets:
-      - ${SECRET_DB_ROOT}
-      - ${SECRET_DB}
+      - db_root_password
+      - db_password
 
-  #####################################
-  # 2. WORDPRESS SERVICE (Web Server) #
-  #####################################
-
+  # 2. WORDPRESS SERVICE (Web Server)
   wordpress:
-
     # Make sure WordPress waits for MariaDB before starting setup
     depends_on:
       - mariadb
@@ -77,9 +63,10 @@ services:
       WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
       WP_VOLUME: ${WP_VOLUME}
 
-      DB_PASSWORD_FILE: /run/secrets/${SECRET_DB}
-      WP_ADMIN_PASSWORD_FILE: /run/secrets/${SECRET_WP_ADMIN}
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      WP_ADMIN_PASSWORD_FILE: /run/secrets/wp_admin_password
 
+    # Expose the PHP-FPM port internally to Ngninx
     expose:
       - "9000"
 
@@ -90,8 +77,8 @@ services:
       - inception
 
     secrets:
-      - ${SECRET_DB}
-      - ${SECRET_WP_ADMIN}
+      - db_password
+      - wp_admin_password
 
 # ------------------------------------
 # DEFINE VOLUMES AND SECRETS
