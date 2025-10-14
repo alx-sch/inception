@@ -9,7 +9,7 @@
 set -e
 
 # Read the password content from the mounted secret files:
-DB_PASSWORD=$(cat $DB_PASSWORD_FILE)
+DB_USER_PASSWORD=$(cat $DB_USER_PASSWORD_FILE)
 WP_ADMIN_PASSWORD=$(cat $WP_ADMIN_PASSWORD_FILE)
 
 # --- 1. WAIT FOR DATABASE ---
@@ -29,7 +29,7 @@ if [ ! -f "$WP_VOLUME/wp-config.php" ]; then
 	wp config create \
 		--dbname="$DB_NAME" \
 		--dbuser="$DB_USER" \
-		--dbpass="$DB_PASSWORD" \
+		--dbpass="$DB_USER_PASSWORD" \
 		--dbhost="$DB_HOST:$DB_PORT" \
 		--allow-root \
 		--skip-check \
@@ -50,11 +50,19 @@ if ! wp core is-installed --allow-root --path="$WP_VOLUME"; then
 		--skip-email \
 		--allow-root \
 		--path="$WP_VOLUME"
-
-		echo "WordPress setup complete."
 fi
 
-# --- 4. START MAIN PROCESS ---
+# --- 4. CREATE USER OTHER THAN ADMIN ---
+if ! wp user get "$WP_USER" --allow-root --path="$WP_VOLUME" > /dev/null 2>&1; then
+	echo "Creating WordPress user '$WP_USER'..."
+	wp user create "$WP_USER" "$WP_USER_EMAIL" \
+		--role=editor \
+		--user_pass="$WP_USER_PASSWORD" \
+		--allow-root \
+		--path="$WP_VOLUME"
+fi
+
+# --- 5. START MAIN PROCESS ---
 echo "Setup complete. Starting PHP-FPM in foreground..."
 # Execute the command passed via CMD (which is /usr/sbin/php-fpm7.4 -F)
 exec "$@"

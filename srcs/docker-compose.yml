@@ -26,7 +26,7 @@ services:
 
       # Vars pointing to secret file paths within the container (default location)
       DB_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
-      DB_PASSWORD_FILE: /run/secrets/db_password
+      DB_USER_PASSWORD_FILE: /run/secrets/db_user_password
 
     volumes:
       - db_data:${DB_VOLUME}
@@ -37,7 +37,7 @@ services:
     # Secrets are mounted as files in /run/secrets/<name>
     secrets:
       - db_root_password
-      - db_password
+      - db_user_password
 
   # 2. WORDPRESS SERVICE (Web Server)
   wordpress:
@@ -61,10 +61,14 @@ services:
       WP_TITLE: ${WP_TITLE}
       WP_ADMIN_USER: ${WP_ADMIN_USER}
       WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
+      WP_USER: ${WP_USER}
+      WP_USER_EMAIL: ${WP_USER_EMAIL}
+      WP_USER_ROLE: ${WP_USER_ROLE}
       WP_VOLUME: ${WP_VOLUME}
 
-      DB_PASSWORD_FILE: /run/secrets/db_password
+      DB_USER_PASSWORD_FILE: /run/secrets/db_user_password
       WP_ADMIN_PASSWORD_FILE: /run/secrets/wp_admin_password
+      WP_USER_PASSWORD_FILE: /run/secrets/wp_user_password
 
     # Expose the PHP-FPM port internally to Ngninx
     expose:
@@ -77,7 +81,7 @@ services:
       - inception
 
     secrets:
-      - db_password
+      - db_user_password
       - wp_admin_password
 
 # ------------------------------------
@@ -95,8 +99,11 @@ secrets:
   db_root_password:
     file: ${SECRET_DB_ROOT_PASS_FILE}
 
-  db_password:
-    file: ${SECRET_DB_PASS_FILE}
+  db_user_password:
+    file: ${SECRET_DB_USER_PASS_FILE}
 
   wp_admin_password:
     file: ${SECRET_WP_ADMIN_PASS_FILE}
+
+  wp_user_password:
+    file: ${SECRET_WP_USER_PASS_FILE}

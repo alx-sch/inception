@@ -5,7 +5,7 @@ set -e
 
 # Read the password content from the mounted secret files:
 DB_ROOT_PASSWORD=$(cat $DB_ROOT_PASSWORD_FILE)
-DB_PASSWORD=$(cat $DB_PASSWORD_FILE)
+DB_USER_PASSWORD=$(cat $DB_USER_PASSWORD_FILE)
 
 # Check if the database data directory is empty.
 # If it's not empty, it means initialization has already run.
@@ -34,7 +34,7 @@ else
 		CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
 
 		-- Create a dedicated user for WordPress to connect with.
-		CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD';
+		CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PASSWORD';
 
 		-- Grant that user full permissions on the WordPress database only.
 		GRANT ALL PRIVILEGES ON \`$DB_NAME\`.* TO '$DB_USER'@'%';
