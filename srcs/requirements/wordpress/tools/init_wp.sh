@@ -8,29 +8,18 @@
 # 'set -e' makes the script exit immediately if any command fails.
 set -e
 
-# Load the file paths from the container's environment (as set in docker-compose.yml):
-DB_PASSWORD_F=$DB_PASSWORD_FILE
-WP_ADMIN_PASSWORD_F=$WP_ADMIN_PASSWORD_FILE
-
 # Read the password content from the mounted secret files:
-DB_PASSWORD=$(cat $DB_PASSWORD_F)
-WP_ADMIN_PASSWORD=$(cat $WP_ADMIN_PASSWORD_F)
-
-# The paths below are set via environment variables in docker-compose.yml
-DB_PASSWORD_FILE=/run/secrets/db_password
-WP_ADMIN_PASSWORD_FILE=/run/secrets/wp_admin_password
-
 DB_PASSWORD=$(cat $DB_PASSWORD_FILE)
 WP_ADMIN_PASSWORD=$(cat $WP_ADMIN_PASSWORD_FILE)
 
 # --- 1. WAIT FOR DATABASE ---
-echo "Waiting for database readiness at $DB_HOST:$DB_PORT..."
+echo "Checking database readiness at $DB_HOST:$DB_PORT..."
 
 # This loop uses netcat to check if the port is open ('-z' flag is for scanning, no data sent).
 while ! nc -z $DB_HOST $DB_PORT; do
 	sleep 1
 done
-echo "Database is ready."
+echo "Database is connected."
 
 
 # --- 2. WP-CONFIG.PHP GENERATION ---
@@ -41,7 +30,7 @@ if [ ! -f "$WP_VOLUME/wp-config.php" ]; then
 		--dbname="$DB_NAME" \
 		--dbuser="$DB_USER" \
 		--dbpass="$DB_PASSWORD" \
-		--dbhost="$DB_HOST" \
+		--dbhost="$DB_HOST:$DB_PORT" \
 		--allow-root \
 		--skip-check \
 		--path="$WP_VOLUME"
@@ -66,6 +55,6 @@ if ! wp core is-installed --allow-root --path="$WP_VOLUME"; then
 fi
 
 # --- 4. START MAIN PROCESS ---
-echo "Starting PHP-FPM..."
+echo "Setup complete. Starting PHP-FPM in foreground..."
 # Execute the command passed via CMD (which is /usr/sbin/php-fpm7.4 -F)
 exec "$@"

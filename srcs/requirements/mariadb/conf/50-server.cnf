@@ -1,5 +1,5 @@
 # MariaDB server configuration file.
-#
+
 # The main purpose of this file in the Inception project is to
 # override the default network settings.
 
@@ -11,5 +11,5 @@
 # By default, MariaDB only listens for connections from 'localhost' (127.0.0.1).
 # Changing the 'bind-address' to '0.0.0.0' makes it listen on all available
 # network interfaces inside the container. This allows other containers,
-# like your WordPress service, to connect to the database.
+# like the WordPress service, to connect to the database.
 bind-address = 0.0.0.0

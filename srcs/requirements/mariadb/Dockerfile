@@ -26,9 +26,6 @@ COPY		./tools/init_db.sh /usr/local/bin/init_db.sh
 # Make the entrypoint script executable.
 RUN			chmod +x /usr/local/bin/init_db.sh
 
-# Expose the default MariaDB port (3306) to allow connections from other containers.
-EXPOSE		3306
-
 # Set the entrypoint for the container.
 # This script will run when the container starts, setting up the database.
 ENTRYPOINT	["/usr/local/bin/init_db.sh"]

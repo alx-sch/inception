@@ -6,7 +6,11 @@
 # ------------------------------------
 
 services:
-  # 1. MARIADB SERVICE (Database)
+
+  #################################
+  # 1. MARIADB SERVICE (Database) #
+  #################################
+
   mariadb:
     # Use 'inception' tag, as not to default to 'latest'.
     image: mariadb:inception
@@ -28,6 +32,12 @@ services:
       DB_ROOT_PASSWORD_FILE: /run/secrets/${SECRET_DB_ROOT}
       DB_PASSWORD_FILE: /run/secrets/${SECRET_DB}
 
+    # Expose the PHP-FPM port internally to Ngninx
+    # Mostly for documentation, as there is automatic service discovery and DNS resolution
+    # for services communicating within the same Docker network
+    expose:
+      - ${DB_PORT}
+
     volumes:
       - db_data:${DB_VOLUME}
 
@@ -39,8 +49,12 @@ services:
       - ${SECRET_DB_ROOT}
       - ${SECRET_DB}
 
-  # 2. WORDPRESS SERVICE (Web Server)
+  #####################################
+  # 2. WORDPRESS SERVICE (Web Server) #
+  #####################################
+
   wordpress:
+
     # Make sure WordPress waits for MariaDB before starting setup
     depends_on:
       - mariadb
@@ -66,7 +80,6 @@ services:
       DB_PASSWORD_FILE: /run/secrets/${SECRET_DB}
       WP_ADMIN_PASSWORD_FILE: /run/secrets/${SECRET_WP_ADMIN}
 
-    # Expose the PHP-FPM port internally to Ngninx
     expose:
       - "9000"
 
