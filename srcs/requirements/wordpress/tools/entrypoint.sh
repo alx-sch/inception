@@ -35,7 +35,7 @@ echo "Database is ready."
 
 # --- 2. WP-CONFIG.PHP GENERATION ---
 # Check if wp-config.php exists. If not, create it using env variables.
-if [ ! -f "$WP_PATH/wp-config.php" ]; then
+if [ ! -f "$WP_VOLUME/wp-config.php" ]; then
 	echo "Creating wp-config.php..."
 	wp config create \
 		--dbname="$DB_NAME" \
@@ -44,13 +44,13 @@ if [ ! -f "$WP_PATH/wp-config.php" ]; then
 		--dbhost="$DB_HOST" \
 		--allow-root \
 		--skip-check \
-		--path="$WP_PATH"
+		--path="$WP_VOLUME"
 fi
 
 
 # --- 3. WORDPRESS INSTALLATION ---
 # Check if WordPress tables are created. If not, run the core installation.
-if ! wp core is-installed --allow-root --path="$WP_PATH"; then
+if ! wp core is-installed --allow-root --path="$WP_VOLUME"; then
 	echo "Installing WordPress core..."
 	wp core install \
 		--url="https://$DOMAIN_NAME" \
@@ -60,7 +60,7 @@ if ! wp core is-installed --allow-root --path="$WP_PATH"; then
 		--admin_email="$WP_ADMIN_EMAIL" \
 		--skip-email \
 		--allow-root \
-		--path="$WP_PATH"
+		--path="$WP_VOLUME"
 
 		echo "WordPress setup complete."
 fi

@@ -13,7 +13,7 @@ DB_PASSWORD=$(cat $DB_PASSWORD_F)
 
 # Check if the database data directory is empty.
 # If it's not empty, it means initialization has already run.
-if [ -d "/var/lib/mysql/$DB_NAME" ]; then		# '-d' returns true if argument exists and is a directory
+if [ -d "$DB_VOLUME/$DB_NAME" ]; then		# '-d' returns true if argument exists and is a directory
 	echo "Database '$DB_NAME' already exists. Skipping initialization."
 else
 	echo "Initializing MariaDB database..."
@@ -49,13 +49,13 @@ else
 
 	# This is the key command. 'mariadbd --bootstrap' runs the server
 	# just long enough to execute the SQL from the file, then it exits.
-	# This initializes the database data directory (/var/lib/mysql) correctly.
+	# This initializes the database data directory ($DB_VOLUME: /var/lib/mysql) correctly.
 	mariadbd --bootstrap < $init
 
 	# The bootstrap process creates files owned by root. We must change ownership
 	# to the 'mysql' user, which is what the final server process runs as.
 	echo "Setting correct file permissions..."
-	chown -R mysql:mysql /var/lib/mysql
+	chown -R mysql:mysql $DB_VOLUME
 
 	# Clean up the temporary file.
 	rm -f $init

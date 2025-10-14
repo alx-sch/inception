@@ -22,21 +22,22 @@ services:
     environment:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
+      DB_VOLUME: ${DB_VOLUME}
 
-      # Vars pointing to secret file paths within the container
-      DB_ROOT_PASSWORD_FILE: /run/secrets/root_password
-      DB_PASSWORD_FILE: /run/secrets/db_password
+      # Vars pointing to secret file paths within the container (default location)
+      DB_ROOT_PASSWORD_FILE: /run/secrets/${SECRET_DB_ROOT}
+      DB_PASSWORD_FILE: /run/secrets/${SECRET_DB}
 
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:${DB_VOLUME}
 
     networks:
       - inception
 
     # secrets are made available as files in container in /run/secrets/<secret_name>
     secrets:
-      - root_password
-      - db_password
+      - ${SECRET_DB_ROOT}
+      - ${SECRET_DB}
 
   # 2. WORDPRESS SERVICE (Web Server)
   wordpress:
@@ -60,24 +61,24 @@ services:
       WP_TITLE: ${WP_TITLE}
       WP_ADMIN_USER: ${WP_ADMIN_USER}
       WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
-      WP_PATH: ${WP_PATH}
+      WP_VOLUME: ${WP_VOLUME}
 
-      DB_PASSWORD_FILE: /run/secrets/db_password
-      WP_ADMIN_PASSWORD_FILE: /run/secrets/wp_admin_password
+      DB_PASSWORD_FILE: /run/secrets/${SECRET_DB}
+      WP_ADMIN_PASSWORD_FILE: /run/secrets/${SECRET_WP_ADMIN}
 
     # Expose the PHP-FPM port internally to Ngninx
     expose:
       - "9000"
 
     volumes:
-      - wp_files:/var/www/html
+      - wp_data:${WP_VOLUME}
 
     networks:
       - inception
 
     secrets:
-      - db_password
-      - wp_admin_password
+      - ${SECRET_DB}
+      - ${SECRET_WP_ADMIN}
 
 # ------------------------------------
 # DEFINE VOLUMES AND SECRETS
@@ -85,13 +86,13 @@ services:
 
 volumes:
   db_data:
-  wp_files:
+  wp_data:
 
 networks:
   inception:
 
 secrets:
-  root_password:
+  db_root_password:
     file: ${SECRET_DB_ROOT_PASS_FILE}
 
   db_password:
