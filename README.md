@@ -385,8 +385,8 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
       -p 3306:3306 \
       -v db_data:/var/lib/mysql \
       -e DB_NAME=wordpress \
-      -e DB_USER=wp_user \
-      -e DB_PASSWORD=wp_pass \
+      -e DB_USER=db_user \
+      -e DB_PASSWORD=user_pass \
       -e DB_ROOT_PASSWORD=root_pass \
       mariadb:inception
     ```
@@ -416,9 +416,9 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
     Once inside, we verify the following:
    
     - **Root Access:** Can we log in as the MariaDB `root` user with the correct password? (`mysql -u root -p`)
-    - **Application User Access:** Can we log in as the dedicated `wp_user` and connect to the `wordpress` database? (`mysql -u wp_user -p wordpress`)
+    - **Application User Access:** Can we log in as the dedicated `wp_user` and connect to the `wordpress` database? (`mysql -u db_user -p wordpress`)
     - **Permissions and Security:** When logged in as `wp_user`, do `SHOW DATABASES;` and `SHOW GRANTS;` confirm that the user has `ALL PRIVILEGES` on the `wordpress` database and can see nothing else?
-    -  **Full CRUD Test:** As the `wp_user`, verify that you can perform a complete Create, Read, Update and Delete cycle (`CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`, `DROP TABLE`)? This is the ultimate proof that all permissions are correct. Learn more about these SQL commands [here](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)<sup><a href="#footnote10">[10]</a></sup> and [here](https://www.almabetter.com/bytes/cheat-sheet/mariadb)<sup><a href="#footnote11">[11]</a></sup>.
+    -  **Full CRUD Test:** As the `db_user`, verify that you can perform a complete Create, Read, Update and Delete cycle (`CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`, `DROP TABLE`)? This is the ultimate proof that all permissions are correct. Learn more about these SQL commands [here](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)<sup><a href="#footnote10">[10]</a></sup> and [here](https://www.almabetter.com/bytes/cheat-sheet/mariadb)<sup><a href="#footnote11">[11]</a></sup>.
 
     ⚠️ **Note on GitHub Codespaces:**
 
