@@ -20,6 +20,7 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
     - [Container vs VM](#containers-vs-virtual-machines)
     - [Docker Applications](#applications)
 - [Docker Deep Dive](#docker-deep-dive)
+- [Services Used in Inception](#services-used-in-inception)
 
 ---
 
@@ -344,17 +345,19 @@ docker system df
 
 ---
 
-## Docker Containers in Inception
+## Setting up Inception
 
 ### Test Isolated Containers First
 
-While the final goal of Inception is a multi-container application orchestrated by Docker Compose, the foundation of a stable system lies in building and testing each service in complete isolation first. This workflow can be thought of as "unit testing" for infrastructure.
+While the ultimate goal of Inception is to create a multi-container application orchestrated by Docker Compose, the foundation of a stable system lies in building and testing services in isolation first. This workflow can be thought of as "unit testing" for infrastructure.
 
-Before we can connect all the services, we ideally prove that each one (MariaDB, WordPress and NGINX) is individually robust, secure and functional. This isolates variables and makes debugging the final, integrated application much easier.
+Before we can connect all the services, we ideally prove that each one (MariaDB, WordPress and NGINX) is individually robust, secure and functional. This isolates variables, making debugging the final, integrated application much easier.
 
 ---
 
-### Building and Verifying the MariaDB Container
+### MariaDB
+
+MariaDB is a free and open-source Relational Database (using tables, rows and columns) by the original developers of MySQL. It stores the WordPress data (like users, settings and posts) in organized tables using SQL commands.
 
 The goal is to set up a correctly initialized and persistent MariaDB container. The current `init_db.sh` uses the secure method of reading passwords from Docker secret files (`cat /run/secrets/...`). To allow for isolated testing of the container as described below (without Docker Compose), the script needs to use environment variables for passwords (`{$DB_ROOT_PASSWORD}`, `{$DB_PASSWORD}`) instead.
 
