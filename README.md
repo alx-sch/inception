@@ -486,14 +486,14 @@ hostname -I
 ```
 
 3. Set Up Port Forwarding in VirtualBox
-  1. Shut down the VM.
-  2. In **Settings → Network**, ensure the adapter is set to NAT.
-  3. Click Port Forwarding and add a rule:
-     - **Name:** e.g. ssh-access
-     - **Protocol:** TCP
-     - **Host Port**: e.g. `2222` (choose a free port)
-     - **Guest Port**: `22`
-     - **Guest IP**: leave blank (VirtualBox resolves it automatically); you may also add the VM's internal IP address confirmed above
+   1. Shut down the VM.
+   2. In **Settings → Network**, ensure the adapter is set to NAT.
+   3. Click Port Forwarding and add a rule:
+      - **Name:** e.g. ssh-access
+      - **Protocol:** TCP
+      - **Host Port**: e.g. `2222` (choose a free port)
+      - **Guest Port**: `22`
+      - **Guest IP**: leave blank (VirtualBox resolves it automatically); you may also add the VM's internal IP address confirmed above
        
 ### 4. Connect from the Host
 
