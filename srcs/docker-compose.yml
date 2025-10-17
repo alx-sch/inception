@@ -48,7 +48,7 @@ services:
     image: wordpress:inception
 
     build:
-      context: ${WORDPRESS_CONTEXT}
+      context: ./requirements/nginx
 
     restart: always
 
@@ -83,6 +83,37 @@ services:
     secrets:
       - db_user_password
       - wp_admin_password
+
+  nginx:
+    depends_on:
+      - wordpress
+
+    image: nginx:inception
+
+    build:
+      context: ${NGINX_CONTEXT}
+
+    restart: always
+
+    # Variables needed by the entrypoint script
+    environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
+      SSL_CERT_CONTAINER_PATH: ${SSL_CERT_CONTAINER_PATH}
+      SSL_KEY_CONTAINER_PATH: ${SSL_KEY_CONTAINER_PATH}
+      WP_VOLUME: ${WP_VOLUME} # Needed for the 'root' directive in the template
+
+    # Expose both 80 (for HTTPS redirect) and 443 (for secure access)
+    # HOST_PORT:CONTAINER_PORT --> explicitly map host ports as these are entry points to the application
+    ports:
+      - "80:80"
+      - "443:443"
+
+    # Mount WordPress volume so Nginx can access static files
+    volumes:
+      - wp_data:${WP_VOLUME}
+
+    networks:
+      - inception
 
 # ------------------------------------
 # DEFINE VOLUMES AND SECRETS

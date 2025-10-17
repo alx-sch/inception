@@ -20,3 +20,6 @@ Thumbs.db
 
 # SECRETS: You'd usually NEVER commit secrets publicly
 # secrets/
+
+# Ignore the directory containing self-signed SSL certificate and private key
+# srcs/requirements/nginx/conf/ssl/
