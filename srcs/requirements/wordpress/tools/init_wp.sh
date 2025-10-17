@@ -21,7 +21,6 @@ while ! nc -z $DB_HOST $DB_PORT; do
 done
 echo "Database is connected."
 
-
 # --- 2. WP-CONFIG.PHP GENERATION ---
 # Check if wp-config.php exists. If not, create it using env variables.
 if [ ! -f "$WP_VOLUME/wp-config.php" ]; then
@@ -35,7 +34,6 @@ if [ ! -f "$WP_VOLUME/wp-config.php" ]; then
 		--skip-check \
 		--path="$WP_VOLUME"
 fi
-
 
 # --- 3. WORDPRESS INSTALLATION ---
 # Check if WordPress tables are created. If not, run the core installation.
@@ -52,6 +50,10 @@ if ! wp core is-installed --allow-root --path="$WP_VOLUME"; then
 		--path="$WP_VOLUME"
 fi
 
+# Disable comment moderation (makes comments appear immediately)
+echo "Disable comment moderation..."
+wp option update comment_moderation 0 --allow-root --path="$WP_VOLUME"
+
 # --- 4. CREATE USER OTHER THAN ADMIN ---
 if ! wp user get "$WP_USER" --allow-root --path="$WP_VOLUME" > /dev/null 2>&1; then
 	echo "Creating WordPress user '$WP_USER'..."
@@ -62,9 +64,14 @@ if ! wp user get "$WP_USER" --allow-root --path="$WP_VOLUME" > /dev/null 2>&1; t
 		--path="$WP_VOLUME"
 fi
 
+# --- 5. SET FILE PERMISSIONS ---
+# Change ownership of all WordPress files to the www-data user/group.
+# This is necessary because files were created by root (via --allow-root).
+# 'www-data' is the default user for PHP-FPM and web server processes on Debian-based systems.
+echo "Setting file permissions for www-data..."
+chown -R www-data:www-data "$WP_VOLUME"
 
-
-# --- 5. START MAIN PROCESS ---
+# --- 6. START MAIN PROCESS ---
 echo "Setup complete. Starting PHP-FPM in foreground..."
 # Execute the command passed via CMD (which is /usr/sbin/php-fpm7.4 -F)
 exec "$@"
