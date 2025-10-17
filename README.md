@@ -20,6 +20,7 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
     - [Container vs VM](#containers-vs-virtual-machines)
     - [Docker Applications](#applications)
 - [Docker Deep Dive](#docker-deep-dive)
+- [Services Used in Inception](#services-used-in-inception)
 
 ---
 
@@ -344,17 +345,19 @@ docker system df
 
 ---
 
-## Docker Containers in Inception
+## Setting up Inception
 
 ### Test Isolated Containers First
 
-While the final goal of Inception is a multi-container application orchestrated by Docker Compose, the foundation of a stable system lies in building and testing each service in complete isolation first. This workflow can be thought of as "unit testing" for infrastructure.
+While the ultimate goal of Inception is to create a multi-container application orchestrated by Docker Compose, the foundation of a stable system lies in building and testing services in isolation first. This workflow can be thought of as "unit testing" for infrastructure.
 
-Before we can connect all the services, we ideally prove that each one (MariaDB, WordPress and NGINX) is individually robust, secure and functional. This isolates variables and makes debugging the final, integrated application much easier.
+Before we can connect all the services, we ideally prove that each one (MariaDB, WordPress and NGINX) is individually robust, secure and functional. This isolates variables, making debugging the final, integrated application much easier.
 
 ---
 
-### Building and Verifying the MariaDB Container
+### MariaDB
+
+MariaDB is a free and open-source Relational Database (using tables, rows and columns) by the original developers of MySQL. It stores the WordPress data (like users, settings and posts) in organized tables using SQL commands.
 
 The goal is to set up a correctly initialized and persistent MariaDB container. The current `init_db.sh` uses the secure method of reading passwords from Docker secret files (`cat /run/secrets/...`). To allow for isolated testing of the container as described below (without Docker Compose), the script needs to use environment variables for passwords (`{$DB_ROOT_PASSWORD}`, `{$DB_PASSWORD}`) instead.
 
@@ -385,8 +388,8 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
       -p 3306:3306 \
       -v db_data:/var/lib/mysql \
       -e DB_NAME=wordpress \
-      -e DB_USER=wp_user \
-      -e DB_PASSWORD=wp_pass \
+      -e DB_USER=db_user \
+      -e DB_PASSWORD=user_pass \
       -e DB_ROOT_PASSWORD=root_pass \
       mariadb:inception
     ```
@@ -416,9 +419,9 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
     Once inside, we verify the following:
    
     - **Root Access:** Can we log in as the MariaDB `root` user with the correct password? (`mysql -u root -p`)
-    - **Application User Access:** Can we log in as the dedicated `wp_user` and connect to the `wordpress` database? (`mysql -u wp_user -p wordpress`)
+    - **Application User Access:** Can we log in as the dedicated `wp_user` and connect to the `wordpress` database? (`mysql -u db_user -p wordpress`)
     - **Permissions and Security:** When logged in as `wp_user`, do `SHOW DATABASES;` and `SHOW GRANTS;` confirm that the user has `ALL PRIVILEGES` on the `wordpress` database and can see nothing else?
-    -  **Full CRUD Test:** As the `wp_user`, verify that you can perform a complete Create, Read, Update and Delete cycle (`CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`, `DROP TABLE`)? This is the ultimate proof that all permissions are correct. Learn more about these SQL commands [here](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)<sup><a href="#footnote10">[10]</a></sup> and [here](https://www.almabetter.com/bytes/cheat-sheet/mariadb)<sup><a href="#footnote11">[11]</a></sup>.
+    -  **Full CRUD Test:** As the `db_user`, verify that you can perform a complete Create, Read, Update and Delete cycle (`CREATE TABLE`, `INSERT`, `SELECT`, `UPDATE`, `DELETE`, `DROP TABLE`)? This is the ultimate proof that all permissions are correct. Learn more about these SQL commands [here](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)<sup><a href="#footnote10">[10]</a></sup> and [here](https://www.almabetter.com/bytes/cheat-sheet/mariadb)<sup><a href="#footnote11">[11]</a></sup>.
 
     ⚠️ **Note on GitHub Codespaces:**
 
