@@ -545,9 +545,7 @@ su -
 apt install sudo
 
 # Add your user to the sudo group (replace with your username)
-# and the Docker group (so 'docker' can be called without sudo)
-usermod -aG sudo your_username
-usermod -aG docker your_username
+usermod -aG sudo <your_username>
 
 # Verify membership
 groups your_username
@@ -583,10 +581,27 @@ Follow Docker’s official guide for the most reliable installation:
 Use the “Install using the apt repository” method. After installation, confirm that Docker is working:
 
 ```bash
-docker run hello-world
+sudo docker run hello-world
 ```
 
 If you see the “Hello from Docker!” message, your setup is complete.
+
+### 5. Add to Docker Group
+
+Docker commands need to be run by the root or via sudo per default.   
+To simplify things, you can add your user to the `docke` group, allowing you to run all `docker` commands without needing the `sudo` prefix.
+
+```bash
+# Log in as root
+su -
+
+
+# Add your user to the sudo group (replace with your username)
+usermod -aG docker <your_username>
+
+# Verify membership
+groups your_username
+```
 
 ## References
 
