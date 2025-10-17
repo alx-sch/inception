@@ -14,7 +14,7 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
 
 ## Table of Contents
   
-- [Docker Introduction](#docker-introduction)
+- [Docker Introduction](#docker-introduction)F
     - [What is Docker?](#what-is-docker)
     - [Docker History](#a-bit-of-history)
     - [Container vs VM](#containers-vs-virtual-machines)
@@ -596,7 +596,7 @@ To simplify things, you can add your user to the `docke` group, allowing you to 
 su -
 
 
-# Add your user to the sudo group (replace with your username)
+# Add your user to the docker group (replace with your username)
 usermod -aG docker <your_username>
 
 # Verify membership
