@@ -20,10 +20,8 @@ COPY		./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 # Set stricter, non-writable permissions for others. Gets rid of warnings in the logs.
 RUN			chmod 644 /etc/mysql/mariadb.conf.d/50-server.cnf
 
-# Copy the entrypoint script to initialize the database.
+# Copy the entrypoint script to initialize the database and make it executable.
 COPY		./tools/init_db.sh /usr/local/bin/init_db.sh
-
-# Make the entrypoint script executable.
 RUN			chmod +x /usr/local/bin/init_db.sh
 
 # Set the entrypoint for the container.

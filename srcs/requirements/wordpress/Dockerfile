@@ -46,10 +46,8 @@ RUN			mkdir -p /run/php
 # Copy in a custom configuration file for PHP-FPM
 COPY		./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
-# Copy the entrypoint script
+# Copy the entrypoint script and make it executable
 COPY		./tools/init_wp.sh /usr/local/bin/init_wp.sh
-
-# Make the entrypoint script executable
 RUN			chmod +x /usr/local/bin/init_wp.sh
 
 # Set the entrypoint to run the setup script first.

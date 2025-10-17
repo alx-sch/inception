@@ -48,7 +48,7 @@ services:
     image: wordpress:inception
 
     build:
-      context: ./requirements/nginx
+      context: ${WORDPRESS_CONTEXT}
 
     restart: always
 

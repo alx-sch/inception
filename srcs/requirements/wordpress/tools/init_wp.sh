@@ -62,6 +62,8 @@ if ! wp user get "$WP_USER" --allow-root --path="$WP_VOLUME" > /dev/null 2>&1; t
 		--path="$WP_VOLUME"
 fi
 
+
+
 # --- 5. START MAIN PROCESS ---
 echo "Setup complete. Starting PHP-FPM in foreground..."
 # Execute the command passed via CMD (which is /usr/sbin/php-fpm7.4 -F)
