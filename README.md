@@ -653,6 +653,7 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
     You can now proceed with the permission and CRUD tests.
 
     **C. Persistence Test (`docker stop` / `docker rm`)**
+
     Finally, ensure that the data survives in the allocated volume even when the container is completely removed.
 
    1. **Stop and remove the container:** `docker stop mariadb` and then `docker rm mariadb`. The container is now gone.
