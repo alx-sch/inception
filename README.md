@@ -466,31 +466,39 @@ The goal is to access your WordPress website (hosted in Docker within the VM) us
   If you are on a restricted host machine and cannot edit `/etc/hosts`, you can still edit this file within your VM and eventually access the website via the **VM's browser**:
   ```bash
   172.17.0.1   yourlogin.42.fr
-  ````
+  ```
   Here, the default gateway address `172.17.0.1` is typically the Docker Host's gateway IP within the default internal Docker bridge network. This allows services inside the VM to resolve your domain to the correct internal Docker gateway, which then forwards the request to the Nginx container.
 
   💡 **Note:** In this case, you'd need to also install a desktop environment and GUI when setting up the VM.
 
+--- 
+
 ### 2. Install the Debian VM
 
-Start with a minimal, command-line-only Debian server to keep the environment clean and predictable. Download a net-install ISO from the [Debian website](https://www.debian.org/distrib/) (choose **64-bit PC netinst iso**).
+Using a Debian **minimal install** is highly recommended for this project. Download a net-install ISO from the [Debian website](https://www.debian.org/distrib/) (choose **64-bit PC netinst iso**).
 
-Create a new VM in **Oracle VirtualBox** (free, open-source):
-- **Type**: Linux
-- **Subtype**: Debian
-- **Skip Unattended Installation**: ✔
-- **Memory**: 2048 MB
-- **Processors**: 1 CPU
-- **Disk**: 20 GB (dynamic allocation is fine)
+Create a new VM in **Oracle VirtualBox** (free, open-source) with the following specifications:
+- Choose a directory with enough disk space (42 Network: `/sgoinfre/`)
+- Load the ISO image.
+- **Base Settings:**
+    - **Type**: Linux / **Version**: Debian (64-bit)
+    - **Subtype**: Debian
+    - **Skip Unattended Installation**: ✔
+    - **Memory**: 2048 MB
+    - **Processors**: 1 CPU
+    - **Disk**: 20 GB (dynamic allocation is fine)
 
 When the installer runs:
-- Deselect Debian desktop environment and any graphical options such as GNOME.
-- Make sure SSH server and standard system utilities are selected.
-- Install the GRUB boot loader when prompted.
+- **Software Selection:**
+    - **If you have access rights to the hosts machine's `/etc/hosts` (see above):** Deselect Debian desktop environment and any graphical options such as GNOME to keep the VM light and fast.
+    - Make sure **SSH server** and **standard system utilities** are selected.
+- **Boot Loader:** Install the GRUB boot loader when prompted.
 
-### 2. Enable SSH Access
+--- 
 
-Working directly in the VM console is possible but inconvenient: You have no mouse integration, copy-pasting is not possible and you can't use your favorite text editor. By creating a "tunnel" from the host to the VM's SSH port, you can work from your host machine’s terminal and editor.
+### 3. Enable SSH Access
+
+Working directly in the VM console is possible but might be inconvient. By creating a "tunnel" from the host to the VM's SSH port, you can work from your host machine’s terminal and editor.
 
 Inside the VM, confirm the SSH port:
 
@@ -507,17 +515,17 @@ hostname -I
 # typically something like 10.0.2.15
 ```
 
-3. Set Up Port Forwarding in VirtualBox
-   1. Shut down the VM.
-   2. In **Settings → Network**, ensure the adapter is set to NAT.
-   3. Click Port Forwarding and add a rule:
+#### Set Up Port Forwarding in VirtualBox
+1. Shut down the VM.
+2. In **Settings → Network**, ensure the adapter is set to NAT.
+3. Click Port Forwarding and add a rule:
       - **Name:** e.g. ssh-access
       - **Protocol:** TCP
       - **Host Port**: e.g. `2222` (choose a free port)
       - **Guest Port**: `22`
       - **Guest IP**: leave blank (VirtualBox resolves it automatically); you may also add the VM's internal IP address confirmed above
        
-### 4. Connect from the Host
+#### Connect from the Host
 
 Start the VM (you don’t need to log in at the console) and, on the host:
 
@@ -525,7 +533,7 @@ Start the VM (you don’t need to log in at the console) and, on the host:
 ssh <vm_username>@localhost -p 2222
 ```
 
-### 5 Optional: SSH Config Shortcut
+#### Optional: SSH Config Shortcut
 
 To simplify the command, edit `~/.ssh/config` on the host:
 
@@ -542,7 +550,7 @@ Now you can connect with:
 ssh myvm
 ```
 
-### 6. Use Your Local Editor (e.g. VS Code)
+#### Use Your Local Editor (e.g. VS Code)
 - Install the **Remote – SSH** extension on VS Code.
 - Click the “><” icon in the lower-left corner (“Open a Remote Window”).
 - Choose **Connect to Host → myvm** and enter the VM user’s password.
@@ -551,11 +559,11 @@ You can now edit files and run terminals in VS Code as if you were working local
 
 ---- 
 
-## Setting up Docker
+### 4. Setting up Docker
 
 To turn the minimal Debian server installation to a ready-to-use Docker host, follow these steps:
 
-### 1. Create a Sudo-Enabled User
+#### Add User to Sudo Group
 
 Docker commands typically require elevated privileges. To give your user sudo rights:
 
@@ -575,7 +583,7 @@ groups your_username
 
 You should see `sudo` listed in the groups. Type `exit` to leave the root shell, then log out and back in for the change to take effect.
 
-### 2. Update the System
+#### Update the System and Install Common Tools
 
 Keep the packages current:
 
@@ -583,24 +591,22 @@ Keep the packages current:
 sudo apt update && sudo apt upgrade -y
 ```
 
-### 3. Install Common Tools
-
 Install a few utilities you’ll use often:
 
 ```bash
 sudo apt install curl git make -y
 ```
 
-`git` helps manage project files from a repository.
-`curl` is handy for downloading installation scripts.
-`make` is used to execute Makefiles.
+- `git` helps manage project files from a repository.
+- `curl` is handy for downloading installation scripts.
+- `make` is used to execute Makefiles.
 
 ### 4. Install Docker Engine
 
 Follow Docker’s official guide for the most reliable installation:
 [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
 
-Use the “Install using the apt repository” method. After installation, confirm that Docker is working:
+Use the **“Install using the apt repository”** method. After installation, confirm that Docker is working:
 
 ```bash
 sudo docker run hello-world
@@ -608,10 +614,10 @@ sudo docker run hello-world
 
 If you see the “Hello from Docker!” message, your setup is complete.
 
-### 5. Add to Docker Group
+#### Add to User to Docker Group
 
-Docker commands need to be run by the root or via sudo per default.   
-To simplify things, you can add your user to the `docke` group, allowing you to run all `docker` commands without needing the `sudo` prefix.
+Docker commands must be run by the root user or via sudo by default.   
+To simplify things, you can add your user to the `docker` group, allowing you to run all `docker` commands without needing the `sudo` prefix.
 
 ```bash
 # Log in as root
@@ -624,6 +630,8 @@ usermod -aG docker <your_username>
 # Verify membership
 groups your_username
 ```
+
+---
 
 ## References
 
