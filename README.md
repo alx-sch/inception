@@ -13,7 +13,11 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
 ---
 
 ## Table of Contents
-  
+
+- [The Project](#the-project-a-dockerized-web-application-stack)
+     - [Technology Stack](#technology-stack)
+     - [Architecture & Request Flow](#architecture-and-request-flow)
+     - [How To Use?](#how-to-use?)
 - [Docker Introduction](#docker-introduction)
     - [What is Docker?](#what-is-docker)
     - [Docker History](#a-bit-of-history)
@@ -83,7 +87,7 @@ The "big picture" of the Inception application is an orchestrated stack of servi
 
 ---
 
-## How to Use?
+### How to Use?
 
 XXX
 
