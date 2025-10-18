@@ -17,13 +17,19 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
 - [The Project](#the-project-a-dockerized-web-application-stack)
      - [Technology Stack](#technology-stack)
      - [Architecture & Request Flow](#architecture-and-request-flow)
-     - [How To Use?](#how-to-use?)
+     - [How To Use?](#how-to-use)
 - [Docker Introduction](#docker-introduction)
     - [What is Docker?](#what-is-docker)
-    - [Docker History](#a-bit-of-history)
+    - [History](#a-bit-of-history)
     - [Container vs VM](#containers-vs-virtual-machines)
-    - [Docker Applications](#applications)
-- [Docker Deep Dive](#docker-deep-dive)
+    - [Applications](#applications)
+- [Deep Dive](#docker-deep-dive)
+    - [Docker Components](#docker-components)
+    - [Docker Workflow](#docker-workflow)
+    - [Docker File](#the-dockerfile)
+    - [Docker Compose](#XXX)
+    - [Docker Commands](#docker-commands)
+    - [Total Cleanup](#total-cleanup)
 - [Services Used in Inception](#services-used-in-inception)
 
 ---
@@ -34,6 +40,8 @@ In this project, I containerize a full-stack web application using Docker. The g
 
 This project emphasizes the importance of isolated environments and the automation of service deployment. By using Docker, it is ensured that the application is portable, scalable and runs consistently across any environment. The `docker-compose.yml` file serves as the master blueprint, defining and connecting the individual services on a private network to form a single, cohesive application.
 
+---
+
 ### Technology Stack
 - **Host Environment:** Virtual Machine running Debian 13 (Trixie)
 - **Orchestration:** Docker & Docker Compose
@@ -41,6 +49,8 @@ This project emphasizes the importance of isolated environments and the automati
 - **Application:** WordPress with PHP-FPM
 - **Database:** MariaDB
 - **Automation:** Makefile
+
+---
 
 ### Architecture and Request Flow
 
@@ -93,9 +103,9 @@ XXX
 
 ---
 
-# Docker Introduction
+## Docker Introduction
 
-## What is Docker?
+### What is Docker?
 
 Docker is a platform for developing, shipping and running applications in **containers**. A Docker container can hold any application and its dependencies (code, libraries, system tools, configuration) and run on any machine that has Docker installed.    
 
@@ -103,7 +113,7 @@ This solves the classic problem of "it works on my machine" by packaging the ent
 
 ---
 
-## A Bit of History
+### A Bit of History
 
 Docker was first introduced by Solomon Hykes at PyCon 2013 -- check out his legendary five-minute minute talk [here](https://www.youtube.com/watch?v=wW9CAH9nSLs)<sup><a href="#footnote1">[1]</a></sup>.     
 Originally an internal project at his PaaS company dotCloud, it was quickly open-sourced once its potential became clear.
@@ -114,7 +124,7 @@ Docker’s innovation was to create a user-friendly set of tools, a strong commu
 
 ---
 
-## Containers vs. Virtual Machines
+### Containers vs. Virtual Machines
 
 A common point of confusion is the difference between a container and a virtual machine (VM):
 
@@ -135,7 +145,7 @@ This makes containers incredibly lightweight, fast to start and efficient compar
 
 ---
 
-## Applications
+### Applications
 
 Docker is the standard way modern applications are built, shipped and run<sup><a href="#footnote3">[3</a>,<a href="#footnote4">4]</sup>. Common applications are:
 
@@ -200,7 +210,7 @@ Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
 
 ---
 
-### The Workflow
+### Docker Workflow
 
 1. You write a **Dockerfile**, a text file containing instructions to build a Docker image.   
 2. You use the **Docker Client** (`docker build`) to send these instructions to the **Docker Daemon**.
@@ -266,6 +276,12 @@ Note: When multiple `ENTRYPOINT` and `CMD` are specified in a Dockerfile, all bu
 
 ---
 
+### Docker Compose
+
+XXXXX
+
+---
+
 ### Docker Commands    
 
 The most common Docker commands you'll use with a `Dockerfile` are for building an image from the file and running a container based on that image<sup><a href="#footnote6">[6]</a></sup>:
@@ -324,7 +340,7 @@ The most common Docker commands you'll use with a `Dockerfile` are for building 
 
 ---
 
-#### Total Cleanup
+### Total Cleanup
 
 This is a powerful "total cleanup" routine. It removes *ALL* Docker resources to free up space:
 
