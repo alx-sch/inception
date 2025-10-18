@@ -601,7 +601,9 @@ sudo apt install curl git make -y
 - `curl` is handy for downloading installation scripts.
 - `make` is used to execute Makefiles.
 
-### 4. Install Docker Engine
+---
+
+### 5. Install Docker Engine
 
 Follow Docker’s official guide for the most reliable installation:
 [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
