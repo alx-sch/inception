@@ -11,6 +11,7 @@ RED :=				\033[91m
 # Load environment variables from .env file
 ENV_FILE :=			srcs/.env
 
+# If env file exists, include (into Makefile) and export (into shell) variables
 ifneq ($(wildcard $(ENV_FILE)),)
 	include $(ENV_FILE)
 	export $(shell sed 's/=.*//' $(ENV_FILE) | xargs)
