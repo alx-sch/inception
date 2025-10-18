@@ -625,7 +625,6 @@ To simplify things, you can add your user to the `docker` group, allowing you to
 # Log in as root
 su -
 
-
 # Add your user to the docker group (replace with your username)
 usermod -aG docker <your_username>
 
