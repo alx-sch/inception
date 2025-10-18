@@ -449,7 +449,29 @@ After all these checks pass, we can consider the MariaDB service fully validated
 
 ## Setting up the VM
 
-### 1. Install the Debian VM
+### 1. Check Edit Rights for `/etc/hosts` File
+
+The goal is to access your WordPress website (hosted in Docker within the VM) using your custom domain name (`yourlogin.42.fr`). Since this domain is not public, you must perform **Local Domain Name Resolution (Local DNS)** to ensure the domain translates to your VM's IP address.
+
+- **Edit the Hosts File on Host Machine**:     
+  Add an entry to your **host computer's** `/etc/hosts` file. You must use `sudo` privileges to add the line:
+    ```bash
+    127.0.0.1   yourlogin.42.fr
+    ```
+    This uses the loopback address combined with **Port Forwarding** configured in your VM software to route HTTPS traffic (Port 443) directly to the VM's Nginx service.
+
+  💡 **Note:** In this case, setting up a minimal, command-line-only server VM is sufficient.
+
+- **Edit the Hosts File on VM**:       
+  If you are on a restricted host machine and cannot edit `/etc/hosts`, you can still edit this file within your VM and eventually access the website via the **VM's browser**:
+  ```bash
+  172.17.0.1   yourlogin.42.fr
+  ````
+  Here, the default gateway address `172.17.0.1` is typically the Docker Host's gateway IP within the default internal Docker bridge network. This allows services inside the VM to resolve your domain to the correct internal Docker gateway, which then forwards the request to the Nginx container.
+
+  💡 **Note:** In this case, you'd need to also install a desktop environment and GUI when setting up the VM.
+
+### 2. Install the Debian VM
 
 Start with a minimal, command-line-only Debian server to keep the environment clean and predictable. Download a net-install ISO from the [Debian website](https://www.debian.org/distrib/) (choose **64-bit PC netinst iso**).
 
