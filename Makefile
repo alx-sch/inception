@@ -50,8 +50,7 @@ fclean:
 	@docker compose -f $(DOCKER_COMP_F) down --rmi all --volumes
 	@docker system prune -af --volumes
 	@docker volume ls -q | xargs -r docker volume rm
-	@sudo rm -rf $(VOLUME_PATH)db_data
-	@sudo rm -rf $(VOLUME_PATH)wp_data
+	@sudo rm -rf $(VOLUME_PATH)
 	@echo "$(BOLD)$(RED)\n🗑️  All Docker containers, networks, images, and volumes have been removed.$(RESET)"
 
 pause:
