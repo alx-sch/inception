@@ -377,7 +377,7 @@ The goal is to successfully access your WordPress website, exposed via NGINX on 
 
 - **Accessing the site from the Host Machine**:    
   This scenario relies on **NAT Port Forwarding** configured in the VM software. This rule tells your host machine to redirect traffic from its own loopback address to the VM.     
-  - **VM Software Configuration:**
+  - **VM Software Configuration:**     
     The VM software must be configured with a NAT network adapter and a Port Forwarding rule:
        - Host IP: `127.0.0.1` (or blank, which defaults to all interfaces)
        - Host Port: `443`
