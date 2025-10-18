@@ -397,6 +397,7 @@ The goal is to successfully access your WordPress website, exposed via NGINX on 
     Use `sudo` to edit the `/etc/hosts` file inside the **VM** and add the following entry:
     ```bash
     # The VM's Loopback IP is used for direct Docker NATing inside the VM.
+    127.0.0.1   yourlogin.42.fr
     ```
   💡 **Note:** In this case, you'd also need to install a desktop environment and GUI when setting up the VM.
 
