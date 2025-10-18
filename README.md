@@ -383,7 +383,7 @@ The goal is to successfully access your WordPress website, exposed via NGINX on 
        - Host Port: `443`
        - Guest IP: leave blank (VirtualBox resolves it automatically); you may also add the VM's internal IP address
        - Guest Port: `443` 
-  - **Edit the Hosts File on the Host Machine:**     
+  - **Edit the Hosts File on the Host Machine:**      
     Use `sudo` privileges to edit the `/etc/hosts` file on your **main host computer** and add the following entry:
     ```bash
     # The Host Machine's NAT rule directs this loopback traffic to the VM.
@@ -393,7 +393,7 @@ The goal is to successfully access your WordPress website, exposed via NGINX on 
 
 - **Accessing the site from the VM**:       
   If you are on a restricted host machine and cannot edit `/etc/hosts`, you can still edit this file within your VM and eventually access the website via the VM's browser. Since the NGINX container exposes port `443` to all interfaces (`0.0.0.0:443`) on the VM, you still use the loopback address.
-  - **Edit the Hosts File on the VM:**
+  - **Edit the Hosts File on the VM:**     
   Use `sudo` to edit the `/etc/hosts` file inside the **VM** and add the following entry:
   ```bash
   # The VM's Loopback IP is used for direct Docker NATing inside the VM.
