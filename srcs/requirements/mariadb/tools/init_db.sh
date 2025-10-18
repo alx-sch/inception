@@ -62,5 +62,6 @@ fi
 # 'exec "$@"' passes control to the CMD specified in the Dockerfile
 # (which is 'mysqld_safe'). This starts the MariaDB server in the foreground,
 # keeping the container running.
+# Expands to all arguments passed to the script (the commands after the entrypoint in the Dockerfile) -> 'exec mysqld_safe'
 echo "Starting MariaDB server in the foreground..."
-exec "$@" # expands to all arguments passed to the script (the commands after the entrypoint in the Dockerfile) -> 'exec mysqld_safe'
+exec "$@"

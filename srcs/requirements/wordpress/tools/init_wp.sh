@@ -11,8 +11,9 @@ set -e
 # Read the password content from the mounted secret files:
 DB_USER_PASSWORD=$(cat $DB_USER_PASSWORD_FILE)
 WP_ADMIN_PASSWORD=$(cat $WP_ADMIN_PASSWORD_FILE)
+WP_USER_PASSWORD=$(cat $WP_USER_PASSWORD_FILE)
 
-# --- 1. WAIT FOR DATABASE ---
+# --- WAIT FOR DATABASE ---
 echo "Checking database readiness at $DB_HOST:$DB_PORT..."
 
 # This loop uses netcat to check if the port is open ('-z' flag is for scanning, no data sent).
@@ -21,7 +22,7 @@ while ! nc -z $DB_HOST $DB_PORT; do
 done
 echo "Database is connected."
 
-# --- 2. WP-CONFIG.PHP GENERATION ---
+# --- WP-CONFIG.PHP GENERATION ---
 # Check if wp-config.php exists. If not, create it using env variables.
 if [ ! -f "$WP_VOLUME/wp-config.php" ]; then
 	echo "Creating wp-config.php..."
@@ -35,7 +36,7 @@ if [ ! -f "$WP_VOLUME/wp-config.php" ]; then
 		--path="$WP_VOLUME"
 fi
 
-# --- 3. WORDPRESS INSTALLATION ---
+# --- WORDPRESS INSTALLATION ---
 # Check if WordPress tables are created. If not, run the core installation.
 if ! wp core is-installed --allow-root --path="$WP_VOLUME"; then
 	echo "Installing WordPress core..."
@@ -50,11 +51,14 @@ if ! wp core is-installed --allow-root --path="$WP_VOLUME"; then
 		--path="$WP_VOLUME"
 fi
 
-# Disable comment moderation (makes comments appear immediately)
-echo "Disable comment moderation..."
-wp option update comment_moderation 0 --allow-root --path="$WP_VOLUME"
+# --- DISABLE COMMENT MODERATION SETTIGNS ---
+# makes comments appear immediately
+echo "Disabling comment moderation settings..."
+wp option update comment_moderation 0 --allow-root --path="$WP_VOLUME" && \
+wp option update comment_whitelist 0 --allow-root --path="$WP_VOLUME" && \
+wp option update comment_max_links 100 --allow-root --path="$WP_VOLUME"
 
-# --- 4. CREATE USER OTHER THAN ADMIN ---
+# --- CREATE USER OTHER THAN ADMIN ---
 if ! wp user get "$WP_USER" --allow-root --path="$WP_VOLUME" > /dev/null 2>&1; then
 	echo "Creating WordPress user '$WP_USER'..."
 	wp user create "$WP_USER" "$WP_USER_EMAIL" \
@@ -64,14 +68,14 @@ if ! wp user get "$WP_USER" --allow-root --path="$WP_VOLUME" > /dev/null 2>&1; t
 		--path="$WP_VOLUME"
 fi
 
-# --- 5. SET FILE PERMISSIONS ---
+# --- SET FILE PERMISSIONS ---
 # Change ownership of all WordPress files to the www-data user/group.
 # This is necessary because files were created by root (via --allow-root).
 # 'www-data' is the default user for PHP-FPM and web server processes on Debian-based systems.
 echo "Setting file permissions for www-data..."
 chown -R www-data:www-data "$WP_VOLUME"
 
-# --- 6. START MAIN PROCESS ---
+# --- START MAIN PROCESS ---
 echo "Setup complete. Starting PHP-FPM in foreground..."
 # Execute the command passed via CMD (which is /usr/sbin/php-fpm7.4 -F)
 exec "$@"

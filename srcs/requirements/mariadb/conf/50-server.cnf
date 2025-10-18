@@ -4,7 +4,8 @@
 # override the default network settings.
 
 # It's called "50-server.cnf" as MariaDB reads config files in alphatical order.
-# The '50-' prefix places the configuration in the middle of the potential loading sequence.
+# The '50-' prefix places the configuration in the middle of the potential
+# loading sequence.
 # --> Easy to override via '99-' or have base settings loaded before ('00-').
 
 [mysqld]

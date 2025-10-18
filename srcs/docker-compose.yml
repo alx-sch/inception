@@ -83,6 +83,7 @@ services:
     secrets:
       - db_user_password
       - wp_admin_password
+      - wp_user_password
 
   nginx:
     depends_on:
@@ -102,10 +103,9 @@ services:
       SSL_KEY_CONTAINER_PATH: ${SSL_KEY_CONTAINER_PATH}
       WP_VOLUME: ${WP_VOLUME} # Needed for the 'root' directive in the template
 
-    # Expose both 80 (for HTTPS redirect) and 443 (for secure access)
+    # Expose 443 (for secure access)
     # HOST_PORT:CONTAINER_PORT --> explicitly map host ports as these are entry points to the application
     ports:
-      - "80:80"
       - "443:443"
 
     # Mount WordPress volume so Nginx can access static files
@@ -120,10 +120,22 @@ services:
 # ------------------------------------
 
 volumes:
+  # Per default, the driver is 'local' (stored on local Docker host filesystem)
+  # and persistence is 'permanent' (data is kept until volume is explicitly removed)
   db_data:
+    driver_opts:
+      # This forces the volume data to be stored at the specified path on the VM host.
+      type: none
+      o: bind
+      device: ${VOLUME_PATH}db_data
   wp_data:
+    driver_opts:
+      type: none
+      o: bind
+      device: ${VOLUME_PATH}wp_data
 
 networks:
+  # Per default, that's a 'bridge' network driver (internal and isolated) and 'local' scope (only accessible by containers on the same host)
   inception:
 
 secrets:
