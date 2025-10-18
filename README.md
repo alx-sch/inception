@@ -373,25 +373,33 @@ docker system df
 
 ### 1. Check Edit Rights for `/etc/hosts` File
 
-The goal is to access your WordPress website (hosted in Docker within the VM) using your custom domain name (`yourlogin.42.fr`). Since this domain is not public, you must perform **Local Domain Name Resolution (Local DNS)** to ensure the domain translates to your VM's IP address.
+The goal is to successfully access your WordPress website, exposed via NGINX on port 443 (`-p 443:443`), using the custom domain `yourlogin.42.fr`. Since this domain is not public, you must configure **Local Domain Name Resolution** (Local DNS) by editing the `/etc/hosts` file on the machine initiating the request
 
-- **Edit the Hosts File on Host Machine**:     
-  Add an entry to your **host computer's** `/etc/hosts` file. You must use `sudo` privileges to add the line:
+- **Accessing the site from the Host Machine**:    
+  This scenario relies on **NAT Port Forwarding** configured in the VM software. This rule tells your host machine to redirect traffic from its own loopback address to the VM.     
+  - **VM Software Configuration:**
+    The VM software must be configured with a NAT network adapter and a Port Forwarding rule:
+       - Host IP: `127.0.0.1` (or blank, which defaults to all interfaces)
+       - Host Port: `443`
+       - Guest IP: leave blank (VirtualBox resolves it automatically); you may also add the VM's internal IP address
+       - Guest Port: `443` 
+  - **Edit the Hosts File on the Host Machine:**     
+    Use `sudo` privileges to edit the `/etc/hosts` file on your **main host computer** and add the following entry:
     ```bash
+    # The Host Machine's NAT rule directs this loopback traffic to the VM.
     127.0.0.1   yourlogin.42.fr
     ```
-    This uses the loopback address combined with **Port Forwarding** configured in your VM software to route HTTPS traffic (Port 443) directly to the VM's Nginx service.
-
   💡 **Note:** In this case, setting up a minimal, command-line-only server VM is sufficient.
 
-- **Edit the Hosts File on VM**:       
-  If you are on a restricted host machine and cannot edit `/etc/hosts`, you can still edit this file within your VM and eventually access the website via the **VM's browser**:
+- **Accessing the site from the VM**:       
+  If you are on a restricted host machine and cannot edit `/etc/hosts`, you can still edit this file within your VM and eventually access the website via the VM's browser. Since the NGINX container exposes port `443` to all interfaces (`0.0.0.0:443`) on the VM, you still use the loopback address.
+  - **Edit the Hosts File on the VM:**
+  Use `sudo` to edit the `/etc/hosts` file inside the **VM** and add the following entry:
   ```bash
-  172.17.0.1   yourlogin.42.fr
+  # The VM's Loopback IP is used for direct Docker NATing inside the VM.
+  127.0.0.1    yourlogin.42.fr
   ```
-  Here, the default gateway address `172.17.0.1` is typically the Docker Host's gateway IP within the default internal Docker bridge network. This allows services inside the VM to resolve your domain to the correct internal Docker gateway, which then forwards the request to the Nginx container.
-
-  💡 **Note:** In this case, you'd need to also install a desktop environment and GUI when setting up the VM.
+  💡 **Note:** In this case, you'd also need to install a desktop environment and GUI when setting up the VM.
 
 --- 
 
