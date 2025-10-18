@@ -533,7 +533,7 @@ Start the VM (you don’t need to log in at the console) and, on the host:
 ssh <vm_username>@localhost -p 2222
 ```
 
-#### Optional: SSH Config Shortcut
+#### SSH Config Shortcut
 
 To simplify the command, edit `~/.ssh/config` on the host:
 
@@ -559,9 +559,9 @@ You can now edit files and run terminals in VS Code as if you were working local
 
 ---- 
 
-### 4. Setting up Docker
+### 4. Prepare the Debian Host
 
-To turn the minimal Debian server installation to a ready-to-use Docker host, follow these steps:
+To prepare the minimal Debian server installation for the project and the Docker Engine installation, follow these steps:
 
 #### Add User to Sudo Group
 
@@ -598,7 +598,7 @@ sudo apt install curl git make -y
 ```
 
 - `git` helps manage project files from a repository.
-- `curl` is handy for downloading installation scripts.
+- `curl` is handy for downloading installation scripts (used when installing the Docker Engine).
 - `make` is used to execute Makefiles.
 
 ---
