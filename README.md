@@ -31,7 +31,7 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
     - [Docker Commands](#docker-commands)
     - [Total Cleanup](#total-cleanup)
 - [Setting Up the VM](#setting-up-the-vm)
-- [Setting up Inception](#setting-up-inception)
+- [Setting Up Inception](#setting-up-inception)
 
 ---
 
