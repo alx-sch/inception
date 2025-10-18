@@ -30,7 +30,8 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
     - [Docker Compose](#XXX)
     - [Docker Commands](#docker-commands)
     - [Total Cleanup](#total-cleanup)
-- [Services Used in Inception](#services-used-in-inception)
+- [Setting Up the VM](#setting-up-the-vm)
+- [Setting up Inception](#setting-up-inception)
 
 ---
 
