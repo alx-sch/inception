@@ -9,7 +9,7 @@ YELLOW =			\033[33m
 RED :=				\033[91m
 
 # Load environment variables from .env file
-ENV_FILE := srcs/.env
+ENV_FILE :=			srcs/.env
 
 ifneq ($(wildcard $(ENV_FILE)),)
 	include $(ENV_FILE)
@@ -24,8 +24,8 @@ all: build up
 
 build:
 	@echo "$(BOLD)$(GREEN)📁 Creating host directories for volumes...$(RESET)"
-	mkdir -p $(VOLUME_PATH)db_data
-	mkdir -p $(VOLUME_PATH)wp_data
+	sudo mkdir -p $(VOLUME_PATH)db_data
+	sudo mkdir -p $(VOLUME_PATH)wp_data
 	@echo "$(BOLD)$(GREEN)🐳 Building Docker images...$(RESET)"
 	@docker compose -f $(DOCKER_COMP_F) build
 
@@ -73,6 +73,6 @@ status:
 	@echo "$(BOLD)$(YELLOW)Current status of all services: $(RESET)"
 	@docker compose -f $(DOCKER_COMP_F) ps
 
-re:	fclean all
+re: fclean all
 
 .PHONY: all build up clean fclean pause unpause stop start re status
