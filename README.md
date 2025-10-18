@@ -475,7 +475,7 @@ The goal is to access your WordPress website (hosted in Docker within the VM) us
 
 ### 2. Install the Debian VM
 
-Using a Debian **minimal install** is highly recommended for this project. Download a net-install ISO from the [Debian website](https://www.debian.org/distrib/) (choose **64-bit PC netinst iso**).
+Using a Debian **minimal install** is recommended for this project. Download a net-install ISO from the [Debian website](https://www.debian.org/distrib/) (choose **64-bit PC netinst iso**).
 
 Create a new VM in **Oracle VirtualBox** (free, open-source) with the following specifications:
 - Choose a directory with enough disk space (42 Network: `/sgoinfre/`)
