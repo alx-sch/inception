@@ -134,6 +134,48 @@ services:
     networks:
       - inception_network
 
+  # BONUS: REDIS (In-memory Data Store)
+  redis:
+    image: redis:inception
+
+    build:
+      context: ${REDIS_CONTEXT}
+
+    restart: always
+
+    ports:
+      - "6379:6379"
+
+    networks:
+      - inception_network
+
+  # BONUS: FTP-SERVER (manage WordPress files via FTP)
+  ftp-server:
+    image: ftp-server:inception
+
+    build:
+      context: ${FTP_SERVER_CONTEXT}
+
+    restart: always
+
+    environment:
+      FTP_USER: ${FTP_USER}
+      FTP_USER_PASSWORD_FILE: /run/secrets/ftp_user_password
+
+    # Expose FTP ports
+    ports:
+      - "21:21" # FTP command port
+      - "21000-21009:21000-21009" # Passive mode ports (for data transfer)
+
+    volumes:
+      - wp_data:${FTP_WP_VOLUME}
+
+    networks:
+      - inception_network
+
+    secrets:
+      - ftp_user_password
+
 # ------------------------------------
 # DEFINE VOLUMES AND SECRETS
 # ------------------------------------
@@ -169,3 +211,6 @@ secrets:
 
   wp_user_password:
     file: ${SECRET_WP_USER_PASS_FILE}
+
+  ftp_user_password:
+    file: ${SECRET_FTP_USER_PASS_FILE}

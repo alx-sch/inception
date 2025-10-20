@@ -1,10 +1,10 @@
 # Base image for the container.
 # Debian 13 ("Trixie") is the latest stable version currenly, but
 # Debian 12 ("Bookworm") is the current penultimate stable version.
-FROM		debian:bookworm-slim
+FROM	debian:bookworm-slim
 
 # Author & Maintainer
-LABEL		maintainer="aschenk"
+LABEL	maintainer="aschenk"
 
 # Install necessary packages: PHP, PHP-FPM, PHP-MySQL extension, and utilities
 # - php-cli: Runs PHP scripts from the command line.
@@ -28,4 +28,4 @@ RUN		wget "https://www.adminer.org/latest-en.php" -O index.php
 EXPOSE	8080
 
 # Start Adminer script via PHP built-in server (runs index.php by default)
-CMD ["php", "-S", "[::]:8080"]
+CMD		["php", "-S", "[::]:8080"]

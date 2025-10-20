@@ -57,8 +57,7 @@ fi
 # --- DISABLE COMMENT MODERATION SETTINGS ---
 # makes comments appear immediately (very optional)
 echo "Disabling comment moderation settings..."
-wp option update comment_moderation 0 --allow-root --path="$WP_VOLUME" && \
-wp option update comment_whitelist 0 --allow-root --path="$WP_VOLUME" && \
+wp option update comment_whitelist 0 --allow-root --path="$WP_VOLUME"
 
 # --- CREATE USER OTHER THAN ADMIN ---
 if ! wp user get "$WP_USER" --allow-root --path="$WP_VOLUME" > /dev/null 2>&1; then

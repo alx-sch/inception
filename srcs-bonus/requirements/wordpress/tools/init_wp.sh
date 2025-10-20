@@ -36,6 +36,11 @@ if [ ! -f "$WP_VOLUME/wp-config.php" ]; then
 		--path="$WP_VOLUME"
 fi
 
+# --- ADD REDIS CONFIGURATION HERE ---
+echo "Adding Redis connection constants to wp-config.php..."
+wp config set WP_REDIS_HOST "'redis'" --raw --allow-root --path="$WP_VOLUME"
+wp config set WP_REDIS_PORT 6379 --raw --allow-root --path="$WP_VOLUME"
+
 # --- WORDPRESS INSTALLATION ---
 # Check if WordPress tables are created. If not, run the core installation.
 
@@ -54,11 +59,18 @@ if ! wp core is-installed --allow-root --path="$WP_VOLUME"; then
 		--path="$WP_VOLUME"
 fi
 
+# --- INSTALL AND ACTIVATE REDIS PLUGIN ---
+echo "Installing Redis Object Cache plugin..."
+# 1. Install the plugin from the WordPress repository
+wp plugin install redis-cache --activate --allow-root --path="$WP_VOLUME"
+# 2. Enable the drop-in object-cache.php file
+echo "Enabling Redis Object Cache..."
+wp redis enable --allow-root --path="$WP_VOLUME"
+
 # --- DISABLE COMMENT MODERATION SETTINGS ---
 # makes comments appear immediately (very optional)
 echo "Disabling comment moderation settings..."
-wp option update comment_moderation 0 --allow-root --path="$WP_VOLUME" && \
-wp option update comment_whitelist 0 --allow-root --path="$WP_VOLUME" && \
+wp option update comment_whitelist 0 --allow-root --path="$WP_VOLUME"
 
 # --- CREATE USER OTHER THAN ADMIN ---
 if ! wp user get "$WP_USER" --allow-root --path="$WP_VOLUME" > /dev/null 2>&1; then
