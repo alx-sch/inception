@@ -1,10 +1,10 @@
 # Base image for the container.
 # Debian 12 ("Bookworm") is the latest stable version currently, but
 # Debian 11 ("Bullseye") is the current penultimate stable version.
-FROM		debian:bullseye
+FROM		debian:bullseye-slim
 
-# Author
-LABEL		author="aschenk"
+# Author & Maintainer
+LABEL		maintainer="aschenk"
 
 # Update package lists and install Nginx in a single layer.
 # - nginx: The web server software.

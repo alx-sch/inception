@@ -1,10 +1,10 @@
 # Base image for the container.
 # Debian 12 ("Bookworm") is the latest stable version currenly, but
 # Debian 11 ("Bullseye") is the current penultimate stable version.
-FROM		debian:bullseye
+FROM		debian:bullseye-slim
 
-# Author
-LABEL		author="aschenk"
+# Author & Maintainer
+LABEL		maintainer="aschenk"
 
 # Update package lists and install all necessary packages in a single layer.
 # - php-fpm: The PHP FastCGI Process Manager, which runs the WordPress code -> is 7.4 in Debian Bullseye

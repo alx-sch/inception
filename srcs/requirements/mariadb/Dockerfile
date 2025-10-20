@@ -1,10 +1,10 @@
 # Base image for the container.
 # Debian 12 ("Bookworm") is the latest stable version currently, but
 # Debian 11 ("Bullseye") is the current penultimate stable version.
-FROM		debian:bullseye
+FROM		debian:bullseye-slim
 
-# Author
-LABEL		author="aschenk"
+# Author & Maintainer
+LABEL		maintainer="aschenk"
 
 # Update package lists and install necessary packages.
 # - We remove package lists afterwards to keep the final image size smaller.
@@ -13,11 +13,9 @@ RUN			apt-get update && apt-get install -y \
 			mariadb-client \
 			&& rm -rf /var/lib/apt/lists/*
 
-# Copy the MariaDB configuration file.
+# Copy the MariaDB configuration file and set permissions (gets rid of warnings in the logs).
 # This file allows connections from other containers (like WordPress).
 COPY		./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-
-# Set stricter, non-writable permissions for others. Gets rid of warnings in the logs.
 RUN			chmod 644 /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # Copy the entrypoint script to initialize the database and make it executable.
