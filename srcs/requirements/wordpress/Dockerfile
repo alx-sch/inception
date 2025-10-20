@@ -1,13 +1,13 @@
 # Base image for the container.
-# Debian 12 ("Bookworm") is the latest stable version currenly, but
-# Debian 11 ("Bullseye") is the current penultimate stable version.
-FROM		debian:bullseye-slim
+# Debian 13 ("Trixie") is the latest stable version currenly, but
+# Debian 12 ("Bookworm") is the current penultimate stable version.
+FROM		debian:bookworm-slim
 
 # Author & Maintainer
 LABEL		maintainer="aschenk"
 
 # Update package lists and install all necessary packages in a single layer.
-# - php-fpm: The PHP FastCGI Process Manager, which runs the WordPress code -> is 7.4 in Debian Bullseye
+# - php-fpm: The PHP FastCGI Process Manager, which runs the WordPress code -> is 8.2 in Debian Bookworm
 # - php-mysql: The extension that allows PHP to communicate with MariaDB.
 # - curl: A utility for downloading files from the internet.
 # - netcat-traditional: Used in entrypoint script to check if database port is open/ready.
@@ -44,7 +44,7 @@ RUN			wp core download --version=6.7.3 --allow-root
 RUN			mkdir -p /run/php
 
 # Copy in a custom configuration file for PHP-FPM
-COPY		./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY		./conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 
 # Copy the entrypoint script and make it executable
 COPY		./tools/init_wp.sh /usr/local/bin/init_wp.sh
@@ -56,4 +56,4 @@ ENTRYPOINT	["/usr/local/bin/init_wp.sh"]
 # Start the PHP FastCGI Process Manager in the foreground
 # CMD calls 'exec' style --> looks for the binary in the $PATH
 # '-F' flag tells php-fpm to run in the foreground (not as a daemon)
-CMD			["php-fpm7.4", "-F"]
+CMD			["php-fpm8.2", "-F"]

@@ -38,6 +38,9 @@ fi
 
 # --- WORDPRESS INSTALLATION ---
 # Check if WordPress tables are created. If not, run the core installation.
+
+export HTTP_HOST=$DOMAIN_NAME # Set HTTP_HOST for wp-cli to use in installation URL (avoids warning).
+
 if ! wp core is-installed --allow-root --path="$WP_VOLUME"; then
 	echo "Installing WordPress core..."
 	wp core install \
@@ -51,12 +54,11 @@ if ! wp core is-installed --allow-root --path="$WP_VOLUME"; then
 		--path="$WP_VOLUME"
 fi
 
-# --- DISABLE COMMENT MODERATION SETTIGNS ---
-# makes comments appear immediately
+# --- DISABLE COMMENT MODERATION SETTINGS ---
+# makes comments appear immediately (very optional)
 echo "Disabling comment moderation settings..."
 wp option update comment_moderation 0 --allow-root --path="$WP_VOLUME" && \
 wp option update comment_whitelist 0 --allow-root --path="$WP_VOLUME" && \
-wp option update comment_max_links 100 --allow-root --path="$WP_VOLUME"
 
 # --- CREATE USER OTHER THAN ADMIN ---
 if ! wp user get "$WP_USER" --allow-root --path="$WP_VOLUME" > /dev/null 2>&1; then
@@ -77,5 +79,5 @@ chown -R www-data:www-data "$WP_VOLUME"
 
 # --- START MAIN PROCESS ---
 echo "Setup complete. Starting PHP-FPM in foreground..."
-# Execute the command passed via CMD (which is /usr/sbin/php-fpm7.4 -F)
+# Execute the command passed via CMD (which is /usr/sbin/php-fpm8.2 -F)
 exec "$@"

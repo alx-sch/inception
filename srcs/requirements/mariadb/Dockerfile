@@ -1,7 +1,7 @@
 # Base image for the container.
-# Debian 12 ("Bookworm") is the latest stable version currently, but
-# Debian 11 ("Bullseye") is the current penultimate stable version.
-FROM		debian:bullseye-slim
+# Debian 13 ("Trixie") is the latest stable version currenly, but
+# Debian 12 ("Bookworm") is the current penultimate stable version.
+FROM		debian:bookworm-slim
 
 # Author & Maintainer
 LABEL		maintainer="aschenk"
