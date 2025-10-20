@@ -6,7 +6,7 @@
 # ------------------------------------
 
 services:
-  # 1. MARIADB SERVICE (Database)
+  # 1. MARIADB (Database)
   mariadb:
     # Use 'inception' tag, as not to default to 'latest'.
     image: mariadb:inception
@@ -39,7 +39,7 @@ services:
       - db_root_password
       - db_user_password
 
-  # 2. WORDPRESS SERVICE (Web Server)
+  # 2. WORDPRESS (Web Server)
   wordpress:
     # Make sure WordPress waits for MariaDB before starting setup
     depends_on:
@@ -112,6 +112,24 @@ services:
     # Mount WordPress volume so Nginx can access static files
     volumes:
       - wp_data:${WP_VOLUME}
+
+    networks:
+      - inception_network
+
+  # BONUS: ADMINER (Database Management Tool)
+  adminer:
+    depends_on:
+      - mariadb
+
+    image: adminer:inception
+
+    build:
+      context: ${ADMINER_CONTEXT}
+
+    restart: always
+
+    ports:
+      - "8080:8080"
 
     networks:
       - inception_network

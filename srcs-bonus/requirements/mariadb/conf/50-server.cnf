@@ -1,0 +1,16 @@
+# MariaDB server configuration file.
+
+# The main purpose of this file in the Inception project is to
+# override the default network settings.
+
+# It's called "50-server.cnf" as MariaDB reads config files in alphatical order.
+# The '50-' prefix places the configuration in the middle of the potential
+# loading sequence.
+# --> Easy to override via '99-' or have base settings loaded before ('00-').
+
+[mysqld]
+# By default, MariaDB only listens for connections from 'localhost' (127.0.0.1).
+# Changing the 'bind-address' to '0.0.0.0' makes it listen on all available
+# network interfaces inside the container. This allows other containers,
+# like the WordPress service, to connect to the database.
+bind-address = 0.0.0.0

@@ -1,6 +1,7 @@
-NAME :=				Inception
+NAME :=				inception
 
 DOCKER_COMP_F :=	srcs/docker-compose.yml
+DOCKER_BONUS_F :=	srcs-bonus/docker-compose.yml
 
 RESET =				\033[0m
 BOLD =				\033[1m
@@ -9,7 +10,7 @@ YELLOW =			\033[33m
 RED :=				\033[91m
 
 # Load environment variables from .env file
-ENV_FILE :=			srcs/.env
+ENV_FILE :=			srcs-bonus/.env
 
 # If env file exists, include (into Makefile) and export (into shell) variables
 ifneq ($(wildcard $(ENV_FILE)),)
@@ -17,7 +18,7 @@ ifneq ($(wildcard $(ENV_FILE)),)
 	export $(shell sed 's/=.*//' $(ENV_FILE) | xargs)
 endif
 
-###########
+########### 
 ## RULES ##
 ###########
 
@@ -32,48 +33,64 @@ build:
 
 up:
 	@echo "$(BOLD)$(GREEN)🐳 Starting services in detached mode...$(RESET)"
-	@docker compose -f $(DOCKER_COMP_F) up -d
+	@docker compose -f $(DOCKER_COMP_F) -p $(NAME) up -d
 	@echo "$(BOLD)$(GREEN)\n✅ Project $(YELLOW)$(NAME)$(GREEN) is now running in the background.$(RESET)"
+	@echo "$(YELLOW)\nUsage: Access the website here: $(BOLD)https://$(DOMAIN_NAME)$(RESET)"
+
+bonus: build_bonus up_bonus
+
+build_bonus:
+	@echo "$(BOLD)$(GREEN)📁 Creating host directories for bonus volumes...$(RESET)"
+	sudo mkdir -p $(VOLUME_PATH)db_data
+	sudo mkdir -p $(VOLUME_PATH)wp_data
+	@echo "$(BOLD)$(GREEN)🐳 Building Docker images from bonus stack...$(RESET)"
+	@docker compose -f $(DOCKER_BONUS_F) build
+
+up_bonus:
+	@echo "$(BOLD)$(GREEN)🐳 Starting bonus services in detached mode...$(RESET)"
+	@docker compose -f $(DOCKER_BONUS_F) -p $(NAME) up -d
+	@echo "$(BOLD)$(GREEN)\n✅ Project $(YELLOW)$(NAME)$(GREEN) (Bonus) is now running in the background.$(RESET)"
 	@echo "$(YELLOW)\nUsage: Access the website here: $(BOLD)https://$(DOMAIN_NAME)$(RESET)"
 
 clean:
 	@echo "$(BOLD)$(RED)🐳 Stopping services and removing containers and networks...$(RESET)"
-	@docker compose -f $(DOCKER_COMP_F) down
-	@echo "$(BOLD)$(RED)\n🗑️  All Docker containers and networks have been removed.$(RESET)"
+	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) -p $(NAME) down
+	@echo "$(BOLD)$(RED)🗑️  All Docker containers and networks have been removed.$(RESET)"
 
 # Stops everything and removes containers, networks, images, and volumes.
 # This performs the complete environment reset.
 ## 1. Take down the entire project stack (containers, networks, images, volumes)
 ## 2. Prune any remaining ressources (dangling images, build cache)
 ## 3. Make sure that all volumes are REALLY removed
-fclean:
-	@echo "$(BOLD)$(RED)💥 FULL CLEANUP: Removing containers, networks, images, and volumes...$(RESET)"
-	@docker compose -f $(DOCKER_COMP_F) down --rmi all --volumes
+fclean: clean
+	@echo "$(BOLD)$(RED)💥 FULL CLEANUP: Removing images and volumes...$(RESET)"
+	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) -p $(NAME) down --rmi all --volumes
 	@docker system prune -af --volumes
-	@docker volume ls -q | xargs -r docker volume rm
 	@sudo rm -rf $(VOLUME_PATH)
-	@echo "$(BOLD)$(RED)\n🗑️  All Docker containers, networks, images, and volumes have been removed.$(RESET)"
+	@echo "$(BOLD)$(RED)🗑️  All Docker ressources have been removed.$(RESET)"
 
 pause:
 	@echo "$(BOLD)$(YELLOW)Pause all running containers... $(RESET)"
-	@docker compose -f $(DOCKER_COMP_F) pause
+	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) pause
 
 unpause:
 	@echo "$(BOLD)$(YELLOW)Unpause all running containers... $(RESET)"
-	@docker compose -f $(DOCKER_COMP_F) unpause
+	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) unpause
 
 stop:
 	@echo "$(BOLD)$(RED)Stopping all services... $(RESET)"
-	@docker compose -f $(DOCKER_COMP_F) stop
+	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) stop
 
 start:
 	@echo "$(BOLD)$(GREEN)Starting all services... $(RESET)"
-	@docker compose -f $(DOCKER_COMP_F) start
+	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) start
 
 status:
 	@echo "$(BOLD)$(YELLOW)Current status of all services: $(RESET)"
-	@docker compose -f $(DOCKER_COMP_F) ps
+	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) -p $(NAME) ps
 
 re: fclean all
 
-.PHONY: all build up clean fclean pause unpause stop start re status
+re_bonus: fclean bonus
+
+.PHONY: all build build_bonus up up_bonus clean fclean pause unpause stop start re status
