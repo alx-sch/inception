@@ -22,6 +22,9 @@ RUN			chmod 644 /etc/mysql/mariadb.conf.d/50-server.cnf
 COPY		./tools/init_db.sh /usr/local/bin/init_db.sh
 RUN			chmod +x /usr/local/bin/init_db.sh
 
+# Document MariaDB default port
+EXPOSE		3306
+
 # Set the entrypoint for the container.
 # This script will run when the container starts, setting up the database.
 ENTRYPOINT	["/usr/local/bin/init_db.sh"]

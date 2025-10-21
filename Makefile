@@ -79,11 +79,11 @@ unpause:
 
 stop:
 	@echo "$(BOLD)$(RED)Stopping all services... $(RESET)"
-	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) stop
+	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) -p $(NAME) stop
 
 start:
 	@echo "$(BOLD)$(GREEN)Starting all services... $(RESET)"
-	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) start
+	@docker compose -f $(DOCKER_COMP_F) -f $(DOCKER_BONUS_F) -p $(NAME) start
 
 status:
 	@echo "$(BOLD)$(YELLOW)Current status of all services: $(RESET)"

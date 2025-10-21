@@ -39,6 +39,9 @@ services:
       - db_root_password
       - db_user_password
 
+    #mariadb container does not stop by itself --> send SIGKILL fast
+    stop_grace_period: 1s
+
   # 2. WORDPRESS (Web Server)
   wordpress:
     # Make sure WordPress waits for MariaDB before starting setup
@@ -134,6 +137,8 @@ services:
     networks:
       - inception_network
 
+    stop_grace_period: 1s
+
   # BONUS: REDIS (In-memory Data Store)
   redis:
     image: redis:inception
@@ -149,7 +154,7 @@ services:
     networks:
       - inception_network
 
-  # BONUS: FTP-SERVER (manage WordPress files via FTP)
+  #BONUS: FTP-SERVER (manage WordPress files via FTP)
   ftp-server:
     image: ftp-server:inception
 
@@ -161,17 +166,21 @@ services:
     environment:
       FTP_USER: ${FTP_USER}
       FTP_USER_PASSWORD_FILE: /run/secrets/ftp_user_password
+      WP_VOLUME: ${WP_VOLUME}
 
     # Expose FTP ports
     ports:
       - "21:21" # FTP command port
       - "21000-21009:21000-21009" # Passive mode ports (for data transfer)
 
-    volumes:
-      - wp_data:${FTP_WP_VOLUME}
-
     networks:
       - inception_network
+
+    # Mount WordPress volume so FTP server can access WordPress files
+    volumes:
+      - wp_data:${WP_VOLUME}
+
+    stop_grace_period: 1s
 
     secrets:
       - ftp_user_password

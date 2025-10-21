@@ -39,6 +39,8 @@ services:
       - db_root_password
       - db_user_password
 
+    stop_grace_period: 1s
+
   # 2. WORDPRESS SERVICE (Web Server)
   wordpress:
     # Make sure WordPress waits for MariaDB before starting setup

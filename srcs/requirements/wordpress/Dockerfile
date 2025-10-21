@@ -50,6 +50,9 @@ COPY		./conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 COPY		./tools/init_wp.sh /usr/local/bin/init_wp.sh
 RUN			chmod +x /usr/local/bin/init_wp.sh
 
+# Document PHP-FPM default port
+EXPOSE		9000
+
 # Set the entrypoint to run the setup script first.
 ENTRYPOINT	["/usr/local/bin/init_wp.sh"]
 
