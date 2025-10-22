@@ -185,6 +185,24 @@ services:
     secrets:
       - ftp_user_password
 
+  # BONUS: STATIC SITE DEPLOYER
+  static-site:
+    image: static-site:inception
+
+    build:
+      context: ${STATIC_SITE_CONTEXT}
+
+    # Container has one job: to initially copy files to the volume, then exit
+    restart: no
+
+    environment:
+      STATIC_SITE: ${STATIC_SITE}
+      WP_VOLUME: ${WP_VOLUME}
+
+    # Mount WordPress volume so static site deploy script can access it
+    volumes:
+      - wp_data:${WP_VOLUME}
+
 # ------------------------------------
 # DEFINE VOLUMES AND SECRETS
 # ------------------------------------

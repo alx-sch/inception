@@ -44,7 +44,7 @@ echo "Setting ownership to $WEB_USER:$WEB_GROUP for consistency..."
 chown -R "$WEB_USER":"$WEB_GROUP" "$WP_VOLUME"
 
 # Set directory permissions to 2775 (rwxrwsr-x)
-# The 's' (SETGID) ensures new files/folders are always owned by the www-data group.
+# The '2' (SETGID) ensures new files/folders are always owned by the www-data group.
 find "$WP_VOLUME" -type d -exec chmod 2775 {} \;
 
 # Set file permissions to 0664 (rw-rw-r--)
