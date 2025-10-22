@@ -5,16 +5,16 @@
 	Text: #333 (Dark Gray)
 */
 
-profile-pic-container {
+.profile-pic-container {
 	text-align: center;
-	margin-bottom: 15px; /* Spacing between picture and name */
+	margin-bottom: 15px;	/* Spacing between picture and name */
 }
 
-profile-pic {
-	width: 150px;       /* Set a fixed size for the image */
+.profile-pic {
+	width: 150px;		/* Set a fixed size for the image */
 	height: 150px;
-	object-fit: cover;  /* Ensures the image fills the area without stretching */
-	border-radius: 50%; /* Makes the image circular */
+	object-fit: cover;	/* Ensures the image fills the area without stretching */
+	border-radius: 50%;	/* Makes the image circular */
 	border: 5px solid white; /* White border for emphasis */
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Soft shadow */
 		
