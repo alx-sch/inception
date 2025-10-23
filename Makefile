@@ -50,7 +50,11 @@ up_bonus:
 	@echo "$(BOLD)$(GREEN)🐳 Starting bonus services in detached mode...$(RESET)"
 	@docker compose -f $(DOCKER_BONUS_F) -p $(NAME) up -d
 	@echo "$(BOLD)$(GREEN)\n✅ Project $(YELLOW)$(NAME)$(GREEN) (Bonus) is now running in the background.$(RESET)"
-	@echo "$(YELLOW)\nUsage: Access the website here: $(BOLD)https://$(DOMAIN_NAME)$(RESET)"
+	@echo "$(YELLOW)\nUsage: Access the website here: $(BOLD)https://$(DOMAIN_NAME)$(RESET)\n"
+	@echo "Bonus: Access $(YELLOW)static site$(RESET) here: $(BOLD)https://$(DOMAIN_NAME)/$(STATIC_SITE)$(RESET)"
+	@echo "Bonus: Access $(YELLOW)Redis Explorer$(RESET) here: $(BOLD)https://$(DOMAIN_NAME)/redis-explorer$(RESET)"
+	@echo "Bonus: Access $(YELLOW)Adminer$(RESET) here: $(BOLD)localhost:8080$(RESET)"
+	@echo "Bonus: Access $(YELLOW)FTP$(RESET) with: $(BOLD)localhost:21$(RESET) (use clients like FileZilla)"
 
 clean:
 	@echo "$(BOLD)$(RED)🐳 Stopping services and removing containers and networks...$(RESET)"

@@ -72,10 +72,6 @@ services:
       WP_ADMIN_PASSWORD_FILE: /run/secrets/wp_admin_password
       WP_USER_PASSWORD_FILE: /run/secrets/wp_user_password
 
-    # Expose the PHP-FPM port internally to Ngninx
-    expose:
-      - "9000"
-
     volumes:
       - wp_data:${WP_VOLUME}
 

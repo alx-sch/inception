@@ -1,7 +1,8 @@
-// backend logic to handle Redis commands
-// process user-submitted commands, establish connection to Redis server,
-// execute commands and capture the result or any errors.
 <?php
+
+# backend logic to handle Redis commands
+# process user-submitted commands, establish connection to Redis server,
+# execute commands and capture the result or any errors.
 
 $host = 'redis';
 $port = 6379;
@@ -29,9 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['command'])) { # List
 }
 
 ?>
-
-// HTML and CSS for the web interface
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- HTML structure for the web interface -->
 <html>
 <head>
 	<title>Redis CLI Explorer</title>
@@ -45,18 +44,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['command'])) { # List
 	</style>
 </head>
 
-<body> // Start of visible HTML content
+<body> <!-- Start of visible HTML content -->
 	<div class="container">
 		<h2 class="title">Redis CLI Explorer</h2>
-		<p>Connected to: **<?php echo htmlspecialchars("{$host}:{$port}"); ?>**</p> // htmlspecialchars to prevent code injection
+		<p>Connected to: **<?php echo htmlspecialchars("{$host}:{$port}"); ?>**</p> <!-- htmlspecialchars to prevent code injection -->
 
-		<form method="POST"> // POST form to submit Redis commands, triggers PHP script above
+		<form method="POST"> <!-- POST form to submit Redis commands, triggers PHP script above -->
 			<label for="command">Enter Redis Command (e.g., GET mykey, KEYS *, INFO):</label>
 			<input type="text" id="command" name="command" value="<?php echo htmlspecialchars($command_line ?? ''); ?>" required>
 			<input type="submit" value="Execute">
 		</form>
 
-		<?php if ($output): ?> // if
+		<?php if ($output): ?> <!-- if there is output, display it -->
 			<h3>Output:</h3>
 			<pre><?php echo htmlspecialchars($output); ?></pre>
 		<?php endif; ?>

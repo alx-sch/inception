@@ -7,7 +7,16 @@ echo "Waiting for WordPress PHP-FPM (wordpress:9000) to start..."
 while ! nc -z wordpress 9000; do
 	sleep 1
 done
-echo "WordPress PHP-FPM is available. Starting Nginx..."
+echo "WordPress PHP-FPM is available."
+
+# Wait for Redis Explorer PHP-FPM to be available
+echo "Waiting for Redis Explorer PHP-FPM (redis-explorer:9000) to start..."
+while ! nc -z redis-explorer 9000; do
+	sleep 1
+done
+echo "Redis Explorer PHP-FPM is available."
+
+echo "All services are up. Starting Nginx..."
 
 # Execute the main Nginx command (the CMD)
 exec "$@"

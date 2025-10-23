@@ -73,10 +73,6 @@ services:
       WP_ADMIN_PASSWORD_FILE: /run/secrets/wp_admin_password
       WP_USER_PASSWORD_FILE: /run/secrets/wp_user_password
 
-    # Expose the PHP-FPM port internally to Ngninx
-    expose:
-      - "9000"
-
     volumes:
       - wp_data:${WP_VOLUME}
 
@@ -92,6 +88,7 @@ services:
   nginx:
     depends_on:
       - wordpress
+      - redis-explorer
 
     image: nginx:inception
 
@@ -153,9 +150,6 @@ services:
 
     restart: always
 
-    ports:
-      - "6379:6379"
-
     networks:
       - inception_network
 
@@ -207,6 +201,22 @@ services:
     # Mount WordPress volume so static site deploy script can access it
     volumes:
       - wp_data:${WP_VOLUME}
+
+  # BONUS: REDIS-EXPLORER (Web-based Redis client)
+  redis-explorer:
+    depends_on:
+      - redis
+
+    image: redis-explorer:inception
+
+    build:
+      context: ${REDIS_EXPLORER_CONTEXT}
+
+    restart: always
+
+    networks:
+      - inception_network
+
 
 # ------------------------------------
 # DEFINE VOLUMES AND SECRETS
