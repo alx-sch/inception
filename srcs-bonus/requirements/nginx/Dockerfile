@@ -15,13 +15,6 @@ RUN			apt-get update && apt-get install -y \
 			netcat-traditional \
 			&& rm -rf /var/lib/apt/lists/*
 
-# Create directories for SSL files.
-RUN			mkdir -p /etc/nginx/ssl
-
-# Copy the SSL Certificate and Key from the host into the container
-COPY		./conf/ssl/inception.crt /etc/ssl/certs/inception.crt
-COPY		./conf/ssl/inception.key /etc/ssl/private/inception.key
-
 # Copy the config file
 COPY		./conf/default.conf /etc/nginx/conf.d/default.conf
 

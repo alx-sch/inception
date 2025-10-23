@@ -102,9 +102,10 @@ services:
     # Variables needed by the entrypoint script
     environment:
       DOMAIN_NAME: ${DOMAIN_NAME}
-      SSL_CERT_CONTAINER_PATH: ${SSL_CERT_CONTAINER_PATH}
-      SSL_KEY_CONTAINER_PATH: ${SSL_KEY_CONTAINER_PATH}
-      WP_VOLUME: ${WP_VOLUME} # Needed for the 'root' directive in the template
+      WP_VOLUME: ${WP_VOLUME}
+
+      SSL_PRIV_KEY_FILE: /run/secrets/ssl_priv_key
+      SSL_CERT_FILE: /run/secrets/ssl_pub_key
 
     # Expose 443 (for secure access)
     # HOST_PORT:CONTAINER_PORT --> explicitly map host ports as these are entry points to the application
@@ -117,6 +118,10 @@ services:
 
     networks:
       - inception_network
+
+    secrets:
+      - ssl_pub_key
+      - ssl_priv_key
 
 # ------------------------------------
 # DEFINE VOLUMES AND SECRETS
@@ -153,3 +158,9 @@ secrets:
 
   wp_user_password:
     file: ${SECRET_WP_USER_PASS_FILE}
+
+  ssl_pub_key:
+    file: ${SECRET_SSL_PUB_KEY_FILE}
+
+  ssl_priv_key:
+    file: ${SECRET_SSL_PRIV_KEY_FILE}
