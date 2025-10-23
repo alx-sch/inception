@@ -666,6 +666,32 @@ After all these checks pass, we can consider the MariaDB service fully validated
 
 ---
 
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout inception.key -out inception.crt
+```
+
+- `openssl req`: Starts the utility to create a certificate request (or, with -x509, a self-signed certificate).
+- `x509`: Creates a **self-signed certificate** instead of a request.
+- `nodes`: **No DES/No Encryption:** Disables the use of a passphrase for the private key. This is critical for Docker, as Nginx cannot start automatically if it needs a password to read the key.
+- `days 365`: Sets the certificate's validity period to 365 days.
+- `newkey rsa:2048`: Generates a new **Private Key** using the RSA algorithm with a length of 2048 bits (standard security).
+- `keyout inception.key`: **Output File for the Private Key (Secret):** This is your `ssl_priv_key` file.
+- `out inception.crt`: **Output File for the Certificate (Public Key):** This is your `ssl_pub_key` file.
+
+#### Prompts You Must Answer
+
+When you run the command, OpenSSL will prompt you to enter information to embed into the certificate. Since this is for development, the values don't need to be perfectly accurate, but the **Common Name** is important:
+
+- **Country Name (2 letter code):** `DE`
+- **State or Province Name:** `Berlin`
+- **Locality Name (city):** `Berlin`
+- **Organization Name:** `42 Berin`
+- **Organizational Unit Name:** `Inception Project`
+- **Common Name (FQDN of your server):** `aschenk.42.fr` (Crucial: Must match your Nginx `server_name`)
+- **Email Address:** `XXX@aschenk.42.fr`
+
+---
+
 ## References
 
 <a name="footnote1">[1]</a> Hykes, S.; PyCon 2013 (Mar 13, 2013). [*The future of Linux Containers*](https://www.youtube.com/watch?v=wW9CAH9nSLs)         
