@@ -18,6 +18,28 @@ ifneq ($(wildcard $(ENV_FILE)),)
 	export $(shell sed 's/=.*//' $(ENV_FILE) | xargs)
 endif
 
+## CHECK IF SECRETS ARE AVAILABLE ##
+
+SECRET_DB_ROOT_PASS_MAKE   := secrets/db_root_password.txt
+SECRET_DB_USER_PASS_MAKE   := secrets/db_user_password.txt
+SECRET_WP_ADMIN_PASS_MAKE  := secrets/wp_admin_password.txt
+SECRET_WP_USER_PASS_MAKE   := secrets/wp_user_password.txt
+SECRET_SSL_PUB_KEY_MAKE    := secrets/inception.crt
+SECRET_SSL_PRIV_KEY_MAKE   := secrets/inception.key
+SECRET_FTP_USER_PASS_MAKE  := secrets/ftp_user_password.txt
+
+SECRET_FILES :=				$(SECRET_DB_ROOT_PASS_MAKE) \
+							$(SECRET_DB_USER_PASS_MAKE) \
+							$(SECRET_WP_ADMIN_PASS_MAKE) \
+							$(SECRET_WP_USER_PASS_MAKE) \
+							$(SECRET_SSL_PUB_KEY_MAKE) \
+							$(SECRET_SSL_PRIV_KEY_MAKE)
+
+# CHECK_SECRETS contains a list of all files that DO NOT exist.
+CHECK_SECRETS :=			$(strip $(foreach file,$(SECRET_FILES),\
+								$(if $(wildcard $(file)),,\
+									$(file))) )
+
 ########### 
 ## RULES ##
 ###########
@@ -25,6 +47,14 @@ endif
 all: build up
 
 build:
+	@echo "$(BOLD)$(GREEN)🤫 Checking required secret file...$(RESET)"
+	@if [ -n "$(CHECK_SECRETS)" ]; then \
+		echo "$(RED)$(BOLD)ERROR: Missing secret file(s)!$(RESET)" >&2; \
+		echo "Please create the following file(s) relative to the Makefile:" >&2; \
+		echo "$(YELLOW)$(CHECK_SECRETS)$(RESET)" >&2; \
+		exit 1; \
+	fi
+
 	@echo "$(BOLD)$(GREEN)📁 Creating host directories for volumes...$(RESET)"
 	sudo mkdir -p $(VOLUME_PATH)db_data
 	sudo mkdir -p $(VOLUME_PATH)wp_data
@@ -40,6 +70,21 @@ up:
 bonus: build_bonus up_bonus
 
 build_bonus:
+	@echo "$(BOLD)$(GREEN)🤫 Checking required secret file...$(RESET)"
+	@if [ -n "$(CHECK_SECRETS)" ]; then \
+		echo "$(RED)$(BOLD)ERROR: Missing secret file(s)!$(RESET)" >&2; \
+		echo "Please create the following file(s) relative to the Makefile:" >&2; \
+		echo "$(YELLOW)$(CHECK_SECRETS)$(RESET)" >&2; \
+		exit 1; \
+	fi
+
+	@if [ ! -f "$(SECRET_FTP_USER_PASS_MAKE)" ]; then \
+		echo "$(RED)$(BOLD)ERROR: Missing secret file(s)!$(RESET)" >&2; \
+		echo "Please create the following file(s) relative to the Makefile:" >&2; \
+		echo "$(YELLOW)$(SECRET_FTP_USER_PASS_MAKE)$(RESET)" >&2; \
+		exit 1; \
+	fi
+	
 	@echo "$(BOLD)$(GREEN)📁 Creating host directories for bonus volumes...$(RESET)"
 	sudo mkdir -p $(VOLUME_PATH)db_data
 	sudo mkdir -p $(VOLUME_PATH)wp_data
@@ -97,4 +142,4 @@ re: fclean all
 
 re_bonus: fclean bonus
 
-.PHONY: all build build_bonus up up_bonus clean fclean pause unpause stop start re status
+.PHONY: all build build_bonus up up_bonus clean fclean pause unpause stop start re re_bonus status
