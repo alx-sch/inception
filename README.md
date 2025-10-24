@@ -70,10 +70,10 @@ The "big picture" of the Inception application is an orchestrated stack of servi
 |  Browser | <------------- | (Port 443)  | <------------- |   (PHP-FPM)    | <------------- | (Database)  |
 |          |      HTML      |             |      HTML      |                |      Data      |             |
 +----------+                +-------------+                +----------------+                +-------------+
-  ^                                                                                                |
-  |                                                                                                |
-  +------------------------------------------------------------------------------------------------+
-                                       (Data stored in a persistent Docker Volume)
+  ^                                |                                |                              |
+  |                                |                                |                              |
+  +--------------------------------+--------------------------------+------------------------------+
+                                       (Data stored in persistent Docker Volumes)
 ```
 
 #### Step-by-Step Breakdown:
@@ -125,7 +125,7 @@ This solves the classic problem of "it works on my machine" by packaging the ent
 Docker was first introduced by Solomon Hykes at PyCon 2013 -- check out his legendary five-minute minute talk [here](https://www.youtube.com/watch?v=wW9CAH9nSLs)<sup><a href="#footnote1">[1]</a></sup>.     
 Originally an internal project at his PaaS company dotCloud, it was quickly open-sourced once its potential became clear.
 
-While Docker popularized containers, the underlying technology has been part of the Linux kernel for years in the form of **cgroups** (which limit resource usage) and **namespaces** (which isolate processes)<sup><a href="#footnote2">[2]</a></sup>.    
+While Docker popularized containers, the underlying technology has been part of the Linux kernel for years in the form of **cgroups** (which limit resource usage) and **namespaces** (which isolate processes, filesystems, etc.)<sup><a href="#footnote2">[2]</a></sup>.    
 
 Docker’s innovation was to create a user-friendly set of tools, a strong community and useful services (public registries, ready-made base images and orchestration tools like Compose and Kubernetes), making those kernel features approachable for everyday developers.
 
