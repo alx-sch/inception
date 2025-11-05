@@ -3,7 +3,7 @@
 # WIP!!!! NOT FINISHED YET!
 
 <p align="center">
-    <img src="https://github.com/alx-sch/inception/blob/main/.assets/inception_badge.png" alt="inception_badge.png" />
+    <img src="https://raw.githubusercontent.com/alx-sch/inception/refs/heads/main/.assets/inception_badge.png" alt="inception_badge.png" />
 </p>
 
 This project focuses on system administration and containerization with **Docker**. The goal is to build a multi-container application using **Docker Compose**, featuring separate containers for an NGINX web server, a MariaDB database and a WordPress instance.
@@ -142,7 +142,7 @@ A common point of confusion is the difference between a container and a virtual 
 This makes containers incredibly lightweight, fast to start and efficient compared to VMs.
 
 <p align="center">
-    <img src="https://github.com/alx-sch/inception/blob/main/.assets/vm-vs-docker.png" alt="vm-vs-docker.png"  width="600" />
+    <img src="https://raw.githubusercontent.com/alx-sch/inception/refs/heads/main/.assets/vm-vs-docker.png" alt="vm-vs-docker.png"  width="600" />
     <br>
      <span>
         <b>VMs (left):</b> Use a hypervisor (managing virtual hardware), include full guest OS.<br>
@@ -196,7 +196,7 @@ Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
 
 <br>
 <p align="center">
-    <img src="https://github.com/alx-sch/inception/blob/main/.assets/docker-engine.png" alt="docker-engine.png"  width="400" />
+    <img src="https://raw.githubusercontent.com/alx-sch/inception/refs/heads/main/.assets/docker-engine.png" alt="docker-engine.png"  width="400" />
     <br>
      <span>
         <b>Docker Engine:</b> Running a Docker command in the CLI, it communicates with the daemon via a REST API (locally over a Unix socket or TCP). The daemon then manages images, containers, networks and volumes<sup><a href="#footnote9">[9]</a></sup>.
@@ -205,7 +205,7 @@ Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
 
 <br>
 <p align="center">
-    <img src="https://github.com/alx-sch/inception/blob/main/.assets/docker-architecture.png" alt="docker-architecture.png"  width="400" />
+    <img src="https://raw.githubusercontent.com/alx-sch/inception/refs/heads/main/.assets/docker-architecture.png" alt="docker-architecture.png"  width="400" />
     <br>
      <span>
         <b>Docker Architecture:</b> The Docker client (CLI) communicates with the Docker Engine on the host to run containers using images, which are often stored and pulled from a registry like Docker Hub.<br>
