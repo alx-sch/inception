@@ -1,4 +1,4 @@
-# inception
+# Inception: A Dockerized Web Application Stack
 
 # WIP!!!! NOT FINISHED YET!
 
@@ -41,7 +41,7 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
 
 ---
 
-## The Project: A Dockerized Web Application Stack
+## The Project
 
 In this project, I containerize a full-stack web application using Docker. The goal is to learn about system administration, container orchestration and the architecture of modern web services by setting up a WordPress site with NGINX and a MariaDB database from scratch, without using pre-existing official images. The entire stack is deployed within a Debian virtual machine, creating a fully isolated and production-like server environment from the ground up. 
 
