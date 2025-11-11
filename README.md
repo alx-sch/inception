@@ -8,7 +8,7 @@
 
 This project focuses on system administration and containerization with **Docker**. The goal is to build a multi-container application using **Docker Compose**, featuring separate containers for an NGINX web server, a MariaDB database and a WordPress instance.
 
-As extra features, I implemented:
+The following features were implemented as well:
 - **Redis caching** with a custom **Redis Explorer** for monitoring cached data.
 - **Adminer** for efficiently inspecting and managing the MariaDB database.
 - **FTP** for handling files in the WordPress PHP-FPM volume.
