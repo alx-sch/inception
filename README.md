@@ -3,7 +3,7 @@
 # WIP!!!! NOT FINISHED YET!
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/alx-sch/inception/refs/heads/main/.assets/inception_badge.png" alt="inception_badge.png" />
+    <img src=".assets/inception_badge.png" alt="inception_badge.png" />
 </p>
 
 This project focuses on system administration and containerization with **Docker**. The goal is to build a multi-container application using **Docker Compose**, featuring separate containers for an NGINX web server, a MariaDB database and a WordPress instance.
@@ -142,7 +142,7 @@ A common point of confusion is the difference between a container and a virtual 
 This makes containers incredibly lightweight, fast to start and efficient compared to VMs.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/alx-sch/inception/refs/heads/main/.assets/vm-vs-docker.png" alt="vm-vs-docker.png"  width="600" />
+    <img src=".assets/vm-vs-docker.png" alt="vm-vs-docker.png"  width="600" />
     <br>
      <span>
         <b>VMs (left):</b> Use a hypervisor (managing virtual hardware), include full guest OS.<br>
@@ -196,7 +196,7 @@ Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
 
 <br>
 <p align="center">
-    <img src="https://raw.githubusercontent.com/alx-sch/inception/refs/heads/main/.assets/docker-engine.png" alt="docker-engine.png"  width="400" />
+    <img src=".assets/docker-engine.png" alt="docker-engine.png"  width="400" />
     <br>
      <span>
         <b>Docker Engine:</b> Running a Docker command in the CLI, it communicates with the daemon via a REST API (locally over a Unix socket or TCP). The daemon then manages images, containers, networks and volumes<sup><a href="#footnote9">[9]</a></sup>.
@@ -205,7 +205,7 @@ Overview of multiple Docker components<sup><a href="#footnote5">[5]</a></sup>:
 
 <br>
 <p align="center">
-    <img src="https://raw.githubusercontent.com/alx-sch/inception/refs/heads/main/.assets/docker-architecture.png" alt="docker-architecture.png"  width="400" />
+    <img src=".assets/docker-architecture.png" alt="docker-architecture.png"  width="400" />
     <br>
      <span>
         <b>Docker Architecture:</b> The Docker client (CLI) communicates with the Docker Engine on the host to run containers using images, which are often stored and pulled from a registry like Docker Hub.<br>
@@ -586,7 +586,7 @@ MariaDB is a free and open-source Relational Database (using tables, rows and co
 
 The goal is to set up a correctly initialized and persistent MariaDB container. The current `init_db.sh` uses the secure method of reading passwords from Docker secret files (`cat /run/secrets/...`). To allow for isolated testing of the container as described below (without Docker Compose), the script needs to use environment variables for passwords (`{$DB_ROOT_PASSWORD}`, `{$DB_PASSWORD}`) instead.
 
-The files used to build the MariaDB image and container are found in [`srcs/requirements/mariadb`](https://github.com/alx-sch/inception/tree/main/srcs/requirements/mariadb):
+The files used to build the MariaDB image and container are found in [`srcs/requirements/mariadb`](srcs/requirements/mariadb):
 
 - `Dockerfile`: This is the main blueprint. It starts from a base Debian image, installs the MariaDB server packages and copies our custom configuration and scripts into the image. It also defines the `ENTRYPOINT` and `CMD` to ensure that the container starts gracefully.
   
