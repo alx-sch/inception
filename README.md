@@ -360,7 +360,114 @@ Note: When multiple `ENTRYPOINT` and `CMD` are specified in a Dockerfile, all bu
 
 ### Docker Compose
 
-XXXXX
+Docker Compose is a tool for defining and running multi-container applications. Instead of manually running each container with long `docker run` commands, you describe your entire application stack in a single YAML file (`docker-compose.yml`). One command then builds, creates and connects all services.
+
+A `docker-compose.yml` file is structured around these top-level keys:
+
+- **`services`** — Defines each container in the application (what to build, how to configure it, what it depends on).
+- **`volumes`** — Declares persistent storage that survives container restarts and removals.
+- **`networks`** — Defines private networks for inter-service communication.
+- **`secrets`** — References sensitive files (passwords, keys) that are mounted read-only into containers at `/run/secrets/<name>`.
+
+#### Example: This Project's Core Stack
+
+```yaml
+services:
+  mariadb:
+    image: mariadb:inception
+    build:
+      context: ./requirements/mariadb
+    restart: always
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - inception_network
+    secrets:
+      - db_root_password
+      - db_user_password
+
+  wordpress:
+    depends_on:
+      - mariadb
+    image: wordpress:inception
+    build:
+      context: ./requirements/wordpress
+    restart: always
+    environment:
+      DB_HOST: mariadb    # Service name = hostname on the Docker network
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - inception_network
+    secrets:
+      - db_user_password
+      - wp_admin_password
+
+  nginx:
+    depends_on:
+      - wordpress
+    image: nginx:inception
+    build:
+      context: ./requirements/nginx
+    restart: always
+    ports:
+      - "443:443"         # Only public-facing port
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - inception_network
+    secrets:
+      - ssl_pub_key
+      - ssl_priv_key
+
+volumes:
+  db_data:
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/aschenk/data/db_data
+  wp_data:
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/aschenk/data/wp_data
+
+networks:
+  inception_network:
+
+secrets:
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  # ...
+```
+
+#### Key Concepts Illustrated
+
+| Concept | What It Does |
+| :--- | :--- |
+| `build: context:` | Points to the directory containing the service's `Dockerfile`. Compose builds the image automatically. |
+| `depends_on:` | Controls startup order. WordPress waits for MariaDB; NGINX waits for WordPress. |
+| `environment:` | Passes configuration into the container. Variables are loaded from the `.env` file in the same directory via `${VAR}` syntax. |
+| `secrets:` | Mounts sensitive files into the container at `/run/secrets/<name>`. More secure than environment variables, as secrets don't appear in `docker inspect` or process listings. |
+| `networks:` | All services on `inception_network` can reach each other by service name (Docker DNS). No service is reachable from outside unless `ports:` is specified. |
+| `volumes:` with `bind` | Forces volume data to a specific host path, ensuring persistence even if Docker's default storage is wiped. |
+| `ports: "443:443"` | Maps host port to container port. Only NGINX exposes a port — all other services are internal. |
+| `restart: always` | Containers restart automatically on failure or host reboot. |
+
+#### Compose Commands
+
+| Command | Purpose |
+| :--- | :--- |
+| `docker compose up -d` | Builds (if needed) and starts all services in detached mode. |
+| `docker compose down` | Stops and removes containers and networks. |
+| `docker compose down --rmi all --volumes` | Full teardown: also removes images and volumes. |
+| `docker compose ps` | Shows status of all services in the project. |
+| `docker compose logs <service>` | View logs for a specific service. |
+| `docker compose build` | Rebuilds images without starting containers. |
 
 ---
 
