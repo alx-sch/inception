@@ -861,7 +861,9 @@ After all these checks pass, we can consider the MariaDB service fully validated
 
 ### WordPress
 
-After MariaDB, the WordPress container is built and tested in isolation. It runs **PHP-FPM** and uses **WP-CLI** to automate the full WordPress installation (downloading core files, creating `wp-config.php`, installing the site and creating users).
+WordPress is a free and open-source Content Management System (CMS) written in PHP. It powers over 40% of websites on the internet<sup><a href="#footnote12">[12]</a></sup>, from personal blogs to enterprise sites. In this project, WordPress runs as a headless PHP application processed by **PHP-FPM** (FastCGI Process Manager) — it does not serve pages directly but instead handles PHP execution while NGINX takes care of the actual HTTP serving.
+
+The container uses **WP-CLI** to automate the full WordPress installation (downloading core files, creating `wp-config.php`, installing the site and creating users).
 
 The files used to build the WordPress image are found in [`srcs/requirements/wordpress`](srcs/requirements/wordpress):
 
@@ -875,7 +877,7 @@ Isolated testing follows the same methodology as MariaDB: build the image, run a
 
 ### NGINX
 
-NGINX is the only container exposed to the outside world. It terminates TLS and reverse-proxies requests to WordPress via PHP-FPM over the private Docker network.
+NGINX (pronounced "engine-x") is a high-performance web server and reverse proxy. Originally created to solve the C10K problem<sup><a href="#footnote13">[13]</a></sup> (handling 10,000+ concurrent connections), it's known for its low memory footprint and event-driven architecture. In this project, NGINX serves as the sole public-facing entry point. It terminates TLS and reverse-proxies requests to WordPress via PHP-FPM over the private Docker network.
 
 The files used to build the NGINX image are found in [`srcs/requirements/nginx`](srcs/requirements/nginx):
 
@@ -963,5 +965,7 @@ Each bonus service has its own `Dockerfile` and configuration in `srcs-bonus/req
 <a name="footnote9">[9]</a> Rahul; Tecadmin.net (Apr 26, 2025). [*Docker 101: An Introduction to Containerization Technology*](https://tecadmin.net/docker-introduction/) 
 <a name="footnote10">[10]</a> Singh, N.; DataLemur(Jan 19, 2025). [*SQL CRUD: CREATE, READ, UPDATE, DELETE, DROP, and ALTER in SQL*](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)
 <a name="footnote11">[11]</a> Abhani, J; AlmaBetter (Dec 15, 2024). [*MariaDB Cheat Sheet*](https://www.almabetter.com/bytes/cheat-sheet/mariadb)  
+<a name="footnote12">[12]</a> W3Techs (2025). [*Usage Statistics of Content Management Systems*](https://w3techs.com/technologies/overview/content_management)     
+<a name="footnote13">[13]</a> NGINX Inc. (2025). [*What is NGINX?*](https://nginx.org/en/)  
 
 The project badge is from [this repository](https://github.com/ayogun/42-project-badges) by Ali Ogun.
