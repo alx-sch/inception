@@ -880,7 +880,7 @@ NGINX is the only container exposed to the outside world. It terminates TLS and 
 The files used to build the NGINX image are found in [`srcs/requirements/nginx`](srcs/requirements/nginx):
 
 - `Dockerfile`: Installs NGINX on a Debian base image and copies the server configuration.
-- `conf/default.conf`: Server block configuration — listens on port 443 with TLSv1.3, sets the `server_name` to the domain, and forwards `.php` requests to the WordPress container via FastCGI.
+- `conf/default.conf`: Server block configuration: Listens on port 443 with TLSv1.3, sets the `server_name` to the domain, and forwards `.php` requests to the WordPress container via FastCGI.
 - `tools/wait-start.sh`: Entrypoint script that waits for the WordPress volume to be populated before starting NGINX.
 
 Isolated testing verifies that NGINX starts, serves the TLS certificate on port 443, and correctly proxies to a running WordPress instance.
@@ -900,7 +900,7 @@ Once each service is individually validated, Docker Compose takes over. The diff
 | **Startup order** | You start containers manually in the right sequence | `depends_on` ensures MariaDB starts before WordPress, WordPress before NGINX |
 | **Persistence** | You manually create and attach volumes | Volumes are declared once and automatically managed |
 
-In short: isolated testing proves each container works on its own. Docker Compose then wires them together into the final application — handling networking, secrets, startup order and volumes declaratively. The init scripts (`init_db.sh`, `init_wp.sh`, `wait-start.sh`) are written to work in both contexts: they check whether initialization has already happened and act accordingly.
+In short: isolated testing proves each container works on its own. Docker Compose then wires them together into the final application, handling networking, secrets, startup order and volumes declaratively. The init scripts (`init_db.sh`, `init_wp.sh`, `wait-start.sh`) are written to work in both contexts: they check whether initialization has already happened and act accordingly.
 
 ---
 
