@@ -1,7 +1,5 @@
 # Inception: A Dockerized Web Application Stack
 
-# WIP!!!! NOT FINISHED YET!
-
 <p align="center">
     <img src=".assets/inception_badge.png" alt="inception_badge.png" />
 </p>
