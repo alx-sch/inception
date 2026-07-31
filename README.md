@@ -20,7 +20,7 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
 
 ## Table of Contents
 
-- [The Project](#the-project-a-dockerized-web-application-stack)
+- [The Project](#the-project)
      - [Technology Stack](#technology-stack)
      - [Architecture & Request Flow](#architecture-and-request-flow)
      - [How To Use?](#how-to-use)
@@ -33,7 +33,7 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
     - [Docker Components](#docker-components)
     - [Docker Workflow](#docker-workflow)
     - [Docker File](#the-dockerfile)
-    - [Docker Compose](#XXX)
+    - [Docker Compose](#docker-compose)
     - [Docker Commands](#docker-commands)
     - [Total Cleanup](#total-cleanup)
 - [Setting Up the VM](#setting-up-the-vm)
@@ -106,85 +106,82 @@ The "big picture" of the Inception application is an orchestrated stack of servi
 
 ### How to Use?
 
-Assumes Docker Engine is installed on the Debian VM and `/etc/hosts` is configured as described [above](#1-check-edit-rights-for-etchosts-file).
+Make sure the Docker Engine is installed on the Debian VM and `/etc/hosts` is configured as described [above](#1-check-edit-rights-for-etchosts-file).
+   
+1. **Clone the Repository**       
+   ```bash
+   git clone <repo-url> inception && cd inception
+   ```
 
-**1. Clone the Repository**
+2. **Create the Secret Files**     
+   The project reads sensitive credentials from files in the `secrets/` directory. These are checked at build time and must exist before running:
+   ```bash
+   secrets/db_root_password.txt
+   secrets/db_user_password.txt
+   secrets/wp_admin_password.txt
+   secrets/wp_user_password.txt
+   secrets/inception.crt          # TLS certificate
+   secrets/inception.key          # TLS private key
+   ```
 
-```bash
-git clone <repo-url> inception && cd inception
-```
+   For the password files, each should contain a single plaintext password. For the TLS certificate and key, generate a self-signed pair as described in [Generating the TLS Certificate](#generating-the-tls-certificate).
 
-**2. Create the Secret Files**
+3. **Configure the Domain Name**
 
-The project reads sensitive credentials from files in the `secrets/` directory. These are checked at build time and must exist before running:
+   The domain is set in `srcs-bonus/.env` (and `srcs/.env`):
 
-```bash
-secrets/db_root_password.txt
-secrets/db_user_password.txt
-secrets/wp_admin_password.txt
-secrets/wp_user_password.txt
-secrets/inception.crt          # TLS certificate
-secrets/inception.key          # TLS private key
-```
+    ```bash
+    DOMAIN_NAME=aschenk.42.fr
+    ```
 
-For the password files, each should contain a single plaintext password. For the TLS certificate and key, generate a self-signed pair as described in [Generating the TLS Certificate](#generating-the-tls-certificate).
+    Change this to your desired domain (e.g., `yourlogin.42.fr`). Make sure the same domain is also added to your `/etc/hosts` file and used as the **Common Name** when generating the TLS certificate.
 
-**3. Configure the Domain Name**
+4. **Build and Run**
 
-The domain is set in `srcs-bonus/.env` (and `srcs/.env`):
+    ```bash
+    make
+    ```
 
-```bash
-DOMAIN_NAME=aschenk.42.fr
-```
+    This builds all Docker images from their Dockerfiles, creates the host volume directories and starts the services in detached mode.
 
-Change this to your desired domain (e.g., `yourlogin.42.fr`). Make sure the same domain is also added to your `/etc/hosts` file and used as the **Common Name** when generating the TLS certificate.
+5. **Access the Website**
 
-**4. Build and Run**
+    Open your browser and navigate to:
 
-```bash
-make
-```
+    ```
+    https://<your-domain-name>
+    ```
 
-This builds all Docker images from their Dockerfiles, creates the host volume directories and starts the services in detached mode.
+6. **Bonus Stack**
 
-**5. Access the Website**
+    To run the full stack including Redis, Redis Explorer, Adminer, FTP and the static site:
 
-Open your browser and navigate to:
+    ```bash
+    make bonus
+    ```
 
-```
-https://<your-domain-name>
-```
+    This additionally requires `secrets/ftp_user_password.txt`.
 
-**6. Bonus Stack**
+    | Service | Access |
+    | :--- | :--- |
+    | WordPress | `https://<your-domain>` |
+    | Static Site | `https://<your-domain>/my-page` |
+    | Redis Explorer | `https://<your-domain>/redis-explorer` |
+    | Adminer | `localhost:8080` |
+    | FTP | `localhost:21` (use a client like FileZilla) |
 
-To run the full stack including Redis, Redis Explorer, Adminer, FTP and the static site:
+7. **`make` Commands**
 
-```bash
-make bonus
-```
-
-This additionally requires `secrets/ftp_user_password.txt`.
-
-| Service | Access |
-| :--- | :--- |
-| WordPress | `https://<your-domain>` |
-| Static Site | `https://<your-domain>/my-page` |
-| Redis Explorer | `https://<your-domain>/redis-explorer` |
-| Adminer | `localhost:8080` |
-| FTP | `localhost:21` (use a client like FileZilla) |
-
-**7. `make` Commands**
-
-| Command | Purpose |
-| :--- | :--- |
-| `make` | Builds images and starts the core stack (MariaDB, WordPress, NGINX). |
-| `make bonus` | Builds and starts the full stack including all bonus services. |
-| `make clean` | Stops services and removes containers and networks. |
-| `make fclean` | Full cleanup: removes containers, images, volumes and host data. |
-| `make re` / `make re_bonus` | Full rebuild from scratch (runs `fclean` then `all`/`bonus`). |
-| `make pause` / `make unpause` | Pauses/unpauses all running containers. |
-| `make stop` / `make start` | Stops/starts all services. |
-| `make status` | Shows current status of all services. |
+    | Command | Purpose |
+    | :--- | :--- |
+    | `make` | Builds images and starts the core stack (MariaDB, WordPress, NGINX). |
+    | `make bonus` | Builds and starts the full stack including all bonus services. |
+    | `make clean` | Stops services and removes containers and networks. |
+    | `make fclean` | Full cleanup: removes containers, images, volumes and host data. |
+    | `make re` / `make re_bonus` | Full rebuild from scratch (runs `fclean` then `all`/`bonus`). |
+    | `make pause` / `make unpause` | Pauses/unpauses all running containers. |
+    | `make stop` / `make start` | Stops/starts all services. |
+    | `make status` | Shows current status of all services. |
 
 ---
 
