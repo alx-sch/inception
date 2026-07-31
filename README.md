@@ -965,7 +965,7 @@ Each bonus service has its own `Dockerfile` and configuration in `srcs-bonus/req
 <a name="footnote9">[9]</a> Rahul; Tecadmin.net (Apr 26, 2025). [*Docker 101: An Introduction to Containerization Technology*](https://tecadmin.net/docker-introduction/) 
 <a name="footnote10">[10]</a> Singh, N.; DataLemur(Jan 19, 2025). [*SQL CRUD: CREATE, READ, UPDATE, DELETE, DROP, and ALTER in SQL*](https://datalemur.com/blog/sql-create-read-update-delete-drop-alter)
 <a name="footnote11">[11]</a> Abhani, J; AlmaBetter (Dec 15, 2024). [*MariaDB Cheat Sheet*](https://www.almabetter.com/bytes/cheat-sheet/mariadb)  
-<a name="footnote12">[12]</a> W3Techs (2025). [*Usage Statistics of Content Management Systems*](https://w3techs.com/technologies/overview/content_management)     
+<a name="footnote12">[12]</a> W3Techs (Jul 31, 2026). [*Usage Statistics of Content Management Systems*](https://w3techs.com/technologies/overview/content_management)     
 <a name="footnote13">[13]</a> NGINX Inc. (2025). [*What is NGINX?*](https://nginx.org/en/)  
 
 The project badge is from [this repository](https://github.com/ayogun/42-project-badges) by Ali Ogun.
