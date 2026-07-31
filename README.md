@@ -929,7 +929,7 @@ When you run the command, OpenSSL will prompt you to enter information to embed 
 - **Country Name (2 letter code):** `DE`
 - **State or Province Name:** `Berlin`
 - **Locality Name (city):** `Berlin`
-- **Organization Name:** `42 Berin`
+- **Organization Name:** `42 Berlin`
 - **Organizational Unit Name:** `Inception Project`
 - **Common Name (FQDN of your server):** `aschenk.42.fr` (Crucial: Must match your NGINX `server_name`)
 - **Email Address:** `XXX@aschenk.42.fr`
