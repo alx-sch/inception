@@ -106,7 +106,85 @@ The "big picture" of the Inception application is an orchestrated stack of servi
 
 ### How to Use?
 
-XXX
+Assumes Docker Engine is installed on the Debian VM and `/etc/hosts` is configured as described [above](#1-check-edit-rights-for-etchosts-file).
+
+**1. Clone the Repository**
+
+```bash
+git clone <repo-url> inception && cd inception
+```
+
+**2. Create the Secret Files**
+
+The project reads sensitive credentials from files in the `secrets/` directory. These are checked at build time and must exist before running:
+
+```bash
+secrets/db_root_password.txt
+secrets/db_user_password.txt
+secrets/wp_admin_password.txt
+secrets/wp_user_password.txt
+secrets/inception.crt          # TLS certificate
+secrets/inception.key          # TLS private key
+```
+
+For the password files, each should contain a single plaintext password. For the TLS certificate and key, generate a self-signed pair as described in [Generating the TLS Certificate](#generating-the-tls-certificate).
+
+**3. Configure the Domain Name**
+
+The domain is set in `srcs-bonus/.env` (and `srcs/.env`):
+
+```bash
+DOMAIN_NAME=aschenk.42.fr
+```
+
+Change this to your desired domain (e.g., `yourlogin.42.fr`). Make sure the same domain is also added to your `/etc/hosts` file and used as the **Common Name** when generating the TLS certificate.
+
+**4. Build and Run**
+
+```bash
+make
+```
+
+This builds all Docker images from their Dockerfiles, creates the host volume directories and starts the services in detached mode.
+
+**5. Access the Website**
+
+Open your browser and navigate to:
+
+```
+https://<your-domain-name>
+```
+
+**6. Bonus Stack**
+
+To run the full stack including Redis, Redis Explorer, Adminer, FTP and the static site:
+
+```bash
+make bonus
+```
+
+This additionally requires `secrets/ftp_user_password.txt`.
+
+| Service | Access |
+| :--- | :--- |
+| WordPress | `https://<your-domain>` |
+| Static Site | `https://<your-domain>/my-page` |
+| Redis Explorer | `https://<your-domain>/redis-explorer` |
+| Adminer | `localhost:8080` |
+| FTP | `localhost:21` (use a client like FileZilla) |
+
+**7. `make` Commands**
+
+| Command | Purpose |
+| :--- | :--- |
+| `make` | Builds images and starts the core stack (MariaDB, WordPress, NGINX). |
+| `make bonus` | Builds and starts the full stack including all bonus services. |
+| `make clean` | Stops services and removes containers and networks. |
+| `make fclean` | Full cleanup: removes containers, images, volumes and host data. |
+| `make re` / `make re_bonus` | Full rebuild from scratch (runs `fclean` then `all`/`bonus`). |
+| `make pause` / `make unpause` | Pauses/unpauses all running containers. |
+| `make stop` / `make start` | Stops/starts all services. |
+| `make status` | Shows current status of all services. |
 
 ---
 
@@ -672,13 +750,17 @@ After all these checks pass, we can consider the MariaDB service fully validated
 
 ---
 
+### Generating the TLS Certificate
+
+To create a self-signed TLS certificate and private key for NGINX:
+
 ```bash
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout inception.key -out inception.crt
 ```
 
 - `openssl req`: Starts the utility to create a certificate request (or, with -x509, a self-signed certificate).
 - `x509`: Creates a **self-signed certificate** instead of a request.
-- `nodes`: **No DES/No Encryption:** Disables the use of a passphrase for the private key. This is critical for Docker, as Nginx cannot start automatically if it needs a password to read the key.
+- `nodes`: **No DES/No Encryption:** Disables the use of a passphrase for the private key. This is critical for Docker, as NGINX cannot start automatically if it needs a password to read the key.
 - `days 365`: Sets the certificate's validity period to 365 days.
 - `newkey rsa:2048`: Generates a new **Private Key** using the RSA algorithm with a length of 2048 bits (standard security).
 - `keyout inception.key`: **Output File for the Private Key (Secret):** This is your `ssl_priv_key` file.
@@ -693,7 +775,7 @@ When you run the command, OpenSSL will prompt you to enter information to embed 
 - **Locality Name (city):** `Berlin`
 - **Organization Name:** `42 Berin`
 - **Organizational Unit Name:** `Inception Project`
-- **Common Name (FQDN of your server):** `aschenk.42.fr` (Crucial: Must match your Nginx `server_name`)
+- **Common Name (FQDN of your server):** `aschenk.42.fr` (Crucial: Must match your NGINX `server_name`)
 - **Email Address:** `XXX@aschenk.42.fr`
 
 ---
