@@ -38,6 +38,12 @@ All services are built from scratch using custom `Dockerfiles` and communicate s
     - [Total Cleanup](#total-cleanup)
 - [Setting Up the VM](#setting-up-the-vm)
 - [Setting Up Inception](#setting-up-inception)
+    - [MariaDB](#mariadb)
+    - [WordPress](#wordpress)
+    - [NGINX](#nginx)
+    - [From Isolation to Integration](#from-isolation-to-integration)
+    - [Generating the TLS Certificate](#generating-the-tls-certificate)
+- [Bonus Services](#bonus-services)
 
 ---
 
@@ -851,7 +857,52 @@ The files used to build the MariaDB image and container are found in [`srcs/requ
 
    3. **Verify the logs:** The new container's logs (`docker logs mariadb`) must now show the message `Database directory is not empty. Skipping initialization.`. This proves our script's logic is correct and that the data persisted in the volume.
 
-After all these checks pass, we can consider the MariaDB service fully validated and ready for integration. All other service containers are validated using a similar methodology. Once each component is proven to be stable and correct, we proceed to the final integration phase: orchestrating the entire application with Docker Compose.
+After all these checks pass, we can consider the MariaDB service fully validated and ready for integration.
+
+---
+
+### WordPress
+
+After MariaDB, the WordPress container is built and tested in isolation. It runs **PHP-FPM** and uses **WP-CLI** to automate the full WordPress installation (downloading core files, creating `wp-config.php`, installing the site and creating users).
+
+The files used to build the WordPress image are found in [`srcs/requirements/wordpress`](srcs/requirements/wordpress):
+
+- `Dockerfile`: Installs PHP-FPM, required PHP extensions and WP-CLI on a Debian base image.
+- `tools/init_wp.sh`: Initialization script that waits for MariaDB to be reachable, then downloads and configures WordPress if not already present. Creates an admin user and a regular user from the environment variables and secret files.
+- `conf/www.conf`: PHP-FPM pool configuration, setting the listen address so NGINX can forward requests to it.
+
+Isolated testing follows the same methodology as MariaDB: build the image, run a container with environment variables and a volume, check logs for successful initialization, and verify persistence across container removals.
+
+---
+
+### NGINX
+
+NGINX is the only container exposed to the outside world. It terminates TLS and reverse-proxies requests to WordPress via PHP-FPM over the private Docker network.
+
+The files used to build the NGINX image are found in [`srcs/requirements/nginx`](srcs/requirements/nginx):
+
+- `Dockerfile`: Installs NGINX on a Debian base image and copies the server configuration.
+- `conf/default.conf`: Server block configuration — listens on port 443 with TLSv1.3, sets the `server_name` to the domain, and forwards `.php` requests to the WordPress container via FastCGI.
+- `tools/wait-start.sh`: Entrypoint script that waits for the WordPress volume to be populated before starting NGINX.
+
+Isolated testing verifies that NGINX starts, serves the TLS certificate on port 443, and correctly proxies to a running WordPress instance.
+
+---
+
+### From Isolation to Integration
+
+Once each service is individually validated, Docker Compose takes over. The difference:
+
+| | Isolated Testing | Docker Compose |
+| :--- | :--- | :--- |
+| **How you run it** | Manual `docker run` with `-e`, `-v`, `-p` flags | Single `docker compose up` command |
+| **Configuration** | Passed inline via the CLI | Declared in `docker-compose.yml` + `.env` file |
+| **Networking** | Containers use `localhost` or explicit port mapping to reach each other | Containers share a private network and resolve each other by service name (e.g., `mariadb`, `wordpress`) |
+| **Secrets** | Passed as environment variables (less secure, but fine for testing) | Mounted as read-only files at `/run/secrets/<name>` |
+| **Startup order** | You start containers manually in the right sequence | `depends_on` ensures MariaDB starts before WordPress, WordPress before NGINX |
+| **Persistence** | You manually create and attach volumes | Volumes are declared once and automatically managed |
+
+In short: isolated testing proves each container works on its own. Docker Compose then wires them together into the final application — handling networking, secrets, startup order and volumes declaratively. The init scripts (`init_db.sh`, `init_wp.sh`, `wait-start.sh`) are written to work in both contexts: they check whether initialization has already happened and act accordingly.
 
 ---
 
@@ -882,6 +933,22 @@ When you run the command, OpenSSL will prompt you to enter information to embed 
 - **Organizational Unit Name:** `Inception Project`
 - **Common Name (FQDN of your server):** `aschenk.42.fr` (Crucial: Must match your NGINX `server_name`)
 - **Email Address:** `XXX@aschenk.42.fr`
+
+---
+
+## Bonus Services
+
+The bonus stack extends the core application with additional services, all defined in `srcs-bonus/docker-compose.yml`:
+
+| Service | Purpose | Access |
+| :--- | :--- | :--- |
+| **Redis** | In-memory cache for WordPress, reducing database queries and improving page load times. | Internal only |
+| **Redis Explorer** | A custom PHP-based web interface for inspecting cached Redis keys and values in real time. | `https://<domain>/redis-explorer` |
+| **Adminer** | Lightweight database management tool for inspecting and managing the MariaDB database via a web UI. | `localhost:8080` |
+| **FTP Server** | vsftpd-based FTP access to the WordPress volume, allowing file management without SSH. | `localhost:21` |
+| **Static Site** | A simple HTML/CSS page deployed into the WordPress volume via a one-shot init container. | `https://<domain>/my-page` |
+
+Each bonus service has its own `Dockerfile` and configuration in `srcs-bonus/requirements/<service>/`. The static site container runs once to copy files into the shared volume and then exits (`restart: no`); all others run persistently.
 
 ---
 
