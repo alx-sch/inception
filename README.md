@@ -344,15 +344,15 @@ A Dockerfile typically follows these steps:
 
 Some of the most common instructions in a `Dockerfile` include:
 
-- `FROM <image>` - this specifies the base image, so what you start with. This could be a minimal OS to build on or a ready-to-use image for a specific application.
-- `WORKDIR <path>` - this instruction specifies the "working directory" or the path in the image where files will be copied and commands will be executed.
-- `COPY <host-path> <image-path>` - this instruction tells the builder to copy files from the host and put them into the container image.
-- `RUN <command>` - this instruction tells the builder to run the specified command.
-- `ENV <name> <value>` - this instruction sets an environment variable that a running container will use.
-- `EXPOSE <port-number>` - this instruction sets configuration on the image that indicates a port the image would like to expose.
-- `USER <user-or-uid>` - this instruction sets the default user for all subsequent instructions.
-- `ENTRYPOINT ["<executable>", "<param1>"]` - this sets the main command. It typically executes a script or a binary, but can also be a command.
-- `CMD ["<command>", "<arg1>"]` - this instruction sets the default command a container using this image will run. This can be overridden when providing a command when starting the container (`docker run my-image <CMD>`).
+- `FROM <image>` — Specifies the base image, so what you start with. This could be a minimal OS to build on or a ready-to-use image for a specific application.
+- `WORKDIR <path>` — Specifies the "working directory" or the path in the image where files will be copied and commands will be executed.
+- `COPY <host-path> <image-path>` — Tells the builder to copy files from the host and put them into the container image.
+- `RUN <command>` — Tells the builder to run the specified command.
+- `ENV <name> <value>` — Sets an environment variable that a running container will use.
+- `EXPOSE <port-number>` — Sets configuration on the image that indicates a port the image would like to expose.
+- `USER <user-or-uid>` — Sets the default user for all subsequent instructions.
+- `ENTRYPOINT ["<executable>", "<param1>"]` - Sets the main command. It typically executes a script or a binary, but can also be a command.
+- `CMD ["<command>", "<arg1>"]` — Sets the default command a container using this image will run. This can be overridden when providing a command when starting the container (`docker run my-image <CMD>`).
 
 Note: When multiple `ENTRYPOINT` and `CMD` are specified in a Dockerfile, all but the very last are ignored.
 
@@ -455,7 +455,7 @@ secrets:
 | `secrets:` | Mounts sensitive files into the container at `/run/secrets/<name>`. More secure than environment variables, as secrets don't appear in `docker inspect` or process listings. |
 | `networks:` | All services on `inception_network` can reach each other by service name (Docker DNS). No service is reachable from outside unless `ports:` is specified. |
 | `volumes:` with `bind` | Forces volume data to a specific host path, ensuring persistence even if Docker's default storage is wiped. |
-| `ports: "443:443"` | Maps host port to container port. Only NGINX exposes a port — all other services are internal. |
+| `ports: "443:443"` | Maps host port to container port. Only NGINX exposes a port; all other services are internal. |
 | `restart: always` | Containers restart automatically on failure or host reboot. |
 
 #### Compose Commands
@@ -468,6 +468,7 @@ secrets:
 | `docker compose ps` | Shows status of all services in the project. |
 | `docker compose logs <service>` | View logs for a specific service. |
 | `docker compose build` | Rebuilds images without starting containers. |
+| `docker compose up --build` | Rebuilds images and then starts all services. |
 
 ---
 
