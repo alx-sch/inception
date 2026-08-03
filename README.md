@@ -926,12 +926,12 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout inception.key -out i
 
 When you run the command, OpenSSL will prompt you to enter information to embed into the certificate. Since this is for development, the values don't need to be perfectly accurate, but the **Common Name** is important:
 
-- **Country Name (2 letter code):** `DE`
+- **Country Name** (2 letter code)**:** `DE`
 - **State or Province Name:** `Berlin`
-- **Locality Name (city):** `Berlin`
+- **Locality Name** (city)**:** `Berlin`
 - **Organization Name:** `42 Berlin`
 - **Organizational Unit Name:** `Inception Project`
-- **Common Name (your domain name):** `aschenk.42.fr` (Crucial: Must match your NGINX `server_name`)
+- **Common Name** (your domain name)**:** `aschenk.42.fr` (Crucial: Must match your NGINX `server_name`)
 - **Email Address:** `XXX@aschenk.42.fr`
 
 ---
