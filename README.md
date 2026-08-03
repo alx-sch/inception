@@ -931,7 +931,7 @@ When you run the command, OpenSSL will prompt you to enter information to embed 
 - **Locality Name (city):** `Berlin`
 - **Organization Name:** `42 Berlin`
 - **Organizational Unit Name:** `Inception Project`
-- **Common Name (FQDN of your server):** `aschenk.42.fr` (Crucial: Must match your NGINX `server_name`)
+- **Common Name (your domain name):** `aschenk.42.fr` (Crucial: Must match your NGINX `server_name`)
 - **Email Address:** `XXX@aschenk.42.fr`
 
 ---
